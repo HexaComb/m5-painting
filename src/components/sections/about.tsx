@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Heart, Handshake, Shield, Palette } from "lucide-react";
+import { BrushStroke, PaintSplatter } from "@/components/ui/paint-decorations";
 
 const values = [
   {
@@ -30,8 +31,20 @@ const values = [
 
 export function About() {
   return (
-    <section id="about" className="bg-muted/50 py-16 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+    <section id="about" className="relative bg-muted/50 py-16 sm:py-24">
+      {/* Background paint accent */}
+      <PaintSplatter
+        color="var(--primary)"
+        size={200}
+        className="pointer-events-none absolute left-0 top-20 opacity-15"
+      />
+      <PaintSplatter
+        color="var(--primary)"
+        size={140}
+        className="pointer-events-none absolute bottom-10 right-4 opacity-20"
+      />
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
           {/* Image */}
           <div className="relative mx-auto w-full max-w-md lg:max-w-none">
@@ -44,18 +57,25 @@ export function About() {
                 sizes="(max-width: 1024px) 100vw, 50vw"
               />
             </div>
+            {/* Paint-stroke frame instead of plain box */}
             <div className="absolute -bottom-4 -left-4 -z-10 h-full w-full rounded-2xl bg-primary/10" />
+            <PaintSplatter
+              color="var(--primary)"
+              size={70}
+              className="pointer-events-none absolute -bottom-6 -right-4 opacity-50"
+            />
           </div>
 
           {/* Content */}
           <div className="space-y-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-                The Family Behind the Brushes
+                The Family Behind Every Coat
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 Built on Hard Work &amp; Handshakes
               </h2>
+              <BrushStroke color="var(--primary)" className="mt-2" />
               <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
                 M5 Painting started the way most good things do — with a family
                 that knows how to work hard. We grew up right here in the Central

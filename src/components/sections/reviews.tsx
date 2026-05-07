@@ -1,5 +1,6 @@
 import { Star } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { BrushStroke, PaintSplatter } from "@/components/ui/paint-decorations";
 
 const reviews = [
   {
@@ -43,8 +44,15 @@ function StarRating() {
 
 export function Reviews() {
   return (
-    <section id="reviews" className="py-16 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+    <section id="reviews" className="relative py-16 sm:py-24">
+      {/* Background paint accent */}
+      <PaintSplatter
+        color="var(--primary)"
+        size={160}
+        className="pointer-events-none absolute -left-8 top-1/3 opacity-15"
+      />
+
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
         {/* Section header */}
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">
@@ -53,6 +61,7 @@ export function Reviews() {
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Don&apos;t Take Our Word for It
           </h2>
+          <BrushStroke color="var(--primary)" className="mx-auto mt-2" />
           <p className="mt-4 text-lg text-muted-foreground">
             Hear from the families and business owners we&apos;ve had the
             pleasure of working with right here in the Valley.
@@ -62,14 +71,17 @@ export function Reviews() {
         {/* Review cards */}
         <div className="grid gap-6 sm:grid-cols-2">
           {reviews.map((review, i) => (
-            <Card key={i} className="flex flex-col justify-between p-6">
-              <div>
+            <Card key={i} className="group relative flex flex-col justify-between overflow-hidden p-6">
+              {/* Subtle paint blob on hover */}
+              <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-yellow-400/5 transition-transform duration-500 group-hover:scale-[2]" />
+
+              <div className="relative">
                 <StarRating />
                 <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
                   &ldquo;{review.text}&rdquo;
                 </blockquote>
               </div>
-              <div className="mt-4 flex items-center justify-between border-t pt-4">
+              <div className="relative mt-4 flex items-center justify-between border-t pt-4">
                 <div>
                   <p className="text-sm font-semibold text-foreground">
                     — {review.author}

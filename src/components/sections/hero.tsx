@@ -1,10 +1,23 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { PaintSplatter } from "@/components/ui/paint-decorations";
 import { Phone } from "lucide-react";
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/30">
+      {/* Decorative paint splatters */}
+      <PaintSplatter
+        color="var(--primary)"
+        size={200}
+        className="pointer-events-none absolute -right-10 -top-10 opacity-40"
+      />
+      <PaintSplatter
+        color="var(--primary)"
+        size={150}
+        className="pointer-events-none absolute -left-8 bottom-20 opacity-30"
+      />
+
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24 lg:py-32">
         {/* Text content */}
         <div className="space-y-6">
@@ -14,7 +27,25 @@ export function Hero() {
             </p>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
               Your Neighbors at{" "}
-              <span className="text-primary">M5 Painting</span>
+              <span className="relative inline-block text-primary">
+                M5 Painting
+                {/* Brush-stroke underline accent */}
+                <svg
+                  viewBox="0 0 200 12"
+                  preserveAspectRatio="none"
+                  className="absolute -bottom-1 left-0 h-2 w-full"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2,8 C20,3 40,6 60,4 C80,2 100,7 120,5 C140,3 160,8 180,4 C190,3 196,6 198,5"
+                    stroke="var(--primary)"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    fill="none"
+                    opacity="0.35"
+                  />
+                </svg>
+              </span>
             </h1>
             <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">
               We&apos;re a family-run painting crew right here in the Central
@@ -82,8 +113,13 @@ export function Hero() {
               sizes="(max-width: 768px) 100vw, 50vw"
             />
           </div>
-          {/* Decorative accent */}
+          {/* Paint-stroke frame accent */}
           <div className="absolute -bottom-4 -right-4 -z-10 h-full w-full rounded-2xl bg-primary/10" />
+          <PaintSplatter
+            color="var(--primary)"
+            size={80}
+            className="pointer-events-none absolute -bottom-8 -left-6 opacity-50"
+          />
         </div>
       </div>
     </section>
