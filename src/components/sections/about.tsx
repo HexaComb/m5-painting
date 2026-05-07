@@ -1,30 +1,30 @@
 import Image from "next/image";
-import { Shield, Star, Palette, Users } from "lucide-react";
+import { Heart, Handshake, Shield, Palette } from "lucide-react";
 
 const values = [
   {
-    icon: Star,
-    title: "Expert Craftsmanship",
+    icon: Heart,
+    title: "We Care Like Family",
     description:
-      "We specialize in high-quality interior and exterior coatings. Our skilled team is committed to bringing precision and excellence to every project, transforming both residential and commercial spaces with stunning, long-lasting finishes.",
+      "Your home is where your family makes memories. We get that — it's why we show up with the same care and respect we'd bring to our own parents' house.",
   },
   {
-    icon: Users,
-    title: "Trusted Professionals",
+    icon: Handshake,
+    title: "Honest From Day One",
     description:
-      "Our reputation is built on reliability, integrity and attention to detail. We treat every project with the utmost care, ensuring a seamless process from start to finish. Your satisfaction is our priority.",
+      "No hidden fees, no surprise charges, no cutting corners. We give you a fair quote, show up when we say we will, and make sure you're happy before we pack up.",
   },
   {
     icon: Shield,
     title: "Licensed, Bonded & Insured",
     description:
-      "We are fully licensed, bonded and insured, providing our clients with peace of mind on every project. This ensures that our services meet the highest standards of quality and professionalism.",
+      "We're fully licensed, bonded, and insured — so you can relax knowing you and your property are protected on every single job.",
   },
   {
     icon: Palette,
-    title: "Tailored Solutions",
+    title: "Your Vision, Our Hands",
     description:
-      "Every space is unique and so is our approach. We take the time to understand your vision. Whether it's a simple refresh or a full-scale transformation, we deliver results that exceed expectations.",
+      "Every home is different and every owner has their own style. We sit down with you, listen to what you want, and bring it to life — whether that's a bold accent wall or a complete refresh.",
   },
 ];
 
@@ -38,7 +38,7 @@ export function About() {
             <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl">
               <Image
                 src="/images/team-collage.webp"
-                alt="M5 Painting team at work"
+                alt="Matt and the M5 Painting crew on a job site"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -51,14 +51,23 @@ export function About() {
           <div className="space-y-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-                Our Story
+                The Family Behind the Brushes
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-                Experience Excellence with M5 Painting
+                Built on Hard Work &amp; Handshakes
               </h2>
-              <p className="mt-4 text-lg italic text-muted-foreground">
-                &ldquo;Bringing color to life with professional painting, quality finishes
-                and creative solutions that feel fresh, vibrant and truly yours.&rdquo;
+              <p className="mt-4 text-lg leading-relaxed text-muted-foreground">
+                M5 Painting started the way most good things do — with a family
+                that knows how to work hard. We grew up right here in the Central
+                Valley, and when we started this business, we made a simple promise:
+                treat every customer like a neighbor, because around here, they
+                usually are.
+              </p>
+              <p className="mt-3 text-lg leading-relaxed text-muted-foreground">
+                Matt and the crew bring that same small-town work ethic to every
+                project. We show up on time, we do quality work, and we don&apos;t
+                leave until you love it. That&apos;s not a sales pitch — it&apos;s
+                just how we were raised.
               </p>
             </div>
 

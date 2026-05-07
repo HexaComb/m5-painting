@@ -14,14 +14,16 @@ export function Contact() {
           <div className="space-y-6">
             <div>
               <p className="text-sm font-semibold uppercase tracking-widest text-primary-foreground/70">
-                Let&apos;s Talk
+                We&apos;d Love to Hear From You
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-                Contact Us for a Free Quote!
+                Ready to Get Started?
               </h2>
               <p className="mt-4 text-lg leading-relaxed text-primary-foreground/80">
-                Ready to transform your space? Reach out and we&apos;ll get back to you
-                with a free, no-obligation estimate.
+                Whether you know exactly what you want or you&apos;re still
+                figuring it out, we&apos;re happy to chat. Drop us a message or
+                give us a call — we&apos;ll come out, take a look, and give you
+                an honest, no-pressure quote.
               </p>
             </div>
 
@@ -34,7 +36,7 @@ export function Contact() {
                   <Phone className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-primary-foreground/60">Call us</p>
+                  <p className="text-xs text-primary-foreground/60">Give us a call</p>
                   <p className="text-sm font-semibold">559-451-1022</p>
                 </div>
               </a>
@@ -43,9 +45,9 @@ export function Contact() {
                   <MapPin className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-primary-foreground/60">Serving</p>
+                  <p className="text-xs text-primary-foreground/60">Based in</p>
                   <p className="text-sm font-semibold">
-                    Central Valley, California
+                    Sanger, CA · Serving the Central Valley
                   </p>
                 </div>
               </div>
@@ -54,7 +56,7 @@ export function Contact() {
                   <Mail className="h-5 w-5" />
                 </div>
                 <div>
-                  <p className="text-xs text-primary-foreground/60">Email</p>
+                  <p className="text-xs text-primary-foreground/60">Email us</p>
                   <p className="text-sm font-semibold">
                     m5paintingco@gmail.com
                   </p>
@@ -125,7 +127,7 @@ export function Contact() {
                   htmlFor="interest"
                   className="text-sm font-medium text-primary-foreground/80"
                 >
-                  I&apos;m Interested In
+                  What Are You Looking For?
                 </label>
                 <select
                   id="interest"
@@ -134,7 +136,7 @@ export function Contact() {
                   defaultValue=""
                 >
                   <option value="" disabled className="text-gray-900">
-                    Select an option
+                    Pick one
                   </option>
                   <option value="interior" className="text-gray-900">
                     Interior Painting
@@ -146,10 +148,10 @@ export function Contact() {
                     Commercial Painting
                   </option>
                   <option value="consultation" className="text-gray-900">
-                    Color Consultation
+                    Just Want to Talk It Through
                   </option>
                   <option value="other" className="text-gray-900">
-                    Other
+                    Something Else
                   </option>
                 </select>
               </div>
@@ -158,12 +160,12 @@ export function Contact() {
                   htmlFor="message"
                   className="text-sm font-medium text-primary-foreground/80"
                 >
-                  Message <span className="text-white/50">(required)</span>
+                  Tell Us About Your Project
                 </label>
                 <Textarea
                   id="message"
                   name="message"
-                  placeholder="Tell us about your project..."
+                  placeholder="What are you looking to have done? Any details help us give you a better quote..."
                   rows={4}
                   required
                   className="border-white/20 bg-white/10 text-white placeholder:text-white/50 focus-visible:border-white/40 focus-visible:ring-white/20"
@@ -175,7 +177,7 @@ export function Contact() {
                 size="lg"
                 className="h-auto w-full px-6 py-3 text-base font-semibold"
               >
-                Contact M5 Painting Now!
+                Send It Over — We&apos;ll Be in Touch!
               </Button>
             </form>
           </div>

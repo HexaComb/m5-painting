@@ -44,10 +44,11 @@ export function Projects() {
             Our Work
           </p>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            See These Homes &amp; Businesses Come to Life
+            Projects We&apos;re Proud Of
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            With the touch of a brush &amp; roll from M5 Painting.
+            Every home and business has a story. Here are a few of the
+            transformations we&apos;ve been lucky to be part of.
           </p>
         </div>
 
@@ -78,7 +79,7 @@ export function Projects() {
         <div className="mt-8 text-center">
           <a href="#contact">
             <Button variant="outline" size="lg" className="h-auto px-6 py-3 text-base">
-              Start Your Project
+              Let&apos;s Start Your Project
             </Button>
           </a>
         </div>
