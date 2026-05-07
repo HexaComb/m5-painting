@@ -11,54 +11,54 @@ const services = [
     icon: Home,
     title: "Interior Painting",
     description:
-      "Refresh your home's interior with professional painting that delivers smooth, even coverage and vibrant color. From single rooms to entire homes.",
+      "Whether it's a single room that needs a refresh or your whole house ready for a new look, we'll help you pick the perfect colors and make sure every wall, trim, and ceiling looks beautiful.",
     items: [
-      "Single Room to Entire Home Painting",
+      "Single Room to Entire Home",
       "Textured and Faux Painting",
       "Wallpaper Removal / Installation",
-      "Cabinet Painting, Staining or Refinishing",
-      "Crown Molding and Trim Painting",
-      "Garage Floor Coating or Painting",
+      "Cabinet Painting & Refinishing",
+      "Crown Molding and Trim",
+      "Garage Floor Coating",
     ],
   },
   {
     icon: Paintbrush,
     title: "Exterior Painting",
     description:
-      "Boost your home's curb appeal with professional exterior painting. Our skilled team uses top-quality paints and techniques to protect and beautify your home.",
+      "Your home's first impression matters. We use high-quality paints and proven techniques so your exterior looks great and holds up against the Valley heat for years to come.",
     items: [
       "Stucco / Plaster Painting",
-      "Wood & Vinyl Siding Painting",
+      "Wood & Vinyl Siding",
       "Trim, Fence & Deck Painting",
-      "Brick Painting and Treatments",
-      "Concrete Sealing and Staining",
-      "House Pressure Washing",
+      "Brick Painting & Treatments",
+      "Concrete Sealing & Staining",
+      "Pressure Washing",
     ],
   },
   {
     icon: Building2,
     title: "Commercial Painting",
     description:
-      "From complex exterior projects to precise interior detailing, we handle it all. Office buildings, retail, restaurants, warehouses, and more.",
+      "We work with local businesses, offices, and property managers to keep their spaces looking sharp. Big job or small — we handle it all with the same attention to detail.",
     items: [
-      "Office Buildings & Retail Stores",
+      "Office Buildings & Retail",
       "Restaurants & Hotels",
       "Gyms & Fitness Centers",
       "Healthcare Facilities",
       "Warehouses & Industrial",
-      "Apartments & Multi-Family Properties",
+      "Apartments & Multi-Family",
     ],
   },
   {
     icon: MessageSquare,
     title: "Free Consultation",
     description:
-      "Schedule a consultation to discuss your vision, design preferences, and ways to elevate your space. We'll walk the job, provide a quote, and offer color consultation.",
+      "Not sure where to start? Give us a call and we'll come out, walk the job with you, talk through your ideas, and give you an honest quote — no pressure, no obligation.",
     items: [
-      "On-Site Job Walk",
+      "On-Site Walkthrough",
       "Detailed Written Quote",
-      "Color Consultation",
-      "No Obligation Estimate",
+      "Color Advice & Guidance",
+      "Absolutely No Obligation",
     ],
   },
 ];
@@ -70,14 +70,14 @@ export function Services() {
         {/* Section header */}
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            What We Do
+            How We Can Help
           </p>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Our Services
+            What We Do
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            We are here to bring your painting vision to life — from simple refreshes
-            to full-scale transformations.
+            From a fresh coat in the living room to a full exterior
+            makeover, we&apos;re here to bring your vision to life.
           </p>
         </div>
 

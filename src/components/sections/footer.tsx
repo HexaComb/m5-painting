@@ -28,13 +28,13 @@ export function Footer() {
               <div>
                 <p className="text-base font-bold">M5 Painting</p>
                 <p className="text-xs text-background/60">
-                  Residential &amp; Commercial
+                  Family-Owned Since Day One
                 </p>
               </div>
             </div>
             <p className="text-sm leading-relaxed text-background/70">
-              Family-owned painting business bringing fresh, vibrant
-              transformations to homes and businesses across the Central Valley.
+              A Central Valley family bringing color, care, and craftsmanship
+              to homes and businesses across Sanger, Fresno, Clovis, and beyond.
             </p>
           </div>
 
@@ -59,7 +59,7 @@ export function Footer() {
           {/* Contact info */}
           <div>
             <h4 className="mb-3 text-sm font-semibold uppercase tracking-wider text-background/50">
-              Contact
+              Get in Touch
             </h4>
             <div className="space-y-3">
               <a
@@ -78,7 +78,7 @@ export function Footer() {
               </a>
               <div className="flex items-center gap-2 text-sm text-background/70">
                 <MapPin className="h-4 w-4 shrink-0" />
-                Central Valley, CA
+                Sanger, CA · Central Valley
               </div>
             </div>
           </div>
@@ -107,7 +107,7 @@ export function Footer() {
                   height={24}
                   className="h-6 w-6 rounded-full"
                 />
-                <span>Premium Quality 5-Star Service</span>
+                <span>5-Star Rated on Yelp &amp; Angi</span>
               </div>
             </div>
           </div>

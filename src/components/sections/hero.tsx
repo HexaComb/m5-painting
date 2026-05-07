@@ -10,16 +10,17 @@ export function Hero() {
         <div className="space-y-6">
           <div className="space-y-3">
             <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-              Residential &amp; Commercial
+              Family-Owned &amp; Locally Operated
             </p>
             <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-              Welcome to{" "}
+              Your Neighbors at{" "}
               <span className="text-primary">M5 Painting</span>
             </h1>
             <p className="max-w-lg text-lg leading-relaxed text-muted-foreground">
-              We bring fresh, vibrant transformations to your space. Our skilled team
-              specializes in delivering expert painting services and tailored property
-              enhancements for both residential and commercial properties.
+              We&apos;re a family-run painting crew right here in the Central
+              Valley. From the first walkthrough to the final coat, we treat
+              your home like it&apos;s our own — because to us, every project is
+              personal.
             </p>
           </div>
 
@@ -61,8 +62,9 @@ export function Hero() {
                 className="h-10 w-10 rounded-full"
               />
               <span className="text-xs font-medium text-muted-foreground">
-                Premium Quality
-                <br />5 Star Service
+                5-Star Reviews
+                <br />
+                on Yelp &amp; Angi
               </span>
             </div>
           </div>
@@ -73,7 +75,7 @@ export function Hero() {
           <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-2xl">
             <Image
               src="/images/hero-banner.webp"
-              alt="M5 Painting — Residential and Commercial painting services"
+              alt="The M5 Painting team — family-owned painting in Central Valley, CA"
               fill
               className="object-cover"
               priority

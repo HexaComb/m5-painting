@@ -48,14 +48,14 @@ export function Reviews() {
         {/* Section header */}
         <div className="mx-auto mb-12 max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            Testimonials
+            Straight From Our Neighbors
           </p>
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            What Our Customers Say
+            Don&apos;t Take Our Word for It
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Real reviews from real customers who trusted M5 Painting with their homes
-            and businesses.
+            Hear from the families and business owners we&apos;ve had the
+            pleasure of working with right here in the Valley.
           </p>
         </div>
 
