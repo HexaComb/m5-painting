@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { BrushStroke } from "@/components/ui/paint-decorations";
 
 const projects = [
   {
@@ -46,6 +47,7 @@ export function Projects() {
           <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
             Projects We&apos;re Proud Of
           </h2>
+          <BrushStroke color="var(--primary)" className="mx-auto mt-2" />
           <p className="mt-4 text-lg text-muted-foreground">
             Every home and business has a story. Here are a few of the
             transformations we&apos;ve been lucky to be part of.
