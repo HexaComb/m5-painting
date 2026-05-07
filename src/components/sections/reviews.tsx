@@ -1,6 +1,6 @@
-import { Star } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { BrushStroke, PaintSplatter } from "@/components/ui/paint-decorations";
+import { Star, Quote } from "lucide-react";
+import { BrushStroke } from "@/components/ui/paint-decorations";
+import { Reveal } from "@/components/ui/reveal";
 
 const reviews = [
   {
@@ -16,7 +16,7 @@ const reviews = [
     source: "Yelp",
   },
   {
-    text: "I highly recommend M5 Painting for any exterior paint work! They did an outstanding job on my home — from the stucco to the trim, everything looks fresh, clean, and professionally done. They helped me choose the perfect color for the stucco, and their attention to detail on the trimming made a huge difference in the final look.",
+    text: "I highly recommend M5 Painting for any exterior paint work! They did an outstanding job on my home. From the stucco to the trim, everything looks fresh, clean, and professionally done. They helped me choose the perfect color for the stucco, and their attention to detail on the trimming made a huge difference.",
     author: "Krystle P.",
     date: "June 2025",
     source: "Angi",
@@ -29,13 +29,13 @@ const reviews = [
   },
 ];
 
-function StarRating() {
+function StarRow() {
   return (
     <div className="flex gap-0.5">
       {[...Array(5)].map((_, i) => (
         <Star
           key={i}
-          className="h-4 w-4 fill-yellow-400 text-yellow-400"
+          className="h-3.5 w-3.5 fill-yellow-400 text-yellow-400"
         />
       ))}
     </div>
@@ -44,55 +44,50 @@ function StarRating() {
 
 export function Reviews() {
   return (
-    <section id="reviews" className="relative py-16 sm:py-24">
-      {/* Background paint accent */}
-      <PaintSplatter
-        color="var(--primary)"
-        size={160}
-        className="pointer-events-none absolute -left-8 top-1/3 opacity-15"
-      />
+    <section id="reviews" className="relative bg-primary py-20 sm:py-28">
+      {/* Subtle texture */}
+      <div className="absolute inset-0 opacity-[0.025]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='18' r='1' fill='white'/%3E%3Ccircle cx='48' cy='8' r='0.7' fill='white'/%3E%3Ccircle cx='65' cy='42' r='0.9' fill='white'/%3E%3Ccircle cx='28' cy='65' r='0.6' fill='white'/%3E%3Ccircle cx='55' cy='75' r='1.1' fill='white'/%3E%3C/svg%3E")`
+      }} />
 
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
         {/* Section header */}
-        <div className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-            Straight From Our Neighbors
-          </p>
-          <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
-            Don&apos;t Take Our Word for It
-          </h2>
-          <BrushStroke color="var(--primary)" className="mx-auto mt-2" />
-          <p className="mt-4 text-lg text-muted-foreground">
-            Hear from the families and business owners we&apos;ve had the
-            pleasure of working with right here in the Valley.
-          </p>
-        </div>
+        <Reveal>
+          <div className="mx-auto mb-14 max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-primary-foreground/70">
+              Straight From Our Neighbors
+            </p>
+            <h2 className="mt-2 text-headline font-bold text-primary-foreground">
+              Don&apos;t Take Our Word for It
+            </h2>
+            <BrushStroke color="white" className="mx-auto mt-3 opacity-40" />
+          </div>
+        </Reveal>
 
-        {/* Review cards */}
-        <div className="grid gap-6 sm:grid-cols-2">
+        {/* Reviews — stacked full-width for variety, not card grid */}
+        <div className="grid gap-5 sm:grid-cols-2">
           {reviews.map((review, i) => (
-            <Card key={i} className="group relative flex flex-col justify-between overflow-hidden p-6">
-              {/* Subtle paint blob on hover */}
-              <div className="absolute -right-4 -top-4 h-16 w-16 rounded-full bg-yellow-400/5 transition-transform duration-500 group-hover:scale-[2]" />
-
-              <div className="relative">
-                <StarRating />
-                <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
-                  &ldquo;{review.text}&rdquo;
-                </blockquote>
-              </div>
-              <div className="relative mt-4 flex items-center justify-between border-t pt-4">
+            <Reveal key={i} delay={Math.min(i + 1, 4) as 0 | 1 | 2 | 3 | 4}>
+              <div className="relative flex h-full flex-col justify-between rounded-2xl bg-white/10 p-6 backdrop-blur-sm sm:p-7">
                 <div>
-                  <p className="text-sm font-semibold text-foreground">
-                    — {review.author}
-                  </p>
-                  <p className="text-xs text-muted-foreground">{review.date}</p>
+                  <div className="mb-4 flex items-center justify-between">
+                    <StarRow />
+                    <Quote className="h-5 w-5 text-white/20" />
+                  </div>
+                  <blockquote className="text-[0.95rem] leading-relaxed text-primary-foreground/90">
+                    &ldquo;{review.text}&rdquo;
+                  </blockquote>
                 </div>
-                <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                  {review.source}
-                </span>
+                <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+                  <p className="text-sm font-semibold text-primary-foreground">
+                    {review.author}
+                  </p>
+                  <span className="rounded-full bg-white/10 px-2.5 py-1 text-xs font-medium text-primary-foreground/80">
+                    {review.source}
+                  </span>
+                </div>
               </div>
-            </Card>
+            </Reveal>
           ))}
         </div>
       </div>

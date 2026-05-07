@@ -1,12 +1,11 @@
 /**
- * Paint-themed decorative SVG components for section transitions,
- * heading accents, and background textures.
+ * Paint-themed decorative SVG components.
+ * Bold, visible, intentional — not invisible 4% opacity blobs.
  */
 
 /* ───────────────────────────────────────────
-   Paint Drip — section divider that sits at
-   the bottom of a section, dripping into the
-   next one. Flip for top placement.
+   Paint Drip — organic section divider.
+   Sits between sections, dripping downward.
    ─────────────────────────────────────────── */
 export function PaintDrip({
   color = "currentColor",
@@ -19,33 +18,33 @@ export function PaintDrip({
 }) {
   return (
     <svg
-      viewBox="0 0 1440 120"
+      viewBox="0 0 1440 100"
       preserveAspectRatio="none"
       className={`block w-full ${flip ? "rotate-180" : ""} ${className}`}
-      style={{ height: "clamp(40px, 6vw, 80px)" }}
+      style={{ height: "clamp(48px, 7vw, 100px)" }}
       aria-hidden="true"
     >
       <path
         d={`
           M0,0 L1440,0
-          L1440,40
-          C1380,42 1340,38 1300,40
-          C1240,44 1200,55 1160,50
-          C1120,44 1100,36 1060,40
-          C1020,46 1000,60 960,55
-          C920,48 900,40 860,42
-          C800,48 780,70 740,80
-          C720,85 710,90 700,95
-          C692,100 688,105 684,95
-          C678,80 670,60 640,50
-          C600,36 560,42 520,40
-          C480,36 440,50 400,55
-          C360,62 340,70 300,65
-          C280,62 270,80 260,90
-          C252,98 248,105 244,100
-          C236,85 220,55 180,48
-          C140,38 100,42 60,40
-          C30,38 10,40 0,40
+          L1440,30
+          C1380,32 1340,28 1300,30
+          C1240,36 1200,48 1160,42
+          C1120,36 1100,28 1060,32
+          C1020,38 1000,52 960,46
+          C920,38 900,32 860,34
+          C800,40 780,62 740,72
+          C720,78 710,84 700,88
+          C692,94 688,100 684,88
+          C678,72 670,52 640,42
+          C600,28 560,34 520,32
+          C480,28 440,42 400,48
+          C360,54 340,62 300,56
+          C280,52 270,72 260,82
+          C252,90 248,98 244,92
+          C236,78 220,48 180,40
+          C140,28 100,34 60,32
+          C30,30 10,32 0,32
           Z
         `}
         fill={color}
@@ -56,7 +55,7 @@ export function PaintDrip({
 
 /* ───────────────────────────────────────────
    Paint Drip Alt — second variation with
-   different drip positions for variety.
+   different drip positions.
    ─────────────────────────────────────────── */
 export function PaintDripAlt({
   color = "currentColor",
@@ -69,33 +68,33 @@ export function PaintDripAlt({
 }) {
   return (
     <svg
-      viewBox="0 0 1440 120"
+      viewBox="0 0 1440 100"
       preserveAspectRatio="none"
       className={`block w-full ${flip ? "rotate-180" : ""} ${className}`}
-      style={{ height: "clamp(40px, 6vw, 80px)" }}
+      style={{ height: "clamp(48px, 7vw, 100px)" }}
       aria-hidden="true"
     >
       <path
         d={`
           M0,0 L1440,0
-          L1440,40
-          C1400,42 1380,38 1340,40
-          C1300,46 1280,65 1240,70
-          C1220,74 1210,85 1200,95
-          C1192,104 1188,108 1184,98
-          C1176,80 1160,50 1120,42
-          C1080,34 1040,40 1000,38
-          C960,34 920,45 880,50
-          C840,56 800,42 760,40
-          C720,36 680,48 640,55
-          C600,64 580,75 540,70
-          C500,62 480,40 440,38
-          C400,34 360,50 320,60
-          C300,66 290,80 280,90
-          C272,100 268,108 264,98
-          C256,82 240,50 200,42
-          C160,32 120,40 80,42
-          C40,46 20,40 0,40
+          L1440,30
+          C1400,32 1380,28 1340,30
+          C1300,38 1280,58 1240,62
+          C1220,66 1210,78 1200,88
+          C1192,96 1188,100 1184,90
+          C1176,72 1160,42 1120,34
+          C1080,26 1040,32 1000,30
+          C960,26 920,38 880,42
+          C840,48 800,34 760,32
+          C720,28 680,40 640,48
+          C600,56 580,66 540,62
+          C500,54 480,32 440,30
+          C400,26 360,42 320,52
+          C300,58 290,72 280,82
+          C272,92 268,100 264,90
+          C256,74 240,42 200,34
+          C160,24 120,32 80,34
+          C40,38 20,32 0,32
           Z
         `}
         fill={color}
@@ -105,8 +104,8 @@ export function PaintDripAlt({
 }
 
 /* ───────────────────────────────────────────
-   Brush Stroke Underline — sits under a
-   heading to give a hand-painted feel.
+   Brush Stroke Underline — decorative accent
+   under headings. Visible and bold.
    ─────────────────────────────────────────── */
 export function BrushStroke({
   className = "",
@@ -117,69 +116,70 @@ export function BrushStroke({
 }) {
   return (
     <svg
-      viewBox="0 0 200 12"
+      viewBox="0 0 200 14"
       preserveAspectRatio="none"
-      className={`h-2 w-32 sm:w-40 ${className}`}
+      className={`h-2.5 w-36 sm:w-44 ${className}`}
       aria-hidden="true"
     >
       <path
-        d="M2,8 C20,3 40,6 60,4 C80,2 100,7 120,5 C140,3 160,8 180,4 C190,3 196,6 198,5"
+        d="M3,9 C18,4 38,7 58,5 C78,3 98,8 118,6 C138,4 158,9 178,5 C188,4 194,7 197,6"
         stroke={color}
-        strokeWidth="4"
+        strokeWidth="4.5"
         strokeLinecap="round"
         fill="none"
-        opacity="0.7"
+        opacity="0.8"
       />
     </svg>
   );
 }
 
 /* ───────────────────────────────────────────
-   Paint Splatter — decorative blob for
-   background accents. Position with absolute.
+   Paint Swatch — bold color block accent
+   used as background decoration.
    ─────────────────────────────────────────── */
-export function PaintSplatter({
+export function PaintSwatch({
   className = "",
   color = "currentColor",
-  size = 120,
 }: {
   className?: string;
   color?: string;
-  size?: number;
 }) {
   return (
     <svg
-      viewBox="0 0 200 200"
+      viewBox="0 0 120 120"
       className={className}
-      width={size}
-      height={size}
       aria-hidden="true"
     >
-      <g fill={color}>
-        {/* Main blob */}
-        <ellipse cx="100" cy="100" rx="60" ry="55" opacity="0.12" />
-        {/* Satellite drops */}
-        <circle cx="45" cy="65" r="12" opacity="0.08" />
-        <circle cx="155" cy="70" r="10" opacity="0.10" />
-        <circle cx="60" cy="150" r="8" opacity="0.07" />
-        <circle cx="148" cy="145" r="14" opacity="0.09" />
-        <circle cx="30" cy="110" r="6" opacity="0.06" />
-        <circle cx="170" cy="115" r="7" opacity="0.08" />
-        {/* Tiny flecks */}
-        <circle cx="80" cy="40" r="4" opacity="0.06" />
-        <circle cx="130" cy="35" r="3" opacity="0.05" />
-        <circle cx="75" cy="165" r="5" opacity="0.06" />
-        <circle cx="135" cy="170" r="3" opacity="0.05" />
-      </g>
+      <rect
+        x="8"
+        y="8"
+        width="104"
+        height="104"
+        rx="4"
+        fill={color}
+        opacity="0.08"
+        transform="rotate(3, 60, 60)"
+      />
+      <rect
+        x="12"
+        y="12"
+        width="96"
+        height="96"
+        rx="3"
+        fill={color}
+        opacity="0.05"
+        transform="rotate(-2, 60, 60)"
+      />
     </svg>
   );
 }
 
 /* ───────────────────────────────────────────
-   Paint Roller Stripe — a horizontal stripe
-   with rough edges, like a roller pass.
+   Roller Edge — rough horizontal edge like
+   a paint roller pass. Used as a subtle
+   section top/bottom accent.
    ─────────────────────────────────────────── */
-export function RollerStripe({
+export function RollerEdge({
   className = "",
   color = "currentColor",
 }: {
@@ -188,18 +188,18 @@ export function RollerStripe({
 }) {
   return (
     <svg
-      viewBox="0 0 400 20"
+      viewBox="0 0 400 8"
       preserveAspectRatio="none"
-      className={`h-3 w-full ${className}`}
+      className={`h-1.5 w-full ${className}`}
       aria-hidden="true"
     >
       <path
-        d="M0,10 C10,6 20,12 40,8 C60,4 80,14 100,10 C120,6 140,13 160,9 C180,5 200,12 220,10 C240,7 260,14 280,9 C300,4 320,13 340,10 C360,7 380,11 400,10"
+        d="M0,4 C10,2 20,6 40,3 C60,1 80,6 100,4 C120,2 140,5 160,3 C180,1 200,6 220,4 C240,2 260,5 280,3 C300,1 320,6 340,4 C360,2 380,5 400,4"
         stroke={color}
-        strokeWidth="8"
+        strokeWidth="2"
         strokeLinecap="round"
         fill="none"
-        opacity="0.15"
+        opacity="0.25"
       />
     </svg>
   );
