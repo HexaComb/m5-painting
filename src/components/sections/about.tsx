@@ -51,7 +51,7 @@ export function About() {
           <div className="space-y-8">
             <div>
               <p className="text-sm font-semibold uppercase tracking-widest text-primary">
-                The Family Behind the Brushes
+                The Family Behind Every Coat
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
                 Built on Hard Work &amp; Handshakes
