@@ -26,7 +26,7 @@ export function Footer() {
                 className="h-10 w-auto brightness-0 invert"
               />
               <div>
-                <p className="text-base font-bold">M5 Painting</p>
+                <p className="text-base font-bold font-heading">M5 Painting</p>
                 <p className="text-xs text-background/60">
                   Family-Owned Since Day One
                 </p>

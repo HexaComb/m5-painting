@@ -28,7 +28,7 @@ export function Header() {
             className="h-10 w-auto sm:h-12"
             priority
           />
-          <span className="hidden text-lg font-bold tracking-tight text-foreground sm:inline-block">
+          <span className="hidden text-lg font-bold tracking-tight text-foreground font-heading sm:inline-block">
             M5 Painting
           </span>
         </a>
