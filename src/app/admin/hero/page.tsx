@@ -157,7 +157,7 @@ export default function HeroPage() {
                 onChange={(e) =>
                   setForm((f) => ({ ...f, ctaPhone: e.target.value }))
                 }
-                placeholder="(555) 000-0000"
+                placeholder="559-451-1022"
               />
             </div>
           </div>

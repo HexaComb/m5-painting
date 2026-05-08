@@ -4,26 +4,26 @@ import { Reveal } from "@/components/ui/reveal";
 
 const reviews = [
   {
-    text: "Great to work with. Very happy with the job M5 and their crew did on the exterior of our home. It was a big project. I would recommend them to have a job done right.",
-    author: "K.B.",
+    text: "Great to work with. Very happy with the job Matt and his crew did on the exterior of our home. It was a big project. I would recommend them to have a job done right.",
+    author: "Kara B.",
     date: "June 2025",
     source: "Yelp",
   },
   {
-    text: "The M5 painting team were amazing. Signed, Sealed and Delivered. Finished the inside of my rental home in one day! On time and very professional. I would recommend M5 to anyone.",
-    author: "N.C.",
+    text: "Matt and his M5 painting team were amazing. Signed, Sealed and Delivered. Finished the inside of my rental home in one day! On time and very professional. I would recommend M5 to anyone.",
+    author: "Nick C.",
     date: "June 2025",
     source: "Yelp",
   },
   {
     text: "I highly recommend M5 Painting for any exterior paint work! They did an outstanding job on my home. From the stucco to the trim, everything looks fresh, clean, and professionally done. They helped me choose the perfect color for the stucco, and their attention to detail on the trimming made a huge difference.",
-    author: "K.P.",
+    author: "Krystle P.",
     date: "June 2025",
     source: "Angi",
   },
   {
-    text: "The M5 crew did an amazing job of meeting all our needs and expectations! The time and quality of work was outstanding. Would highly recommend!",
-    author: "V.F.",
+    text: "Matt and his crew did an amazing job of meeting all our needs and expectations! The time and quality of work was outstanding. Would highly recommend!",
+    author: "Victoria F.",
     date: "June 2025",
     source: "Angi",
   },

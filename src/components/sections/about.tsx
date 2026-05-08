@@ -42,7 +42,7 @@ export function About() {
                 <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl shadow-primary/10">
                   <Image
                     src="/images/team-collage.webp"
-                    alt="The M5 Painting crew on a job site"
+                    alt="Matt and the M5 Painting crew on a job site"
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 90vw, 40vw"
@@ -80,7 +80,7 @@ export function About() {
                   around here, they usually are.
                 </p>
                 <p className="text-body-lg text-muted-foreground">
-                  Our crew brings that same small-town work ethic to
+                  Matt and the crew bring that same small-town work ethic to
                   every project. We show up on time, do quality work, and
                   don&apos;t leave until you love it. That&apos;s not a sales
                   pitch; it&apos;s just how we were raised.
