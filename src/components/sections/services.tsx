@@ -87,31 +87,31 @@ export function Services() {
 
         {/* Services — alternating layout, not uniform cards */}
         <div className="space-y-6">
-          {/* Top row: two wide services */}
+          {/* Top row: two wide services — blue cards matching commercial */}
           <div className="grid gap-6 lg:grid-cols-2">
             {services.slice(0, 2).map((service, idx) => {
               const Icon = service.icon;
               return (
                 <Reveal key={service.title} delay={idx + 1}>
-                  <div className="group relative rounded-2xl bg-muted/60 p-7 transition-colors hover:bg-muted sm:p-8">
+                  <div className="group relative rounded-2xl bg-primary p-7 text-primary-foreground transition-colors hover:bg-primary/90 sm:p-8">
                     <div className="mb-5 flex items-center gap-3">
-                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                      <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15">
                         <Icon className="h-5 w-5" />
                       </div>
-                      <h3 className="text-title font-bold text-foreground">
+                      <h3 className="text-title font-bold">
                         {service.title}
                       </h3>
                     </div>
-                    <p className="mb-6 max-w-lg text-[0.95rem] leading-relaxed text-muted-foreground">
+                    <p className="mb-6 max-w-lg text-[0.95rem] leading-relaxed text-primary-foreground/80">
                       {service.description}
                     </p>
                     <div className="grid grid-cols-2 gap-x-6 gap-y-2">
                       {service.items.map((item) => (
                         <p
                           key={item}
-                          className="flex items-center gap-2 text-sm text-foreground/80"
+                          className="flex items-center gap-2 text-sm text-primary-foreground/85"
                         >
-                          <span className="h-1 w-1 shrink-0 rounded-full bg-primary" />
+                          <span className="h-1 w-1 shrink-0 rounded-full bg-white/60" />
                           {item}
                         </p>
                       ))}
@@ -152,12 +152,12 @@ export function Services() {
               </div>
             </Reveal>
 
-            {/* Free Consultation — takes 2 columns, different feel */}
+            {/* Free Consultation — takes 2 columns, lighter blue accent */}
             <Reveal delay={2} className="lg:col-span-2">
-              <div className="group relative flex h-full flex-col justify-between rounded-2xl border-2 border-primary/15 p-7 sm:p-8">
+              <div className="group relative flex h-full flex-col justify-between rounded-2xl border-2 border-primary/25 bg-primary/5 p-7 sm:p-8">
                 <div>
                   <div className="mb-5 flex items-center gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                       <MessageSquare className="h-5 w-5" />
                     </div>
                     <h3 className="text-title font-bold text-foreground">

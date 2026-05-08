@@ -58,8 +58,8 @@ export default function ContactPage() {
         <CardHeader><CardTitle>Contact Details</CardTitle><CardDescription>Phone, email, and location shown on the website</CardDescription></CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2"><Label>Phone Number</Label><Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="559-451-1022" /></div>
-            <div className="space-y-2"><Label>Email</Label><Input value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="m5paintingco@gmail.com" /></div>
+            <div className="space-y-2"><Label>Phone Number</Label><Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="(555) 000-0000" /></div>
+            <div className="space-y-2"><Label>Email</Label><Input value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="info@example.com" /></div>
           </div>
           <div className="space-y-2"><Label>Location</Label><Input value={form.location} onChange={(e) => setForm((f) => ({ ...f, location: e.target.value }))} placeholder="Sanger, CA · Central Valley" /></div>
           <div className="flex justify-end pt-2">
