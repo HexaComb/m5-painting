@@ -13,41 +13,37 @@ export default function Home() {
     <>
       <Header />
       <main>
+        {/* Hero: bold blue section */}
         <Hero />
 
-        {/* Hero → Services: white paint drips down onto the muted section */}
-        <div className="bg-muted/50">
-          <PaintDrip color="var(--background)" className="-mb-px" />
+        {/* Hero → Services: blue drips into white */}
+        <div className="bg-background">
+          <PaintDrip color="var(--primary)" className="-mb-px" />
         </div>
 
+        {/* Services: white background */}
         <Services />
 
-        {/* Services → Projects: muted paint drips down onto white */}
-        <div className="bg-background">
-          <PaintDripAlt color="var(--muted)" className="-mb-px opacity-50" />
-        </div>
-
+        {/* Projects: subtle muted bg */}
         <Projects />
 
-        {/* Projects → About: white paint drips down onto muted */}
-        <div className="bg-muted/50">
-          <PaintDrip color="var(--background)" className="-mb-px" />
-        </div>
-
+        {/* About: white background */}
         <About />
 
-        {/* About → Reviews: muted drips onto white */}
-        <div className="bg-background">
-          <PaintDripAlt color="var(--muted)" className="-mb-px opacity-50" />
+        {/* About → Reviews: white drips into blue */}
+        <div className="bg-primary">
+          <PaintDripAlt color="var(--background)" className="-mb-px" />
         </div>
 
+        {/* Reviews: blue section */}
         <Reviews />
 
-        {/* Reviews → Contact: white paint drips down onto primary */}
-        <div className="bg-primary">
-          <PaintDrip color="var(--background)" className="-mb-px" />
+        {/* Reviews → Contact: blue drips into white */}
+        <div className="bg-background">
+          <PaintDrip color="var(--primary)" className="-mb-px" />
         </div>
 
+        {/* Contact: white background */}
         <Contact />
       </main>
       <Footer />
