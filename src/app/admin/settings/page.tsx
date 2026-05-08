@@ -53,8 +53,8 @@ export default function SettingsPage() {
             <div className="space-y-2"><Label>Tagline</Label><Input value={form.tagline} onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))} placeholder="Family-Owned Since Day One" /></div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2"><Label>Phone</Label><Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="559-451-1022" /></div>
-            <div className="space-y-2"><Label>Email</Label><Input value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="m5paintingco@gmail.com" /></div>
+            <div className="space-y-2"><Label>Phone</Label><Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="(555) 000-0000" /></div>
+            <div className="space-y-2"><Label>Email</Label><Input value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="info@example.com" /></div>
           </div>
           <div className="space-y-2"><Label>Address / Location</Label><Input value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} placeholder="Sanger, CA · Central Valley" /></div>
           <div className="space-y-2">

@@ -65,14 +65,14 @@ export function Hero() {
                     Get a Free Estimate
                   </Button>
                 </a>
-                <a href="tel:5594511022">
+                <a href="#contact">
                   <Button
                     variant="outline"
                     size="lg"
                     className="h-auto border-white/25 bg-transparent px-6 py-3.5 text-base font-semibold text-primary-foreground hover:bg-white/10"
                   >
                     <Phone className="mr-2 h-4 w-4" />
-                    559-451-1022
+                    Call Us Today
                   </Button>
                 </a>
               </div>
