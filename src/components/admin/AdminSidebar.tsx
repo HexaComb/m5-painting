@@ -12,6 +12,7 @@ import {
   Settings,
   Sparkles,
   Star,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -46,6 +47,7 @@ const contentNav = [
 
 const systemNav = [
   { href: "/admin/settings", label: "Site Settings", icon: Settings },
+  { href: "/admin/users", label: "Users", icon: Users },
 ];
 
 function NavLink({

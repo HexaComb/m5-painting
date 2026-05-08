@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/core": "^0.34.3",
+    "@auth/core": "0.37.4",
     "@base-ui/react": "^1.4.1",
     "@convex-dev/auth": "^0.0.92",
     "@tailwindcss/postcss": "^4.2.4",
