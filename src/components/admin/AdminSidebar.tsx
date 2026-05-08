@@ -3,6 +3,7 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import {
+  Activity,
   FolderOpen,
   Info,
   LayoutDashboard,
@@ -12,6 +13,7 @@ import {
   Settings,
   Sparkles,
   Star,
+  Users,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -44,8 +46,13 @@ const contentNav = [
   { href: "/admin/contact", label: "Contact", icon: Phone },
 ];
 
+const analyticsNav = [
+  { href: "/admin/events", label: "Event Tracking", icon: Activity },
+];
+
 const systemNav = [
   { href: "/admin/settings", label: "Site Settings", icon: Settings },
+  { href: "/admin/users", label: "Users", icon: Users },
 ];
 
 function NavLink({
@@ -100,6 +107,23 @@ function SidebarNav() {
         <SidebarGroupContent>
           <SidebarMenu>
             {contentNav.map((item) => (
+              <NavLink
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                icon={item.icon}
+                isActive={pathname === item.href}
+              />
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <SidebarGroup>
+        <SidebarGroupLabel>Analytics</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {analyticsNav.map((item) => (
               <NavLink
                 key={item.href}
                 href={item.href}

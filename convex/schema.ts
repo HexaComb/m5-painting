@@ -76,6 +76,19 @@ const schema = defineSchema({
     email: v.string(),
     location: v.string(),
   }),
+
+  // Event tracking configurations
+  trackingEvents: defineTable({
+    name: v.string(), // e.g. "hero_estimate_click"
+    category: v.string(), // e.g. "engagement", "conversion", "navigation"
+    label: v.string(), // human-readable label shown in CMS
+    targetElement: v.string(), // data-track ID, e.g. "hero-estimate"
+    trigger: v.union(
+      v.literal("click"),
+      v.literal("form_submit"),
+    ),
+    enabled: v.boolean(),
+  }).index("by_enabled", ["enabled"]),
 });
 
 export default schema;

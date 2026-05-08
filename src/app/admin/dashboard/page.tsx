@@ -11,6 +11,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Activity,
   Paintbrush,
   Star,
   FolderOpen,
@@ -66,6 +67,13 @@ const sections = [
     icon: Phone,
     href: "/admin/contact",
     color: "bg-cyan-500/10 text-cyan-600",
+  },
+  {
+    title: "Event Tracking",
+    description: "Custom analytics events for buttons",
+    icon: Activity,
+    href: "/admin/events",
+    color: "bg-indigo-500/10 text-indigo-600",
   },
   {
     title: "Site Settings",
