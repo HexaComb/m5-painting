@@ -57,7 +57,7 @@ export function Hero() {
 
             <Reveal delay={3}>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <a href="#contact">
+                <a href="#contact" data-track="hero-estimate">
                   <Button
                     size="lg"
                     className="h-auto bg-white px-7 py-3.5 text-base font-semibold text-primary shadow-lg shadow-black/10 hover:bg-white/95"
@@ -65,7 +65,7 @@ export function Hero() {
                     Get a Free Estimate
                   </Button>
                 </a>
-                <a href="tel:5594511022">
+                <a href="tel:5594511022" data-track="hero-phone">
                   <Button
                     variant="outline"
                     size="lg"

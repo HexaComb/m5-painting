@@ -80,7 +80,7 @@ export function Contact() {
           <div className="lg:col-span-7">
             <Reveal delay={1}>
               <div className="rounded-2xl bg-muted/60 p-6 sm:p-8">
-                <form
+                <form data-track="contact-submit"
                   className="space-y-5"
                   onSubmit={(e) => {
                     e.preventDefault();

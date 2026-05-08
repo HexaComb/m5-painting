@@ -104,7 +104,7 @@ export function Projects() {
 
         <Reveal>
           <div className="mt-10 text-center">
-            <a href="#contact">
+            <a href="#contact" data-track="projects-estimate">
               <Button
                 variant="outline"
                 size="lg"

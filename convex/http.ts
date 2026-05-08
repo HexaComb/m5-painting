@@ -71,4 +71,48 @@ http.route({
   }),
 });
 
+// ─── Public API: Active tracking events ────────────────────────────────
+http.route({
+  path: "/api/events",
+  method: "GET",
+  handler: httpAction(async (ctx) => {
+    const events = await ctx.runQuery(api.trackingEvents.getActive);
+
+    return new Response(
+      JSON.stringify({
+        events: events.map((e: { name: string; category: string; label: string; targetElement: string; trigger: string }) => ({
+          name: e.name,
+          category: e.category,
+          label: e.label,
+          targetElement: e.targetElement,
+          trigger: e.trigger,
+        })),
+      }),
+      {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          "Cache-Control": "public, max-age=60, stale-while-revalidate=300",
+        },
+      },
+    );
+  }),
+});
+
+http.route({
+  path: "/api/events",
+  method: "OPTIONS",
+  handler: httpAction(async () => {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }),
+});
+
 export default http;

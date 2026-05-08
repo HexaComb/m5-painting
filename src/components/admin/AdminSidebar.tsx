@@ -3,6 +3,7 @@
 import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import {
+  Activity,
   FolderOpen,
   Info,
   LayoutDashboard,
@@ -43,6 +44,10 @@ const contentNav = [
   { href: "/admin/about", label: "About", icon: Info },
   { href: "/admin/reviews", label: "Reviews", icon: Star },
   { href: "/admin/contact", label: "Contact", icon: Phone },
+];
+
+const analyticsNav = [
+  { href: "/admin/events", label: "Event Tracking", icon: Activity },
 ];
 
 const systemNav = [
@@ -102,6 +107,23 @@ function SidebarNav() {
         <SidebarGroupContent>
           <SidebarMenu>
             {contentNav.map((item) => (
+              <NavLink
+                key={item.href}
+                href={item.href}
+                label={item.label}
+                icon={item.icon}
+                isActive={pathname === item.href}
+              />
+            ))}
+          </SidebarMenu>
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <SidebarGroup>
+        <SidebarGroupLabel>Analytics</SidebarGroupLabel>
+        <SidebarGroupContent>
+          <SidebarMenu>
+            {analyticsNav.map((item) => (
               <NavLink
                 key={item.href}
                 href={item.href}

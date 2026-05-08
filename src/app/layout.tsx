@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Lora, Lato } from "next/font/google";
+import { Tracker } from "@/components/Tracker";
 import "./globals.css";
 
 const lora = Lora({
@@ -19,7 +20,7 @@ const lato = Lato({
 export const metadata: Metadata = {
   title: "M5 Painting | Residential & Commercial Painting in Central Valley, CA",
   description:
-    "M5 Painting is a family-owned painting business in Central Valley, California. Expert residential and commercial painting services — interior, exterior, and more. Call 559-451-1022 for a free estimate.",
+    "M5 Painting is a family-owned painting business in Central Valley, California. Expert residential and commercial painting services — interior, exterior, and more. Contact us for a free estimate.",
   keywords: [
     "painting",
     "residential painting",
@@ -51,6 +52,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${lora.variable} ${lato.variable} font-sans antialiased`}>
         {children}
+        <Tracker />
       </body>
     </html>
   );
