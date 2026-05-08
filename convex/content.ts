@@ -478,8 +478,8 @@ export const seed = internalMutation({
     await ctx.db.insert("siteSettings", {
       businessName: "M5 Painting",
       tagline: "Family-Owned Since Day One",
-      phone: "(555) 000-0000",
-      email: "info@m5painting.com",
+      phone: "559-451-1022",
+      email: "m5paintingco@gmail.com",
       address: "Sanger, CA · Central Valley",
       metaDescription:
         "M5 Painting — family-owned painting contractor in the Central Valley, California. Interior, exterior, and commercial painting services.",
@@ -493,7 +493,7 @@ export const seed = internalMutation({
       bodyText:
         "We're a family-run crew right here in the Valley. From the first walkthrough to the final coat, we treat your home like it's our own.",
       ctaText: "Get a Free Estimate",
-      ctaPhone: "(555) 000-0000",
+      ctaPhone: "559-451-1022",
     });
 
     // Services
@@ -619,7 +619,7 @@ export const seed = internalMutation({
       title: "Built on Hard Work & Handshakes",
       paragraphs: [
         "M5 Painting started the way most good things do: a family that knows how to work hard. We grew up right here in the Central Valley, and when we started this business, we made a simple promise: treat every customer like a neighbor, because around here, they usually are.",
-        "Our crew brings that same small-town work ethic to every project. We show up on time, do quality work, and don't leave until you love it. That's not a sales pitch; it's just how we were raised.",
+        "Matt and the crew bring that same small-town work ethic to every project. We show up on time, do quality work, and don't leave until you love it. That's not a sales pitch; it's just how we were raised.",
       ],
     });
 
@@ -662,14 +662,14 @@ export const seed = internalMutation({
     const reviewsData = [
       {
         order: 1,
-        text: "Great to work with. Very happy with the job The M5 crew did on the exterior of our home. It was a big project. I would recommend them to have a job done right.",
+        text: "Great to work with. Very happy with the job Matt and his crew did on the exterior of our home. It was a big project. I would recommend them to have a job done right.",
         author: "Kara B.",
         date: "June 2025",
         source: "Yelp",
       },
       {
         order: 2,
-        text: "The M5 painting team were amazing. Signed, Sealed and Delivered. Finished the inside of my rental home in one day! On time and very professional. I would recommend M5 to anyone.",
+        text: "Matt and his M5 painting team were amazing. Signed, Sealed and Delivered. Finished the inside of my rental home in one day! On time and very professional. I would recommend M5 to anyone.",
         author: "Nick C.",
         date: "June 2025",
         source: "Yelp",
@@ -683,7 +683,7 @@ export const seed = internalMutation({
       },
       {
         order: 4,
-        text: "The M5 crew did an amazing job of meeting all our needs and expectations! The time and quality of work was outstanding. Would highly recommend!",
+        text: "Matt and his crew did an amazing job of meeting all our needs and expectations! The time and quality of work was outstanding. Would highly recommend!",
         author: "Victoria F.",
         date: "June 2025",
         source: "Angi",
@@ -699,8 +699,8 @@ export const seed = internalMutation({
       title: "Ready to Get Started?",
       description:
         "Drop us a message or give us a call. We'll come out, take a look, and give you an honest, no-pressure quote.",
-      phone: "(555) 000-0000",
-      email: "info@m5painting.com",
+      phone: "559-451-1022",
+      email: "m5paintingco@gmail.com",
       location: "Sanger, CA · Central Valley",
     });
 

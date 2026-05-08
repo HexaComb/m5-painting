@@ -61,10 +61,10 @@ export function Header() {
 
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-2">
-          <a href="#contact" className="hidden lg:inline-flex">
+          <a href="tel:5594511022" className="hidden lg:inline-flex">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <Phone className="mr-1.5 h-3.5 w-3.5" />
-              Call Us
+              559-451-1022
             </Button>
           </a>
           <a href="#contact">
@@ -101,11 +101,11 @@ export function Header() {
               </a>
             ))}
             <a
-              href="#contact"
+              href="tel:5594511022"
               className="mt-2 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-primary"
             >
               <Phone className="h-4 w-4" />
-              Call Us
+              559-451-1022
             </a>
           </nav>
         </div>

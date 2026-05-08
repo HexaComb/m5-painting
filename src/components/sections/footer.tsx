@@ -61,14 +61,20 @@ export function Footer() {
               Get in Touch
             </h4>
             <div className="space-y-3">
-              <div className="flex items-center gap-2.5 text-sm text-primary-foreground/60">
+              <a
+                href="tel:5594511022"
+                className="flex items-center gap-2.5 text-sm text-primary-foreground/60 transition-colors hover:text-primary-foreground"
+              >
                 <Phone className="h-4 w-4 shrink-0" />
-                Phone coming soon
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-primary-foreground/60">
+                559-451-1022
+              </a>
+              <a
+                href="mailto:m5paintingco@gmail.com"
+                className="flex items-center gap-2.5 text-sm text-primary-foreground/60 transition-colors hover:text-primary-foreground"
+              >
                 <Mail className="h-4 w-4 shrink-0" />
-                Email coming soon
-              </div>
+                m5paintingco@gmail.com
+              </a>
               <div className="flex items-center gap-2.5 text-sm text-primary-foreground/60">
                 <MapPin className="h-4 w-4 shrink-0" />
                 Sanger, CA · Central Valley

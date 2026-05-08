@@ -31,7 +31,10 @@ export function Contact() {
                 </div>
 
                 <div className="space-y-4 pt-2">
-                  <div className="flex items-center gap-3 text-foreground/80">
+                  <a
+                    href="tel:5594511022"
+                    className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
+                  >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
                       <Phone className="h-5 w-5" />
                     </div>
@@ -39,9 +42,9 @@ export function Contact() {
                       <p className="text-xs font-medium text-muted-foreground">
                         Give us a call
                       </p>
-                      <p className="text-sm font-bold">Phone number coming soon</p>
+                      <p className="text-sm font-bold">559-451-1022</p>
                     </div>
-                  </div>
+                  </a>
                   <div className="flex items-center gap-3 text-foreground/80">
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                       <MapPin className="h-5 w-5" />
@@ -64,7 +67,7 @@ export function Contact() {
                         Email us
                       </p>
                       <p className="text-sm font-bold">
-                        Email coming soon
+                        m5paintingco@gmail.com
                       </p>
                     </div>
                   </div>
