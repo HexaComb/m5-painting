@@ -44,10 +44,14 @@ export function Contact() {
       });
 
       // Submit to Netlify
+      const netlifyParams: Record<string, string> = {};
+      formData.forEach((value, key) => {
+        if (typeof value === "string") netlifyParams[key] = value;
+      });
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString(),
+        body: new URLSearchParams(netlifyParams).toString(),
       });
 
       setSubmitted(true);
