@@ -23,7 +23,8 @@ export function Contact() {
     e.preventDefault();
     if (submitting || submitted) return;
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
     const interest = formData.get("interest") as string;
 
     if (!interest) {
@@ -33,6 +34,7 @@ export function Contact() {
 
     setSubmitting(true);
     try {
+      // Submit to Convex
       await submitLead({
         name: formData.get("name") as string,
         phone: formData.get("phone") as string || undefined,
@@ -40,9 +42,17 @@ export function Contact() {
         interest,
         message: formData.get("message") as string,
       });
+
+      // Submit to Netlify
+      await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as any).toString(),
+      });
+
       setSubmitted(true);
       toast.success("Message sent! We'll be in touch soon.");
-      e.currentTarget.reset();
+      form.reset();
     } catch {
       toast.error("Something went wrong. Please try again.");
     } finally {
@@ -144,6 +154,8 @@ export function Contact() {
                 ) : (
                   <form
                     data-track="contact-submit"
+                    data-netlify="true"
+                    name="contact"
                     className="space-y-5"
                     onSubmit={handleSubmit}
                   >
