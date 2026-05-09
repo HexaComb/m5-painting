@@ -9,6 +9,7 @@ import {
   Info,
   LayoutDashboard,
   LogOut,
+  Mail,
   Paintbrush,
   Phone,
   Settings,
@@ -48,6 +49,7 @@ const contentNav = [
 ];
 
 const analyticsNav = [
+  { href: "/admin/leads", label: "Leads", icon: Mail },
   { href: "/admin/events", label: "Event Tracking", icon: Activity },
   { href: "/admin/analytics", label: "Analytics Dashboard", icon: BarChart3 },
 ];

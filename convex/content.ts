@@ -463,6 +463,73 @@ export const updateContactContent = mutation({
 });
 
 // ═══════════════════════════════════════════════════════════════════════
+// LEADS
+// ═══════════════════════════════════════════════════════════════════════
+
+export const submitLead = mutation({
+  args: {
+    name: v.string(),
+    phone: v.optional(v.string()),
+    email: v.string(),
+    interest: v.string(),
+    message: v.string(),
+  },
+  returns: v.id("leads"),
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("leads", {
+      ...args,
+      createdAt: Date.now(),
+      read: false,
+    });
+  },
+});
+
+export const getLeads = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id("leads"),
+      _creationTime: v.number(),
+      name: v.string(),
+      phone: v.optional(v.string()),
+      email: v.string(),
+      interest: v.string(),
+      message: v.string(),
+      createdAt: v.number(),
+      read: v.boolean(),
+    }),
+  ),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    return await ctx.db
+      .query("leads")
+      .withIndex("by_createdAt")
+      .order("desc")
+      .collect();
+  },
+});
+
+export const markLeadAsRead = mutation({
+  args: { id: v.id("leads") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    await ctx.db.patch(id, { read: true });
+    return null;
+  },
+});
+
+export const deleteLead = mutation({
+  args: { id: v.id("leads") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    await ctx.db.delete(id);
+    return null;
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════════════
 // SEED — populate DB with current website content
 // ═══════════════════════════════════════════════════════════════════════
 

@@ -1,17 +1,55 @@
 "use client";
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
-import { Phone, Mail, MapPin } from "lucide-react";
-import { useQuery } from "convex/react";
+import { Phone, Mail, MapPin, Loader2 } from "lucide-react";
+import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { toast } from "sonner";
 
 export function Contact() {
   const contact = useQuery(api.content.getContactContent);
+  const submitLead = useMutation(api.content.submitLead);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
   if (!contact) return null;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (submitting || submitted) return;
+
+    const formData = new FormData(e.currentTarget);
+    const interest = formData.get("interest") as string;
+
+    if (!interest) {
+      toast.error("Please select what you're looking for");
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await submitLead({
+        name: formData.get("name") as string,
+        phone: formData.get("phone") as string || undefined,
+        email: formData.get("email") as string,
+        interest,
+        message: formData.get("message") as string,
+      });
+      setSubmitted(true);
+      toast.success("Message sent! We'll be in touch soon.");
+      e.currentTarget.reset();
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <section id="contact" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
@@ -86,13 +124,29 @@ export function Contact() {
           <div className="lg:col-span-7">
             <Reveal delay={1}>
               <div className="rounded-2xl bg-muted/60 p-6 sm:p-8">
-                <form data-track="contact-submit"
-                  className="space-y-5"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    // TODO: wire up form submission
-                  }}
-                >
+                {submitted ? (
+                  <div className="py-12 text-center">
+                    <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
+                      <Mail className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-foreground">Message Sent!</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Thanks for reaching out. We'll get back to you soon.
+                    </p>
+                    <Button
+                      variant="outline"
+                      className="mt-6"
+                      onClick={() => setSubmitted(false)}
+                    >
+                      Send Another Message
+                    </Button>
+                  </div>
+                ) : (
+                  <form
+                    data-track="contact-submit"
+                    className="space-y-5"
+                    onSubmit={handleSubmit}
+                  >
                   <div className="grid gap-5 sm:grid-cols-2">
                     <div className="space-y-2">
                       <label
@@ -185,11 +239,16 @@ export function Contact() {
                   <Button
                     type="submit"
                     size="lg"
+                    disabled={submitting}
                     className="h-auto w-full px-6 py-3.5 text-base font-semibold shadow-lg shadow-primary/20"
                   >
-                    Send It Over
+                    {submitting && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {submitting ? "Sending..." : "Send It Over"}
                   </Button>
                 </form>
+                )}
               </div>
             </Reveal>
           </div>

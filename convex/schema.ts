@@ -77,6 +77,17 @@ const schema = defineSchema({
     location: v.string(),
   }),
 
+  // Contact form submissions / leads
+  leads: defineTable({
+    name: v.string(),
+    phone: v.optional(v.string()),
+    email: v.string(),
+    interest: v.string(),
+    message: v.string(),
+    createdAt: v.number(),
+    read: v.boolean(),
+  }).index("by_createdAt", ["createdAt"]),
+
   // Event tracking configurations
   trackingEvents: defineTable({
     name: v.string(), // e.g. "hero_estimate_click"
