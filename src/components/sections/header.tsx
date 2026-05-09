@@ -46,7 +46,11 @@ export function Header() {
             className="h-9 w-auto sm:h-11"
             priority
           />
-          <span className="hidden text-lg font-bold tracking-tight text-foreground font-heading sm:inline-block">
+          <span
+            className={`hidden text-lg font-bold tracking-tight font-heading sm:inline-block transition-colors duration-300 ${
+              scrolled ? "text-foreground" : "text-white"
+            }`}
+          >
             {settings.businessName}
           </span>
         </a>
@@ -58,7 +62,11 @@ export function Header() {
               key={link.href}
               href={link.href}
               data-track={link.track}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className={`rounded-md px-3 py-2 text-sm font-medium transition-colors duration-300 ${
+                scrolled
+                  ? "text-muted-foreground hover:text-foreground"
+                  : "text-white/80 hover:text-white"
+              }`}
             >
               {link.label}
             </a>
@@ -68,7 +76,15 @@ export function Header() {
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-2">
           <a href={`tel:${settings.phone.replace(/\D/g, "")}`} data-track="header-phone" className="hidden lg:inline-flex">
-            <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
+            <Button
+              variant="ghost"
+              size="sm"
+              className={`transition-colors duration-300 ${
+                scrolled
+                  ? "text-muted-foreground hover:text-foreground"
+                  : "text-white/80 hover:text-white hover:bg-white/10"
+              }`}
+            >
               <Phone className="mr-1.5 h-3.5 w-3.5" />
               {settings.phone}
             </Button>
@@ -80,7 +96,11 @@ export function Header() {
           </a>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:text-foreground md:hidden"
+            className={`ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md md:hidden transition-colors duration-300 ${
+              scrolled
+                ? "text-muted-foreground hover:text-foreground"
+                : "text-white/80 hover:text-white"
+            }`}
             aria-label="Toggle menu"
           >
             {mobileOpen ? (
