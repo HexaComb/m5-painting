@@ -5,6 +5,7 @@ import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Review } from "@/lib/content-types";
 
 function StarRow() {
   return (
@@ -19,8 +20,9 @@ function StarRow() {
   );
 }
 
-export function Reviews() {
-  const reviews = useQuery(api.content.getReviews);
+export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }) {
+  const queryReviews = useQuery(api.content.getReviews);
+  const reviews = queryReviews === undefined ? initialReviews : queryReviews;
   if (!reviews) return null;
   return (
     <section id="reviews" className="relative bg-primary py-20 sm:py-28">

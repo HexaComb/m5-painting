@@ -6,9 +6,11 @@ import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Project } from "@/lib/content-types";
 
-export function Projects() {
-  const projects = useQuery(api.content.getProjects);
+export function Projects({ initialProjects }: { initialProjects?: Project[] | null }) {
+  const queryProjects = useQuery(api.content.getProjects);
+  const projects = queryProjects === undefined ? initialProjects : queryProjects;
   if (!projects) return null;
   return (
     <section id="projects" className="relative bg-muted/40 py-20 sm:py-28">

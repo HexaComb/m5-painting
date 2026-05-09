@@ -7,14 +7,43 @@ import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
 import { PaintDrip, PaintDripAlt } from "@/components/ui/paint-decorations";
+import type { SiteContent } from "@/lib/content-types";
 
-export default function Home() {
+async function fetchSiteContent(): Promise<SiteContent | null> {
+  // Prefer the explicit site URL if available (covers local dev)
+  const siteUrl =
+    process.env.NEXT_PUBLIC_CONVEX_SITE_URL ??
+    process.env.NEXT_PUBLIC_CONVEX_URL?.replace(".convex.cloud", ".convex.site");
+
+  if (!siteUrl) return null;
+
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+  try {
+    const res = await fetch(`${siteUrl}/api/content`, {
+      signal: controller.signal,
+      cache: "no-store",
+    });
+    clearTimeout(timeoutId);
+
+    if (!res.ok) return null;
+    return (await res.json()) as SiteContent;
+  } catch {
+    clearTimeout(timeoutId);
+    return null;
+  }
+}
+
+export default async function Home() {
+  const content = await fetchSiteContent();
+
   return (
     <>
-      <Header />
+      <Header initialSettings={content?.siteSettings ?? null} />
       <main>
         {/* Hero: bold blue section */}
-        <Hero />
+        <Hero initialHero={content?.heroContent ?? null} />
 
         {/* Hero → Services: blue drips into white */}
         <div className="bg-background">
@@ -22,13 +51,16 @@ export default function Home() {
         </div>
 
         {/* Services: white background */}
-        <Services />
+        <Services initialServices={content?.services ?? null} />
 
         {/* Projects: subtle muted bg */}
-        <Projects />
+        <Projects initialProjects={content?.projects ?? null} />
 
         {/* About: white background */}
-        <About />
+        <About
+          initialAbout={content?.aboutContent ?? null}
+          initialValues={content?.aboutValues ?? null}
+        />
 
         {/* About → Reviews: white drips into blue */}
         <div className="bg-primary">
@@ -36,7 +68,7 @@ export default function Home() {
         </div>
 
         {/* Reviews: blue section */}
-        <Reviews />
+        <Reviews initialReviews={content?.reviews ?? null} />
 
         {/* Reviews → Contact: blue drips into white */}
         <div className="bg-background">
@@ -44,9 +76,12 @@ export default function Home() {
         </div>
 
         {/* Contact: white background */}
-        <Contact />
+        <Contact initialContact={content?.contactContent ?? null} />
       </main>
-      <Footer />
+      <Footer
+        initialSettings={content?.siteSettings ?? null}
+        initialContact={content?.contactContent ?? null}
+      />
     </>
   );
 }

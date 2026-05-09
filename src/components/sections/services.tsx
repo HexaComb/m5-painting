@@ -10,6 +10,7 @@ import { Reveal } from "@/components/ui/reveal";
 import { BrushStroke } from "@/components/ui/paint-decorations";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { Service } from "@/lib/content-types";
 
 const iconMap = {
   Home,
@@ -20,8 +21,9 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
-export function Services() {
-  const services = useQuery(api.content.getServices);
+export function Services({ initialServices }: { initialServices?: Service[] | null }) {
+  const queryServices = useQuery(api.content.getServices);
+  const services = queryServices === undefined ? initialServices : queryServices;
   return (
     <section id="services" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">

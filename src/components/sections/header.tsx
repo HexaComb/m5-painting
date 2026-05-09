@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Phone, Menu, X } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { SiteSettings } from "@/lib/content-types";
 
 const navLinks = [
   { label: "Services", href: "#services", track: "nav-services" },
@@ -14,10 +15,11 @@ const navLinks = [
   { label: "Reviews", href: "#reviews", track: "nav-reviews" },
 ];
 
-export function Header() {
+export function Header({ initialSettings }: { initialSettings?: SiteSettings | null }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const settings = useQuery(api.content.getSiteSettings);
+  const querySettings = useQuery(api.content.getSiteSettings);
+  const settings = querySettings === undefined ? initialSettings : querySettings;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);

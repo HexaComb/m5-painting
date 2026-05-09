@@ -6,9 +6,11 @@ import { Reveal } from "@/components/ui/reveal";
 import { Phone, Star } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { HeroContent } from "@/lib/content-types";
 
-export function Hero() {
-  const hero = useQuery(api.content.getHeroContent);
+export function Hero({ initialHero }: { initialHero?: HeroContent | null }) {
+  const queryHero = useQuery(api.content.getHeroContent);
+  const hero = queryHero === undefined ? initialHero : queryHero;
   if (!hero) return null;
   return (
     <section className="relative overflow-hidden bg-primary pt-16 lg:pt-[4.5rem]">

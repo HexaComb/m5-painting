@@ -6,6 +6,7 @@ import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { AboutContent, AboutValue } from "@/lib/content-types";
 
 const iconMap = {
   Heart,
@@ -16,9 +17,17 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
-export function About() {
-  const about = useQuery(api.content.getAboutContent);
-  const values = useQuery(api.content.getAboutValues);
+export function About({
+  initialAbout,
+  initialValues,
+}: {
+  initialAbout?: AboutContent | null;
+  initialValues?: AboutValue[] | null;
+}) {
+  const queryAbout = useQuery(api.content.getAboutContent);
+  const queryValues = useQuery(api.content.getAboutValues);
+  const about = queryAbout === undefined ? initialAbout : queryAbout;
+  const values = queryValues === undefined ? initialValues : queryValues;
   if (!about || !values) return null;
   return (
     <section id="about" className="relative py-20 sm:py-28">

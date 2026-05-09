@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import type { SiteSettings, ContactContent } from "@/lib/content-types";
 
 const navLinks = [
   { label: "Services", href: "#services" },
@@ -13,9 +14,17 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ];
 
-export function Footer() {
-  const settings = useQuery(api.content.getSiteSettings);
-  const contact = useQuery(api.content.getContactContent);
+export function Footer({
+  initialSettings,
+  initialContact,
+}: {
+  initialSettings?: SiteSettings | null;
+  initialContact?: ContactContent | null;
+}) {
+  const querySettings = useQuery(api.content.getSiteSettings);
+  const queryContact = useQuery(api.content.getContactContent);
+  const settings = querySettings === undefined ? initialSettings : querySettings;
+  const contact = queryContact === undefined ? initialContact : queryContact;
   if (!settings || !contact) return null;
   return (
     <footer className="bg-foreground text-primary-foreground">

@@ -10,9 +10,11 @@ import { Phone, Mail, MapPin, Loader2 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
+import type { ContactContent } from "@/lib/content-types";
 
-export function Contact() {
-  const contact = useQuery(api.content.getContactContent);
+export function Contact({ initialContact }: { initialContact?: ContactContent | null }) {
+  const queryContact = useQuery(api.content.getContactContent);
+  const contact = queryContact === undefined ? initialContact : queryContact;
   const submitLead = useMutation(api.content.submitLead);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
