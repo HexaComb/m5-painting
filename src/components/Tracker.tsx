@@ -20,11 +20,25 @@ declare global {
 }
 
 /**
+ * Generate a random session ID (persisted per browser session).
+ */
+function getSessionId(): string {
+  const key = "__m5_session";
+  let id = sessionStorage.getItem(key);
+  if (!id) {
+    id = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+    sessionStorage.setItem(key, id);
+  }
+  return id;
+}
+
+/**
  * Lightweight client-side tracker.
  *
  * 1. Fetches active event configs from the Convex `/api/events` endpoint
  * 2. Finds matching DOM elements via `data-track` attributes
  * 3. Attaches listeners and fires analytics events on trigger
+ * 4. Logs each hit back to Convex `/api/events/log` for the analytics dashboard
  *
  * Dispatches to:
  *   - GA4 (gtag)
@@ -33,12 +47,10 @@ declare global {
  */
 export function Tracker() {
   useEffect(() => {
-    const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-    if (!convexUrl) return;
+    const siteUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
+    if (!siteUrl) return;
 
-    // Derive the HTTP API base from the Convex deployment URL
-    // e.g. https://next-snail-279.convex.cloud → same base
-    const apiBase = convexUrl.replace(/\/$/, "");
+    const apiBase = siteUrl.replace(/\/$/, "");
 
     let aborted = false;
     const cleanups: (() => void)[] = [];
@@ -52,6 +64,8 @@ export function Tracker() {
 
         const data = (await res.json()) as { events: TrackingEvent[] };
         if (aborted || !data.events?.length) return;
+
+        const sessionId = getSessionId();
 
         for (const event of data.events) {
           const elements = document.querySelectorAll(
@@ -99,6 +113,22 @@ export function Tracker() {
                   },
                 }),
               );
+
+              // Log hit to Convex analytics (fire-and-forget)
+              fetch(`${apiBase}/api/events/log`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  eventName: event.name,
+                  category: event.category,
+                  label: event.label,
+                  targetElement: event.targetElement,
+                  url: window.location.href,
+                  sessionId,
+                }),
+              }).catch(() => {
+                // Silently fail — tracking should never break the site
+              });
             };
 
             el.addEventListener(eventType, handler);

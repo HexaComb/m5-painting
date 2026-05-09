@@ -89,6 +89,21 @@ const schema = defineSchema({
     ),
     enabled: v.boolean(),
   }).index("by_enabled", ["enabled"]),
+
+  // Event hit logs — one row per fired event
+  eventLogs: defineTable({
+    eventName: v.string(), // matches trackingEvents.name
+    category: v.string(),
+    label: v.string(),
+    targetElement: v.string(),
+    timestamp: v.number(), // epoch ms
+    url: v.string(), // page URL where the event fired
+    userAgent: v.string(), // browser user-agent
+    sessionId: v.string(), // random ID to group hits per visit
+  })
+    .index("by_timestamp", ["timestamp"])
+    .index("by_event_name", ["eventName", "timestamp"])
+    .index("by_category", ["category", "timestamp"]),
 });
 
 export default schema;

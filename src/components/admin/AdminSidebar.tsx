@@ -4,6 +4,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import {
   Activity,
+  BarChart3,
   FolderOpen,
   Info,
   LayoutDashboard,
@@ -48,6 +49,7 @@ const contentNav = [
 
 const analyticsNav = [
   { href: "/admin/events", label: "Event Tracking", icon: Activity },
+  { href: "/admin/analytics", label: "Analytics Dashboard", icon: BarChart3 },
 ];
 
 const systemNav = [

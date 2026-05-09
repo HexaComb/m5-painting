@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   Activity,
+  BarChart3,
   Plus,
   Pencil,
   Trash2,
@@ -37,6 +38,7 @@ import {
   Send,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 
 // ─── Trackable elements on the public site ─────────────────────────────
 const TRACKABLE_ELEMENTS = [
@@ -153,10 +155,18 @@ export default function EventsPage() {
             site.
           </p>
         </div>
-        <Button onClick={openCreateDialog} className="shrink-0">
-          <Plus className="mr-2 h-4 w-4" />
-          Add Event
-        </Button>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link href="/admin/analytics">
+            <Button variant="outline">
+              <BarChart3 className="mr-2 h-4 w-4" />
+              Analytics
+            </Button>
+          </Link>
+          <Button onClick={openCreateDialog}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Event
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
