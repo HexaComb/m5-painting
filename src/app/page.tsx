@@ -7,6 +7,7 @@ import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
 import { PaintDrip, PaintDripAlt } from "@/components/ui/paint-decorations";
+import type { SiteContent } from "@/lib/content-types";
 import {
   defaultSiteSettings,
   defaultHeroContent,
@@ -18,50 +19,59 @@ import {
   defaultContactContent,
 } from "@/lib/default-content";
 
+let buildContent: SiteContent | null = null;
+try {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  buildContent = require("@/lib/build-content.json") as SiteContent;
+} catch {
+  // build-content.json hasn't been generated yet (e.g. `next dev`)
+}
+
+const content = buildContent ?? {
+  siteSettings: defaultSiteSettings,
+  heroContent: defaultHeroContent,
+  services: defaultServices,
+  projects: defaultProjects,
+  aboutContent: defaultAboutContent,
+  aboutValues: defaultAboutValues,
+  reviews: defaultReviews,
+  contactContent: defaultContactContent,
+};
+
 export default function Home() {
   return (
     <>
-      <Header initialSettings={defaultSiteSettings} />
+      <Header initialSettings={content.siteSettings} />
       <main>
-        {/* Hero: bold blue section */}
-        <Hero initialHero={defaultHeroContent} />
+        <Hero initialHero={content.heroContent} />
 
-        {/* Hero → Services: blue drips into white */}
         <div className="bg-background">
           <PaintDrip color="var(--primary)" className="-mb-px" />
         </div>
 
-        {/* Services: white background */}
-        <Services initialServices={defaultServices} />
+        <Services initialServices={content.services} />
+        <Projects initialProjects={content.projects} />
 
-        {/* Projects: subtle muted bg */}
-        <Projects initialProjects={defaultProjects} />
-
-        {/* About: white background */}
         <About
-          initialAbout={defaultAboutContent}
-          initialValues={defaultAboutValues}
+          initialAbout={content.aboutContent}
+          initialValues={content.aboutValues}
         />
 
-        {/* About → Reviews: white drips into blue */}
         <div className="bg-primary">
           <PaintDripAlt color="var(--background)" className="-mb-px" />
         </div>
 
-        {/* Reviews: blue section */}
-        <Reviews initialReviews={defaultReviews} />
+        <Reviews initialReviews={content.reviews} />
 
-        {/* Reviews → Contact: blue drips into white */}
         <div className="bg-background">
           <PaintDrip color="var(--primary)" className="-mb-px" />
         </div>
 
-        {/* Contact: white background */}
-        <Contact initialContact={defaultContactContent} />
+        <Contact initialContact={content.contactContent} />
       </main>
       <Footer
-        initialSettings={defaultSiteSettings}
-        initialContact={defaultContactContent}
+        initialSettings={content.siteSettings}
+        initialContact={content.contactContent}
       />
     </>
   );
