@@ -7,43 +7,24 @@ import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
 import { PaintDrip, PaintDripAlt } from "@/components/ui/paint-decorations";
-import type { SiteContent } from "@/lib/content-types";
+import {
+  defaultSiteSettings,
+  defaultHeroContent,
+  defaultServices,
+  defaultProjects,
+  defaultAboutContent,
+  defaultAboutValues,
+  defaultReviews,
+  defaultContactContent,
+} from "@/lib/default-content";
 
-async function fetchSiteContent(): Promise<SiteContent | null> {
-  // Prefer the explicit site URL if available (covers local dev)
-  const siteUrl =
-    process.env.NEXT_PUBLIC_CONVEX_SITE_URL ??
-    process.env.NEXT_PUBLIC_CONVEX_URL?.replace(".convex.cloud", ".convex.site");
-
-  if (!siteUrl) return null;
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 15000);
-
-  try {
-    const res = await fetch(`${siteUrl}/api/content`, {
-      signal: controller.signal,
-      cache: "no-store",
-    });
-    clearTimeout(timeoutId);
-
-    if (!res.ok) return null;
-    return (await res.json()) as SiteContent;
-  } catch {
-    clearTimeout(timeoutId);
-    return null;
-  }
-}
-
-export default async function Home() {
-  const content = await fetchSiteContent();
-
+export default function Home() {
   return (
     <>
-      <Header initialSettings={content?.siteSettings ?? null} />
+      <Header initialSettings={defaultSiteSettings} />
       <main>
         {/* Hero: bold blue section */}
-        <Hero initialHero={content?.heroContent ?? null} />
+        <Hero initialHero={defaultHeroContent} />
 
         {/* Hero → Services: blue drips into white */}
         <div className="bg-background">
@@ -51,15 +32,15 @@ export default async function Home() {
         </div>
 
         {/* Services: white background */}
-        <Services initialServices={content?.services ?? null} />
+        <Services initialServices={defaultServices} />
 
         {/* Projects: subtle muted bg */}
-        <Projects initialProjects={content?.projects ?? null} />
+        <Projects initialProjects={defaultProjects} />
 
         {/* About: white background */}
         <About
-          initialAbout={content?.aboutContent ?? null}
-          initialValues={content?.aboutValues ?? null}
+          initialAbout={defaultAboutContent}
+          initialValues={defaultAboutValues}
         />
 
         {/* About → Reviews: white drips into blue */}
@@ -68,7 +49,7 @@ export default async function Home() {
         </div>
 
         {/* Reviews: blue section */}
-        <Reviews initialReviews={content?.reviews ?? null} />
+        <Reviews initialReviews={defaultReviews} />
 
         {/* Reviews → Contact: blue drips into white */}
         <div className="bg-background">
@@ -76,11 +57,11 @@ export default async function Home() {
         </div>
 
         {/* Contact: white background */}
-        <Contact initialContact={content?.contactContent ?? null} />
+        <Contact initialContact={defaultContactContent} />
       </main>
       <Footer
-        initialSettings={content?.siteSettings ?? null}
-        initialContact={content?.contactContent ?? null}
+        initialSettings={defaultSiteSettings}
+        initialContact={defaultContactContent}
       />
     </>
   );
