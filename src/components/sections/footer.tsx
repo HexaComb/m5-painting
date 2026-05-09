@@ -26,7 +26,7 @@ export function Footer() {
             <div className="flex items-center gap-2.5">
               <Image
                 src="/images/logo.webp"
-                alt="M5 Painting"
+                alt={settings.businessName}
                 width={36}
                 height={36}
                 className="h-9 w-auto brightness-0 invert"
@@ -122,10 +122,10 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-primary-foreground/10 pt-8 sm:flex-row">
           <p className="text-xs text-primary-foreground/40">
-            &copy; {new Date().getFullYear()} M5 Painting. All Rights Reserved.
+            &copy; {new Date().getFullYear()} {settings.businessName}. All Rights Reserved.
           </p>
           <p className="text-xs text-primary-foreground/30">
-            Proudly serving Sanger, Fresno, Clovis &amp; the Central Valley
+            Proudly serving {settings.address}
           </p>
         </div>
       </div>
