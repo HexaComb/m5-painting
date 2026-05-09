@@ -47,7 +47,7 @@ export function Contact() {
       await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as any).toString(),
+        body: new URLSearchParams(formData).toString(),
       });
 
       setSubmitted(true);
@@ -141,7 +141,7 @@ export function Contact() {
                     </div>
                     <h3 className="text-lg font-semibold text-foreground">Message Sent!</h3>
                     <p className="mt-2 text-sm text-muted-foreground">
-                      Thanks for reaching out. We'll get back to you soon.
+                      Thanks for reaching out. We&apos;ll get back to you soon.
                     </p>
                     <Button
                       variant="outline"
