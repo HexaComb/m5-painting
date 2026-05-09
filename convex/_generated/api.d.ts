@@ -8,18 +8,14 @@
  * @module
  */
 
-import type * as ViktorSpacesEmail from "../ViktorSpacesEmail.js";
 import type * as adminAuth from "../adminAuth.js";
 import type * as auth from "../auth.js";
-import type * as constants from "../constants.js";
 import type * as content from "../content.js";
+import type * as eventLogs from "../eventLogs.js";
 import type * as http from "../http.js";
-import type * as resetAdmin from "../resetAdmin.js";
 import type * as seedAdmin from "../seedAdmin.js";
-import type * as seedTestUser from "../seedTestUser.js";
-import type * as testAuth from "../testAuth.js";
-import type * as users from "../users.js";
-import type * as viktorTools from "../viktorTools.js";
+import type * as trackingEvents from "../trackingEvents.js";
+import type * as userManagement from "../userManagement.js";
 
 import type {
   ApiFromModules,
@@ -28,18 +24,14 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
-  ViktorSpacesEmail: typeof ViktorSpacesEmail;
   adminAuth: typeof adminAuth;
   auth: typeof auth;
-  constants: typeof constants;
   content: typeof content;
+  eventLogs: typeof eventLogs;
   http: typeof http;
-  resetAdmin: typeof resetAdmin;
   seedAdmin: typeof seedAdmin;
-  seedTestUser: typeof seedTestUser;
-  testAuth: typeof testAuth;
-  users: typeof users;
-  viktorTools: typeof viktorTools;
+  trackingEvents: typeof trackingEvents;
+  userManagement: typeof userManagement;
 }>;
 
 /**
