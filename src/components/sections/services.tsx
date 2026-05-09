@@ -49,8 +49,8 @@ export function Services() {
             {services && services.slice(0, 2).map((service, idx) => {
               const Icon = iconMap[service.iconName as IconName] ?? Home;
               return (
-                <Reveal key={service._id} delay={idx + 1}>
-                  <div className="group relative rounded-2xl bg-primary p-7 text-primary-foreground transition-colors hover:bg-primary/90 sm:p-8">
+                <Reveal key={service._id} delay={idx + 1} className="h-full">
+                  <div className="group relative flex h-full flex-col rounded-2xl bg-primary p-7 text-primary-foreground transition-colors hover:bg-primary/90 sm:p-8">
                     <div className="mb-5 flex items-center gap-3">
                       <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/15">
                         <Icon className="h-5 w-5" />
@@ -62,7 +62,7 @@ export function Services() {
                     <p className="mb-6 max-w-lg text-[0.95rem] leading-relaxed text-primary-foreground/80">
                       {service.description}
                     </p>
-                    <div className="grid grid-cols-2 gap-x-6 gap-y-2">
+                    <div className="mt-auto grid grid-cols-2 gap-x-6 gap-y-2">
                       {service.items.map((item) => (
                         <p
                           key={item}
