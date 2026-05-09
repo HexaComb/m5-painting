@@ -1,48 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
-
-const projects = [
-  {
-    src: "/images/project-shop.webp",
-    alt: "White wood siding barn with large sliding door after exterior paint",
-    label: "Exterior",
-    span: "large",
-  },
-  {
-    src: "/images/project-spray.webp",
-    alt: "M5 Painting crew member spray painting on a job site",
-    label: "In Progress",
-    span: "small",
-  },
-  {
-    src: "/images/project-door.webp",
-    alt: "Black front door with oval glass window, precision detail work",
-    label: "Interior",
-    span: "small",
-  },
-  {
-    src: "/images/project-aerial.webp",
-    alt: "Aerial view of a residential property after a full exterior repaint",
-    label: "Residential",
-    span: "large",
-  },
-  {
-    src: "/images/project-logo-shop.webp",
-    alt: "Building with M5 Painting branding on the garage door",
-    label: "Commercial",
-    span: "small",
-  },
-  {
-    src: "/images/paint-can.webp",
-    alt: "Premium paint can with M5 Painting branding",
-    label: "Materials",
-    span: "small",
-  },
-];
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export function Projects() {
+  const projects = useQuery(api.content.getProjects);
+  if (!projects) return null;
   return (
     <section id="projects" className="relative bg-muted/40 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
@@ -79,8 +46,8 @@ export function Projects() {
             >
               <div className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
                 <Image
-                  src={project.src}
-                  alt={project.alt}
+                  src={project.imageUrl}
+                  alt={project.altText}
                   fill
                   className="object-cover transition-transform duration-600 ease-out group-hover:scale-[1.04]"
                   sizes={

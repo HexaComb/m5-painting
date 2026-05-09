@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Phone, Menu, X } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const navLinks = [
   { label: "Services", href: "#services", track: "nav-services" },
@@ -15,12 +17,15 @@ const navLinks = [
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const settings = useQuery(api.content.getSiteSettings);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (!settings) return null;
 
   return (
     <header
@@ -35,14 +40,14 @@ export function Header() {
         <a href="#" className="flex items-center gap-2.5">
           <Image
             src="/images/logo.webp"
-            alt="M5 Painting"
+            alt={settings.businessName}
             width={48}
             height={48}
             className="h-9 w-auto sm:h-11"
             priority
           />
           <span className="hidden text-lg font-bold tracking-tight text-foreground font-heading sm:inline-block">
-            M5 Painting
+            {settings.businessName}
           </span>
         </a>
 
@@ -62,10 +67,10 @@ export function Header() {
 
         {/* CTA + mobile toggle */}
         <div className="flex items-center gap-2">
-          <a href="tel:5594511022" data-track="header-phone" className="hidden lg:inline-flex">
+          <a href={`tel:${settings.phone.replace(/\D/g, "")}`} data-track="header-phone" className="hidden lg:inline-flex">
             <Button variant="ghost" size="sm" className="text-muted-foreground hover:text-foreground">
               <Phone className="mr-1.5 h-3.5 w-3.5" />
-              559-451-1022
+              {settings.phone}
             </Button>
           </a>
           <a href="#contact" data-track="header-estimate">
@@ -103,12 +108,12 @@ export function Header() {
               </a>
             ))}
             <a
-              href="tel:5594511022"
+              href={`tel:${settings.phone.replace(/\D/g, "")}`}
               data-track="header-phone"
               className="mt-2 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-semibold text-primary"
             >
               <Phone className="h-4 w-4" />
-              559-451-1022
+              {settings.phone}
             </a>
           </nav>
         </div>

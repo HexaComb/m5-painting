@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lora, Lato } from "next/font/google";
 import { Tracker } from "@/components/Tracker";
+import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import "./globals.css";
 
 const lora = Lora({
@@ -51,8 +52,10 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <body className={`${lora.variable} ${lato.variable} font-sans antialiased`}>
-        {children}
-        <Tracker />
+        <ConvexClientProvider>
+          {children}
+          <Tracker />
+        </ConvexClientProvider>
       </body>
     </html>
   );

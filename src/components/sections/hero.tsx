@@ -1,9 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { Phone, Star } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export function Hero() {
+  const hero = useQuery(api.content.getHeroContent);
+  if (!hero) return null;
   return (
     <section className="relative overflow-hidden bg-primary pt-16 lg:pt-[4.5rem]">
       {/* Subtle paint texture on the blue */}
@@ -18,16 +24,16 @@ export function Hero() {
             <Reveal>
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary-foreground/90">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-white/80" />
-                Family-Owned in the Central Valley
+                {hero.badgeText}
               </p>
             </Reveal>
 
             <Reveal delay={1}>
               <h1 className="text-display font-bold text-primary-foreground">
-                Painting done right,
+                {hero.headline}
                 <br />
                 <span className="relative inline-block">
-                  by people who care.
+                  {hero.highlightText}
                   <svg
                     viewBox="0 0 300 12"
                     preserveAspectRatio="none"
@@ -49,9 +55,7 @@ export function Hero() {
 
             <Reveal delay={2}>
               <p className="mt-6 max-w-xl text-body-lg text-primary-foreground/80">
-                We&apos;re a family-run crew right here in the Valley. From the
-                first walkthrough to the final coat, we treat your home like
-                it&apos;s our own.
+                {hero.bodyText}
               </p>
             </Reveal>
 
@@ -62,17 +66,17 @@ export function Hero() {
                     size="lg"
                     className="h-auto bg-white px-7 py-3.5 text-base font-semibold text-primary shadow-lg shadow-black/10 hover:bg-white/95"
                   >
-                    Get a Free Estimate
+                    {hero.ctaText}
                   </Button>
                 </a>
-                <a href="tel:5594511022" data-track="hero-phone">
+                <a href={`tel:${hero.ctaPhone.replace(/\D/g, "")}`} data-track="hero-phone">
                   <Button
                     variant="outline"
                     size="lg"
                     className="h-auto border-white/25 bg-transparent px-6 py-3.5 text-base font-semibold text-primary-foreground hover:bg-white/10"
                   >
                     <Phone className="mr-2 h-4 w-4" />
-                    559-451-1022
+                    {hero.ctaPhone}
                   </Button>
                 </a>
               </div>

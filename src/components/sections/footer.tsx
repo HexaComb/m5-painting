@@ -1,5 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 const navLinks = [
   { label: "Services", href: "#services" },
@@ -10,6 +14,9 @@ const navLinks = [
 ];
 
 export function Footer() {
+  const settings = useQuery(api.content.getSiteSettings);
+  const contact = useQuery(api.content.getContactContent);
+  if (!settings || !contact) return null;
   return (
     <footer className="bg-foreground text-primary-foreground">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16">
@@ -25,9 +32,9 @@ export function Footer() {
                 className="h-9 w-auto brightness-0 invert"
               />
               <div>
-                <p className="text-base font-bold font-heading">M5 Painting</p>
+                <p className="text-base font-bold font-heading">{settings.businessName}</p>
                 <p className="text-xs text-primary-foreground/50">
-                  Family-Owned Since Day One
+                  {settings.tagline}
                 </p>
               </div>
             </div>
@@ -62,22 +69,22 @@ export function Footer() {
             </h4>
             <div className="space-y-3">
               <a
-                href="tel:5594511022"
+                href={`tel:${contact.phone.replace(/\D/g, "")}`}
                 className="flex items-center gap-2.5 text-sm text-primary-foreground/60 transition-colors hover:text-primary-foreground"
               >
                 <Phone className="h-4 w-4 shrink-0" />
-                559-451-1022
+                {contact.phone}
               </a>
               <a
-                href="mailto:m5paintingco@gmail.com"
+                href={`mailto:${contact.email}`}
                 className="flex items-center gap-2.5 text-sm text-primary-foreground/60 transition-colors hover:text-primary-foreground"
               >
                 <Mail className="h-4 w-4 shrink-0" />
-                m5paintingco@gmail.com
+                {contact.email}
               </a>
               <div className="flex items-center gap-2.5 text-sm text-primary-foreground/60">
                 <MapPin className="h-4 w-4 shrink-0" />
-                Sanger, CA · Central Valley
+                {contact.location}
               </div>
             </div>
           </div>

@@ -1,33 +1,10 @@
+"use client";
+
 import { Star, Quote } from "lucide-react";
 import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
-
-const reviews = [
-  {
-    text: "Great to work with. Very happy with the job Matt and his crew did on the exterior of our home. It was a big project. I would recommend them to have a job done right.",
-    author: "Kara B.",
-    date: "June 2025",
-    source: "Yelp",
-  },
-  {
-    text: "Matt and his M5 painting team were amazing. Signed, Sealed and Delivered. Finished the inside of my rental home in one day! On time and very professional. I would recommend M5 to anyone.",
-    author: "Nick C.",
-    date: "June 2025",
-    source: "Yelp",
-  },
-  {
-    text: "I highly recommend M5 Painting for any exterior paint work! They did an outstanding job on my home. From the stucco to the trim, everything looks fresh, clean, and professionally done. They helped me choose the perfect color for the stucco, and their attention to detail on the trimming made a huge difference.",
-    author: "Krystle P.",
-    date: "June 2025",
-    source: "Angi",
-  },
-  {
-    text: "Matt and his crew did an amazing job of meeting all our needs and expectations! The time and quality of work was outstanding. Would highly recommend!",
-    author: "Victoria F.",
-    date: "June 2025",
-    source: "Angi",
-  },
-];
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 function StarRow() {
   return (
@@ -43,6 +20,8 @@ function StarRow() {
 }
 
 export function Reviews() {
+  const reviews = useQuery(api.content.getReviews);
+  if (!reviews) return null;
   return (
     <section id="reviews" className="relative bg-primary py-20 sm:py-28">
       {/* Subtle texture */}
@@ -67,7 +46,7 @@ export function Reviews() {
         {/* Reviews — stacked full-width for variety, not card grid */}
         <div className="grid gap-5 sm:grid-cols-2">
           {reviews.map((review, i) => (
-            <Reveal key={i} delay={Math.min(i + 1, 4) as 0 | 1 | 2 | 3 | 4}>
+            <Reveal key={review._id} delay={Math.min(i + 1, 4) as 0 | 1 | 2 | 3 | 4}>
               <div className="relative flex h-full flex-col justify-between rounded-2xl bg-white/10 p-6 backdrop-blur-sm sm:p-7">
                 <div>
                   <div className="mb-4 flex items-center justify-between">

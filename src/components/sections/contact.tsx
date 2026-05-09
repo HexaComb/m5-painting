@@ -6,8 +6,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { Phone, Mail, MapPin } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
 export function Contact() {
+  const contact = useQuery(api.content.getContactContent);
+  if (!contact) return null;
   return (
     <section id="contact" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
@@ -18,21 +22,20 @@ export function Contact() {
               <div className="space-y-6">
                 <div>
                   <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-                    We&apos;d Love to Hear From You
+                    {contact.subtitle}
                   </p>
                   <h2 className="mt-2 text-headline font-bold text-foreground">
-                    Ready to Get Started?
+                    {contact.title}
                   </h2>
                   <BrushStroke color="var(--primary)" className="mt-3" />
                   <p className="mt-5 text-body-lg text-muted-foreground">
-                    Drop us a message or give us a call. We&apos;ll come out,
-                    take a look, and give you an honest, no-pressure quote.
+                    {contact.description}
                   </p>
                 </div>
 
                 <div className="space-y-4 pt-2">
                   <a
-                    href="tel:5594511022"
+                    href={`tel:${contact.phone.replace(/\D/g, "")}`}
                     className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
@@ -42,7 +45,7 @@ export function Contact() {
                       <p className="text-xs font-medium text-muted-foreground">
                         Give us a call
                       </p>
-                      <p className="text-sm font-bold">559-451-1022</p>
+                      <p className="text-sm font-bold">{contact.phone}</p>
                     </div>
                   </a>
                   <div className="flex items-center gap-3 text-foreground/80">
@@ -54,11 +57,14 @@ export function Contact() {
                         Based in
                       </p>
                       <p className="text-sm font-bold">
-                        Sanger, CA · Central Valley
+                        {contact.location}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-3 text-foreground/80">
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
+                  >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
                       <Mail className="h-5 w-5" />
                     </div>
@@ -67,10 +73,10 @@ export function Contact() {
                         Email us
                       </p>
                       <p className="text-sm font-bold">
-                        m5paintingco@gmail.com
+                        {contact.email}
                       </p>
                     </div>
-                  </div>
+                  </a>
                 </div>
               </div>
             </Reveal>

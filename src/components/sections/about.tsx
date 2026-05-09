@@ -1,36 +1,25 @@
+"use client";
+
 import Image from "next/image";
 import { Heart, Handshake, Shield, Palette } from "lucide-react";
 import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
+import { useQuery } from "convex/react";
+import { api } from "../../../convex/_generated/api";
 
-const values = [
-  {
-    icon: Heart,
-    title: "We Care Like Family",
-    description:
-      "Your home is where your family makes memories. We show up with the same care we'd bring to our own parents' house.",
-  },
-  {
-    icon: Handshake,
-    title: "Honest From Day One",
-    description:
-      "No hidden fees, no surprises, no cutting corners. A fair quote, on time, and happy before we pack up.",
-  },
-  {
-    icon: Shield,
-    title: "Licensed, Bonded & Insured",
-    description:
-      "Fully licensed, bonded, and insured. You can relax knowing your property is protected.",
-  },
-  {
-    icon: Palette,
-    title: "Your Vision, Our Hands",
-    description:
-      "We listen to what you want and bring it to life, whether that's a bold accent wall or a complete refresh.",
-  },
-];
+const iconMap = {
+  Heart,
+  Handshake,
+  Shield,
+  Palette,
+} as const;
+
+type IconName = keyof typeof iconMap;
 
 export function About() {
+  const about = useQuery(api.content.getAboutContent);
+  const values = useQuery(api.content.getAboutValues);
+  if (!about || !values) return null;
   return (
     <section id="about" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
@@ -59,12 +48,10 @@ export function About() {
             <Reveal>
               <div>
                 <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-                  The Family Behind Every Coat
+                  {about.subtitle}
                 </p>
                 <h2 className="mt-2 text-headline font-bold text-foreground">
-                  Built on Hard Work
-                  <br className="hidden sm:block" />
-                  &amp; Handshakes
+                  {about.title}
                 </h2>
                 <BrushStroke color="var(--primary)" className="mt-3" />
               </div>
@@ -72,28 +59,20 @@ export function About() {
 
             <Reveal delay={1}>
               <div className="space-y-4">
-                <p className="text-body-lg text-muted-foreground">
-                  M5 Painting started the way most good things do: a family
-                  that knows how to work hard. We grew up right here in the
-                  Central Valley, and when we started this business, we made a
-                  simple promise: treat every customer like a neighbor, because
-                  around here, they usually are.
-                </p>
-                <p className="text-body-lg text-muted-foreground">
-                  Matt and the crew bring that same small-town work ethic to
-                  every project. We show up on time, do quality work, and
-                  don&apos;t leave until you love it. That&apos;s not a sales
-                  pitch; it&apos;s just how we were raised.
-                </p>
+                {about.paragraphs.map((p, i) => (
+                  <p key={i} className="text-body-lg text-muted-foreground">
+                    {p}
+                  </p>
+                ))}
               </div>
             </Reveal>
 
             {/* Values — 2x2 grid with left border accent */}
             <div className="grid gap-6 sm:grid-cols-2">
               {values.map((value, idx) => {
-                const Icon = value.icon;
+                const Icon = iconMap[value.iconName as IconName] ?? Heart;
                 return (
-                  <Reveal key={value.title} delay={Math.min(idx + 1, 4) as 0 | 1 | 2 | 3 | 4}>
+                  <Reveal key={value._id} delay={Math.min(idx + 1, 4) as 0 | 1 | 2 | 3 | 4}>
                     <div className="space-y-2.5">
                       <div className="flex items-center gap-2.5">
                         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
