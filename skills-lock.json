@@ -36,6 +36,12 @@
       "sourceType": "github",
       "skillPath": "skills/convex-setup-auth/SKILL.md",
       "computedHash": "b1a940758751c5b2fdc6ced105b19927a1655f0c1d4bd2fd5536dc3264202c00"
+    },
+    "grill-me": {
+      "source": "local",
+      "sourceType": "local",
+      "skillPath": "skills/grill-me/SKILL.md",
+      "computedHash": "4f41d771c4c744f0064dff02724ffff98f5d6b51bcbbe068865b84050abf2c8e"
     }
   }
 }
