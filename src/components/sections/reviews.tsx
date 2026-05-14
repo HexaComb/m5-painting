@@ -1,7 +1,6 @@
 "use client";
 
 import { Star, Quote } from "lucide-react";
-import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -41,7 +40,7 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
             <h2 className="mt-2 text-headline font-bold text-primary-foreground">
               Don&apos;t Take Our Word for It
             </h2>
-            <BrushStroke color="white" className="mx-auto mt-3 opacity-40" />
+            <div className="mx-auto mt-3 h-0.5 w-14 bg-white/40" />
           </div>
         </Reveal>
 

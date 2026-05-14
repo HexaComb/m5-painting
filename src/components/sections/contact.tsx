@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { Phone, Mail, MapPin, Loader2 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
@@ -81,7 +80,7 @@ export function Contact({ initialContact }: { initialContact?: ContactContent | 
                   <h2 className="mt-2 text-headline font-bold text-foreground">
                     {contact.title}
                   </h2>
-                  <BrushStroke color="var(--primary)" className="mt-3" />
+                  <div className="mt-3 h-0.5 w-14 bg-primary" />
                   <p className="mt-5 text-body-lg text-muted-foreground">
                     {contact.description}
                   </p>

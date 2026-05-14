@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -24,7 +23,7 @@ export function Projects({ initialProjects }: { initialProjects?: Project[] | nu
             <h2 className="mt-2 text-headline font-bold text-foreground">
               Projects We&apos;re Proud Of
             </h2>
-            <BrushStroke color="var(--primary)" className="mx-auto mt-3" />
+            <div className="mx-auto mt-3 h-0.5 w-14 bg-primary" />
             <p className="mt-5 text-body-lg text-muted-foreground">
               Every home and business has a story. Here are a few
               transformations we&apos;ve been lucky to be part of.

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { Heart, Handshake, Shield, Palette } from "lucide-react";
-import { BrushStroke } from "@/components/ui/paint-decorations";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -62,7 +61,7 @@ export function About({
                 <h2 className="mt-2 text-headline font-bold text-foreground">
                   {about.title}
                 </h2>
-                <BrushStroke color="var(--primary)" className="mt-3" />
+                <div className="mt-3 h-0.5 w-14 bg-primary" />
               </div>
             </Reveal>
 

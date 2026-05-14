@@ -6,7 +6,7 @@ import { About } from "@/components/sections/about";
 import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
-import { PaintDrip, PaintDripAlt } from "@/components/ui/paint-decorations";
+import { Separator } from "@/components/ui/separator";
 import type { SiteContent } from "@/lib/content-types";
 import {
   defaultSiteSettings,
@@ -45,9 +45,7 @@ export default function Home() {
       <main>
         <Hero initialHero={content.heroContent} />
 
-        <div className="bg-background">
-          <PaintDrip color="var(--primary)" className="-mb-px" />
-        </div>
+        <Separator className="bg-border" />
 
         <Services initialServices={content.services} />
         <Projects initialProjects={content.projects} />
@@ -57,15 +55,11 @@ export default function Home() {
           initialValues={content.aboutValues}
         />
 
-        <div className="bg-primary">
-          <PaintDripAlt color="var(--background)" className="-mb-px" />
-        </div>
+        <Separator className="bg-primary" />
 
         <Reviews initialReviews={content.reviews} />
 
-        <div className="bg-background">
-          <PaintDrip color="var(--primary)" className="-mb-px" />
-        </div>
+        <Separator className="bg-border" />
 
         <Contact initialContact={content.contactContent} />
       </main>

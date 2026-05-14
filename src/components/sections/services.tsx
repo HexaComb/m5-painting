@@ -7,7 +7,6 @@ import {
   MessageSquare,
 } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
-import { BrushStroke } from "@/components/ui/paint-decorations";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Service } from "@/lib/content-types";
@@ -36,7 +35,7 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
             <h2 className="mt-2 text-headline font-bold text-foreground">
               What We Do
             </h2>
-            <BrushStroke color="var(--primary)" className="mt-3" />
+            <div className="mt-3 h-0.5 w-14 bg-primary" />
             <p className="mt-5 text-body-lg text-muted-foreground">
               From a fresh coat in the living room to a full exterior
               makeover, we bring your vision to life.
