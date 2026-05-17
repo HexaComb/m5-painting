@@ -224,3 +224,18 @@
 
 /* ── Utility for max prose width ── */
 .max-w-prose { max-width: 65ch; }
+
+/* ── Projects: Elfsight Instagram feed width on mobile ── */
+@media (width < 640px) {
+  #projects .projects-instagram-feed {
+    width: 80vw;
+    max-width: 80vw;
+  }
+
+  #projects .projects-instagram-feed [class*="elfsight"],
+  #projects .projects-instagram-feed iframe {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+  }
+}

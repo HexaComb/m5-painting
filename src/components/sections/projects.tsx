@@ -31,12 +31,14 @@ export function Projects() {
           </div>
         </Reveal>
 
-        {/* Instagram feed */}
+        {/* Instagram feed — 80vw on mobile; full container width on desktop for now */}
         <Reveal>
-          <div
-            className={`elfsight-app-${ELFSIGHT_APP_ID}`}
-            data-elfsight-app-lazy
-          />
+          <div className="projects-instagram-feed relative left-1/2 w-[80vw] max-w-[80vw] -translate-x-1/2 sm:static sm:w-full sm:max-w-none sm:translate-x-0">
+            <div
+              className={`elfsight-app-${ELFSIGHT_APP_ID} w-full min-w-0`}
+              data-elfsight-app-lazy
+            />
+          </div>
         </Reveal>
 
         <Reveal>
