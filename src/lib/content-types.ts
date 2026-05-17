@@ -30,16 +30,6 @@ export interface Service {
   items: string[];
 }
 
-export interface Project {
-  _id: string;
-  _creationTime: number;
-  order: number;
-  imageUrl: string;
-  altText: string;
-  label: string;
-  span: "large" | "small";
-}
-
 export interface AboutContent {
   _id: string;
   _creationTime: number;
@@ -82,7 +72,6 @@ export interface SiteContent {
   siteSettings: SiteSettings | null;
   heroContent: HeroContent | null;
   services: Service[] | null;
-  projects: Project[] | null;
   aboutContent: AboutContent | null;
   aboutValues: AboutValue[] | null;
   reviews: Review[] | null;

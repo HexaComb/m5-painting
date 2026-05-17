@@ -185,70 +185,6 @@ export const reorderServices = mutation({
 });
 
 // ═══════════════════════════════════════════════════════════════════════
-// PROJECTS
-// ═══════════════════════════════════════════════════════════════════════
-
-export const getProjects = query({
-  args: {},
-  returns: v.array(
-    v.object({
-      _id: v.id("projects"),
-      _creationTime: v.number(),
-      order: v.number(),
-      imageUrl: v.string(),
-      altText: v.string(),
-      label: v.string(),
-      span: v.union(v.literal("large"), v.literal("small")),
-    }),
-  ),
-  handler: async (ctx) => {
-    return await ctx.db.query("projects").withIndex("by_order").collect();
-  },
-});
-
-export const updateProject = mutation({
-  args: {
-    id: v.id("projects"),
-    imageUrl: v.string(),
-    altText: v.string(),
-    label: v.string(),
-    span: v.union(v.literal("large"), v.literal("small")),
-  },
-  returns: v.null(),
-  handler: async (ctx, { id, ...data }) => {
-    await requireAuth(ctx);
-    await ctx.db.patch(id, data);
-    return null;
-  },
-});
-
-export const addProject = mutation({
-  args: {
-    imageUrl: v.string(),
-    altText: v.string(),
-    label: v.string(),
-    span: v.union(v.literal("large"), v.literal("small")),
-  },
-  returns: v.id("projects"),
-  handler: async (ctx, args) => {
-    await requireAuth(ctx);
-    const existing = await ctx.db.query("projects").collect();
-    const maxOrder = existing.reduce((max, p) => Math.max(max, p.order), 0);
-    return await ctx.db.insert("projects", { ...args, order: maxOrder + 1 });
-  },
-});
-
-export const deleteProject = mutation({
-  args: { id: v.id("projects") },
-  returns: v.null(),
-  handler: async (ctx, { id }) => {
-    await requireAuth(ctx);
-    await ctx.db.delete(id);
-    return null;
-  },
-});
-
-// ═══════════════════════════════════════════════════════════════════════
 // ABOUT CONTENT
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -626,58 +562,6 @@ export const seed = internalMutation({
     ];
     for (const s of servicesData) {
       await ctx.db.insert("services", s);
-    }
-
-    // Projects
-    const projectsData = [
-      {
-        order: 1,
-        imageUrl: "/images/project-shop.webp",
-        altText:
-          "White wood siding barn with large sliding door after exterior paint",
-        label: "Exterior",
-        span: "large" as const,
-      },
-      {
-        order: 2,
-        imageUrl: "/images/project-spray.webp",
-        altText: "M5 Painting crew member spray painting on a job site",
-        label: "In Progress",
-        span: "small" as const,
-      },
-      {
-        order: 3,
-        imageUrl: "/images/project-door.webp",
-        altText:
-          "Black front door with oval glass window, precision detail work",
-        label: "Interior",
-        span: "small" as const,
-      },
-      {
-        order: 4,
-        imageUrl: "/images/project-aerial.webp",
-        altText:
-          "Aerial view of a residential property after a full exterior repaint",
-        label: "Residential",
-        span: "large" as const,
-      },
-      {
-        order: 5,
-        imageUrl: "/images/project-logo-shop.webp",
-        altText: "Building with M5 Painting branding on the garage door",
-        label: "Commercial",
-        span: "small" as const,
-      },
-      {
-        order: 6,
-        imageUrl: "/images/paint-can.webp",
-        altText: "Premium paint can with M5 Painting branding",
-        label: "Materials",
-        span: "small" as const,
-      },
-    ];
-    for (const p of projectsData) {
-      await ctx.db.insert("projects", p);
     }
 
     // About

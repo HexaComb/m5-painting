@@ -14,7 +14,6 @@ import {
   Activity,
   Paintbrush,
   Star,
-  FolderOpen,
   FileText,
   Phone,
   Settings,
@@ -37,14 +36,6 @@ const sections = [
     href: "/admin/services",
     color: "bg-emerald-500/10 text-emerald-600",
     countKey: "services" as const,
-  },
-  {
-    title: "Projects",
-    description: "Gallery of completed work",
-    icon: FolderOpen,
-    href: "/admin/projects",
-    color: "bg-orange-500/10 text-orange-600",
-    countKey: "projects" as const,
   },
   {
     title: "About",
@@ -86,13 +77,11 @@ const sections = [
 
 export default function DashboardPage() {
   const services = useQuery(api.content.getServices);
-  const projects = useQuery(api.content.getProjects);
   const reviews = useQuery(api.content.getReviews);
   const siteSettings = useQuery(api.content.getSiteSettings);
 
   const counts = {
     services: services?.length ?? 0,
-    projects: projects?.length ?? 0,
     reviews: reviews?.length ?? 0,
   };
 
@@ -109,7 +98,7 @@ export default function DashboardPage() {
         </p>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardContent className="flex items-center gap-3 p-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-500/10">
@@ -118,17 +107,6 @@ export default function DashboardPage() {
             <div>
               <p className="text-2xl font-bold">{counts.services}</p>
               <p className="text-xs text-muted-foreground">Services</p>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="flex items-center gap-3 p-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-orange-500/10">
-              <FolderOpen className="h-5 w-5 text-orange-600" />
-            </div>
-            <div>
-              <p className="text-2xl font-bold">{counts.projects}</p>
-              <p className="text-xs text-muted-foreground">Projects</p>
             </div>
           </CardContent>
         </Card>

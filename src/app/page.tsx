@@ -12,7 +12,6 @@ import {
   defaultSiteSettings,
   defaultHeroContent,
   defaultServices,
-  defaultProjects,
   defaultAboutContent,
   defaultAboutValues,
   defaultReviews,
@@ -31,7 +30,6 @@ const content = buildContent ?? {
   siteSettings: defaultSiteSettings,
   heroContent: defaultHeroContent,
   services: defaultServices,
-  projects: defaultProjects,
   aboutContent: defaultAboutContent,
   aboutValues: defaultAboutValues,
   reviews: defaultReviews,
@@ -48,7 +46,7 @@ export default function Home() {
         <Separator className="bg-border" />
 
         <Services initialServices={content.services} />
-        <Projects initialProjects={content.projects} />
+        <Projects />
 
         <About
           initialAbout={content.aboutContent}

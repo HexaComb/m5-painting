@@ -2,7 +2,6 @@ import type {
   SiteSettings,
   HeroContent,
   Service,
-  Project,
   AboutContent,
   AboutValue,
   Review,
@@ -99,66 +98,6 @@ export const defaultServices: Service[] = [
       "Color Advice",
       "No Obligation",
     ],
-  },
-];
-
-export const defaultProjects: Project[] = [
-  {
-    _id: "p1",
-    _creationTime: Date.now(),
-    order: 1,
-    imageUrl: "/images/project-shop.webp",
-    altText:
-      "White wood siding barn with large sliding door after exterior paint",
-    label: "Exterior",
-    span: "large",
-  },
-  {
-    _id: "p2",
-    _creationTime: Date.now(),
-    order: 2,
-    imageUrl: "/images/project-spray.webp",
-    altText: "M5 Painting crew member spray painting on a job site",
-    label: "In Progress",
-    span: "small",
-  },
-  {
-    _id: "p3",
-    _creationTime: Date.now(),
-    order: 3,
-    imageUrl: "/images/project-door.webp",
-    altText:
-      "Black front door with oval glass window, precision detail work",
-    label: "Interior",
-    span: "small",
-  },
-  {
-    _id: "p4",
-    _creationTime: Date.now(),
-    order: 4,
-    imageUrl: "/images/project-aerial.webp",
-    altText:
-      "Aerial view of a residential property after a full exterior repaint",
-    label: "Residential",
-    span: "large",
-  },
-  {
-    _id: "p5",
-    _creationTime: Date.now(),
-    order: 5,
-    imageUrl: "/images/project-logo-shop.webp",
-    altText: "Building with M5 Painting branding on the garage door",
-    label: "Commercial",
-    span: "small",
-  },
-  {
-    _id: "p6",
-    _creationTime: Date.now(),
-    order: 6,
-    imageUrl: "/images/paint-can.webp",
-    altText: "Premium paint can with M5 Painting branding",
-    label: "Materials",
-    span: "small",
   },
 ];
 

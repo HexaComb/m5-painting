@@ -1,18 +1,18 @@
 "use client";
 
-import Image from "next/image";
+import Script from "next/script";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
-import { useQuery } from "convex/react";
-import { api } from "../../../convex/_generated/api";
-import type { Project } from "@/lib/content-types";
 
-export function Projects({ initialProjects }: { initialProjects?: Project[] | null }) {
-  const queryProjects = useQuery(api.content.getProjects);
-  const projects = queryProjects === undefined ? initialProjects : queryProjects;
-  if (!projects) return null;
+const ELFSIGHT_APP_ID = "1aa25ae7-53ab-4381-a393-0dd7094a4dc1";
+
+export function Projects() {
   return (
     <section id="projects" className="relative bg-muted/40 py-20 sm:py-28">
+      <Script
+        src="https://elfsightcdn.com/platform.js"
+        strategy="lazyOnload"
+      />
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         {/* Header */}
         <Reveal>
@@ -31,33 +31,13 @@ export function Projects({ initialProjects }: { initialProjects?: Project[] | nu
           </div>
         </Reveal>
 
-        {/* Uniform grid — every image same size */}
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project, i) => (
-            <Reveal
-              key={i}
-              delay={Math.min(i + 1, 4) as 0 | 1 | 2 | 3 | 4}
-            >
-              <div className="group relative aspect-[4/3] overflow-hidden rounded-xl bg-muted">
-                <Image
-                  src={project.imageUrl}
-                  alt={project.altText}
-                  fill
-                  className="object-cover transition-transform duration-600 ease-out group-hover:scale-[1.04]"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
-                {/* Gradient overlay on hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/10 to-transparent opacity-0 transition-opacity duration-400 group-hover:opacity-100" />
-                {/* Label on hover */}
-                <div className="absolute bottom-0 left-0 right-0 translate-y-2 p-5 opacity-0 transition-all duration-400 ease-out group-hover:translate-y-0 group-hover:opacity-100">
-                  <span className="rounded-full bg-white px-3.5 py-1.5 text-xs font-semibold text-primary shadow-sm">
-                    {project.label}
-                  </span>
-                </div>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+        {/* Instagram feed */}
+        <Reveal>
+          <div
+            className={`elfsight-app-${ELFSIGHT_APP_ID}`}
+            data-elfsight-app-lazy
+          />
+        </Reveal>
 
         <Reveal>
           <div className="mt-10 text-center">

@@ -34,15 +34,6 @@ const schema = defineSchema({
     items: v.array(v.string()),
   }).index("by_order", ["order"]),
 
-  // Project gallery (multiple items)
-  projects: defineTable({
-    order: v.number(),
-    imageUrl: v.string(),
-    altText: v.string(),
-    label: v.string(),
-    span: v.union(v.literal("large"), v.literal("small")),
-  }).index("by_order", ["order"]),
-
   // About section (single document)
   aboutContent: defineTable({
     subtitle: v.string(),
