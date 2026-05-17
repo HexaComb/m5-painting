@@ -43,9 +43,9 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
           <Image
             src="/images/logo.webp"
             alt={settings.businessName}
-            width={48}
-            height={48}
-            className="h-9 w-auto sm:h-11"
+            width={1024}
+            height={1024}
+            className="h-10 w-auto sm:h-12"
             priority
           />
           <span

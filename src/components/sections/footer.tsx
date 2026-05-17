@@ -36,9 +36,9 @@ export function Footer({
               <Image
                 src="/images/logo.webp"
                 alt={settings.businessName}
-                width={36}
-                height={36}
-                className="h-9 w-auto brightness-0 invert"
+                width={1024}
+                height={1024}
+                className="h-12 w-auto"
               />
               <div>
                 <p className="text-base font-bold font-heading">{settings.businessName}</p>
