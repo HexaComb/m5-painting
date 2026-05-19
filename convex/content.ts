@@ -4,6 +4,7 @@ import {
   query,
   mutation,
   internalMutation,
+  type MutationCtx,
   type QueryCtx,
 } from "./_generated/server";
 
@@ -12,6 +13,25 @@ async function requireAuth(ctx: QueryCtx) {
   const userId = await getAuthUserId(ctx);
   if (!userId) throw new Error("Not authenticated");
   return userId;
+}
+
+/** Keep hero CTA phone and contact section in sync with site settings. */
+async function syncContactFieldsFromSiteSettings(
+  ctx: MutationCtx,
+  fields: { phone: string; email: string; address: string },
+) {
+  const hero = await ctx.db.query("heroContent").first();
+  if (hero) {
+    await ctx.db.patch(hero._id, { ctaPhone: fields.phone });
+  }
+  const contact = await ctx.db.query("contactContent").first();
+  if (contact) {
+    await ctx.db.patch(contact._id, {
+      phone: fields.phone,
+      email: fields.email,
+      location: fields.address,
+    });
+  }
 }
 
 function normalizeInstagramEmbedUrl(url: string): string | null {
@@ -73,6 +93,11 @@ export const updateSiteSettings = mutation({
     } else {
       await ctx.db.insert("siteSettings", args);
     }
+    await syncContactFieldsFromSiteSettings(ctx, {
+      phone: args.phone,
+      email: args.email,
+      address: args.address,
+    });
     return null;
   },
 });
@@ -108,16 +133,17 @@ export const updateHeroContent = mutation({
     highlightText: v.string(),
     bodyText: v.string(),
     ctaText: v.string(),
-    ctaPhone: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
+    const settings = await ctx.db.query("siteSettings").first();
+    const data = { ...args, ctaPhone: settings?.phone ?? "" };
     const existing = await ctx.db.query("heroContent").first();
     if (existing) {
-      await ctx.db.patch(existing._id, args);
+      await ctx.db.patch(existing._id, data);
     } else {
-      await ctx.db.insert("heroContent", args);
+      await ctx.db.insert("heroContent", data);
     }
     return null;
   },
@@ -459,18 +485,22 @@ export const updateContactContent = mutation({
     subtitle: v.string(),
     title: v.string(),
     description: v.string(),
-    phone: v.string(),
-    email: v.string(),
-    location: v.string(),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
+    const settings = await ctx.db.query("siteSettings").first();
+    const data = {
+      ...args,
+      phone: settings?.phone ?? "",
+      email: settings?.email ?? "",
+      location: settings?.address ?? "",
+    };
     const existing = await ctx.db.query("contactContent").first();
     if (existing) {
-      await ctx.db.patch(existing._id, args);
+      await ctx.db.patch(existing._id, data);
     } else {
-      await ctx.db.insert("contactContent", args);
+      await ctx.db.insert("contactContent", data);
     }
     return null;
   },
