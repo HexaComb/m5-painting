@@ -47,6 +47,13 @@ export interface AboutValue {
   description: string;
 }
 
+export interface InstagramPost {
+  _id: string;
+  _creationTime: number;
+  order: number;
+  embedUrl: string;
+}
+
 export interface Review {
   _id: string;
   _creationTime: number;
@@ -74,6 +81,7 @@ export interface SiteContent {
   services: Service[] | null;
   aboutContent: AboutContent | null;
   aboutValues: AboutValue[] | null;
+  instagramPosts: InstagramPost[] | null;
   reviews: Review[] | null;
   contactContent: ContactContent | null;
 }

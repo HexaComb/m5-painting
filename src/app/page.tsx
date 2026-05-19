@@ -14,6 +14,7 @@ import {
   defaultServices,
   defaultAboutContent,
   defaultAboutValues,
+  defaultInstagramPosts,
   defaultReviews,
   defaultContactContent,
 } from "@/lib/default-content";
@@ -32,6 +33,7 @@ const content = buildContent ?? {
   services: defaultServices,
   aboutContent: defaultAboutContent,
   aboutValues: defaultAboutValues,
+  instagramPosts: defaultInstagramPosts,
   reviews: defaultReviews,
   contactContent: defaultContactContent,
 };
@@ -46,7 +48,7 @@ export default function Home() {
         <Separator className="bg-border" />
 
         <Services initialServices={content.services} />
-        <Projects />
+        <Projects initialPosts={content.instagramPosts} />
 
         <About
           initialAbout={content.aboutContent}

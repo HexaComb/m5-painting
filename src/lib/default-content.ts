@@ -4,6 +4,7 @@ import type {
   Service,
   AboutContent,
   AboutValue,
+  InstagramPost,
   Review,
   ContactContent,
 } from "./content-types";
@@ -150,6 +151,8 @@ export const defaultAboutValues: AboutValue[] = [
       "We listen to what you want and bring it to life, whether that's a bold accent wall or a complete refresh.",
   },
 ];
+
+export const defaultInstagramPosts: InstagramPost[] = [];
 
 export const defaultReviews: Review[] = [
   {
