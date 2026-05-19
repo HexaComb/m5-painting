@@ -1,7 +1,8 @@
 "use client";
 
 import { useAuthActions } from "@convex-dev/auth/react";
-import { useState } from "react";
+import { useConvexAuth } from "convex/react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,10 +19,17 @@ import { toast } from "sonner";
 
 export default function LoginPage() {
   const { signIn } = useAuthActions();
+  const { isAuthenticated, isLoading: authLoading } = useConvexAuth();
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      router.replace("/admin/dashboard");
+    }
+  }, [authLoading, isAuthenticated, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,13 +37,16 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      await signIn("admin-credentials", {
+      const result = await signIn("admin-credentials", {
         email: username,
         password,
         flow: "signIn",
       });
-      router.push("/admin/dashboard");
-    } catch {
+      if (!result.signingIn) {
+        toast.error("Invalid username or password");
+      }
+    } catch (error) {
+      console.error("Admin sign-in failed:", error);
       toast.error("Invalid username or password");
     } finally {
       setLoading(false);
@@ -61,7 +72,7 @@ export default function LoginPage() {
               <Input
                 id="username"
                 type="text"
-                placeholder="admin"
+                placeholder="m5-painting-admin"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 required
