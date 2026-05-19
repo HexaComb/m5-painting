@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import {
   Activity,
   BarChart3,
+  Image,
   Info,
   LayoutDashboard,
   LogOut,
@@ -42,6 +43,7 @@ const contentNav = [
   { href: "/admin/hero", label: "Hero", icon: Sparkles },
   { href: "/admin/services", label: "Services", icon: Paintbrush },
   { href: "/admin/about", label: "About", icon: Info },
+  { href: "/admin/projects", label: "Projects", icon: Image },
   { href: "/admin/reviews", label: "Reviews", icon: Star },
   { href: "/admin/contact", label: "Contact", icon: Phone },
 ];

@@ -18,6 +18,7 @@ import {
   Phone,
   Settings,
   Sparkles,
+  Image,
   Info,
 } from "lucide-react";
 
@@ -43,6 +44,14 @@ const sections = [
     icon: Info,
     href: "/admin/about",
     color: "bg-purple-500/10 text-purple-600",
+  },
+  {
+    title: "Projects",
+    description: "Instagram posts and reels for the portfolio section",
+    icon: Image,
+    href: "/admin/projects",
+    color: "bg-pink-500/10 text-pink-600",
+    countKey: "instagramPosts" as const,
   },
   {
     title: "Reviews",
@@ -77,11 +86,13 @@ const sections = [
 
 export default function DashboardPage() {
   const services = useQuery(api.content.getServices);
+  const instagramPosts = useQuery(api.content.getInstagramPosts);
   const reviews = useQuery(api.content.getReviews);
   const siteSettings = useQuery(api.content.getSiteSettings);
 
   const counts = {
     services: services?.length ?? 0,
+    instagramPosts: instagramPosts?.length ?? 0,
     reviews: reviews?.length ?? 0,
   };
 
