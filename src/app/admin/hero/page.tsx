@@ -27,7 +27,6 @@ export default function HeroPage() {
     highlightText: "",
     bodyText: "",
     ctaText: "",
-    ctaPhone: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -39,7 +38,6 @@ export default function HeroPage() {
         highlightText: hero.highlightText,
         bodyText: hero.bodyText,
         ctaText: hero.ctaText,
-        ctaPhone: hero.ctaPhone,
       });
     }
   }, [hero]);
@@ -84,7 +82,12 @@ export default function HeroPage() {
         <CardHeader>
           <CardTitle>Content</CardTitle>
           <CardDescription>
-            Edit the hero banner text and call-to-action
+            Edit the hero banner text and call-to-action. The phone button uses
+            the number from{" "}
+            <Link href="/admin/settings" className="text-primary underline">
+              Site Settings
+            </Link>
+            .
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
@@ -139,27 +142,15 @@ export default function HeroPage() {
             />
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label>CTA Button Text</Label>
-              <Input
-                value={form.ctaText}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, ctaText: e.target.value }))
-                }
-                placeholder="Get a Free Estimate"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Phone Number</Label>
-              <Input
-                value={form.ctaPhone}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, ctaPhone: e.target.value }))
-                }
-                placeholder="559-451-1022"
-              />
-            </div>
+          <div className="space-y-2">
+            <Label>CTA Button Text</Label>
+            <Input
+              value={form.ctaText}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, ctaText: e.target.value }))
+              }
+              placeholder="Get a Free Estimate"
+            />
           </div>
 
           <div className="flex justify-end pt-2">

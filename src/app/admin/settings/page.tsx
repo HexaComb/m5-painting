@@ -41,12 +41,14 @@ export default function SettingsPage() {
         <Link href="/admin/dashboard"><Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button></Link>
         <div>
           <h1 className="text-2xl font-bold">Site Settings</h1>
-          <p className="text-sm text-muted-foreground">Global business information and metadata</p>
+          <p className="text-sm text-muted-foreground">
+            Phone, email, and address update across the header, hero, contact section, and footer
+          </p>
         </div>
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Business Info</CardTitle><CardDescription>Used across the site — header, footer, and meta tags</CardDescription></CardHeader>
+        <CardHeader><CardTitle>Business Info</CardTitle><CardDescription>Single source for phone, email, and location shown site-wide (header, hero, contact, footer)</CardDescription></CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2"><Label>Business Name</Label><Input value={form.businessName} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="M5 Painting" /></div>
