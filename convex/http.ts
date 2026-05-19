@@ -19,6 +19,7 @@ http.route({
       services,
       aboutContent,
       aboutValues,
+      instagramPosts,
       reviews,
       contactContent,
     ] = await Promise.all([
@@ -27,6 +28,7 @@ http.route({
       ctx.runQuery(api.content.getServices),
       ctx.runQuery(api.content.getAboutContent),
       ctx.runQuery(api.content.getAboutValues),
+      ctx.runQuery(api.content.getInstagramPosts),
       ctx.runQuery(api.content.getReviews),
       ctx.runQuery(api.content.getContactContent),
     ]);
@@ -38,6 +40,7 @@ http.route({
         services,
         aboutContent,
         aboutValues,
+        instagramPosts,
         reviews,
         contactContent,
       }),

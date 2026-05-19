@@ -49,6 +49,12 @@ const schema = defineSchema({
     description: v.string(),
   }).index("by_order", ["order"]),
 
+  // Instagram posts for Projects section (multiple items)
+  instagramPosts: defineTable({
+    order: v.number(),
+    embedUrl: v.string(),
+  }).index("by_order", ["order"]),
+
   // Customer reviews (multiple items)
   reviews: defineTable({
     order: v.number(),

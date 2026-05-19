@@ -14,6 +14,23 @@ async function requireAuth(ctx: QueryCtx) {
   return userId;
 }
 
+function normalizeInstagramEmbedUrl(url: string): string | null {
+  const trimmed = url.trim();
+  const match = trimmed.match(
+    /(?:https?:\/\/)?(?:www\.)?instagram\.com\/(p|reel)\/([A-Za-z0-9_-]+)/i,
+  );
+  if (!match) return null;
+  const [, type, shortcode] = match;
+  return `https://www.instagram.com/${type}/${shortcode}/`;
+}
+
+const instagramPostValidator = v.object({
+  _id: v.id("instagramPosts"),
+  _creationTime: v.number(),
+  order: v.number(),
+  embedUrl: v.string(),
+});
+
 // ═══════════════════════════════════════════════════════════════════════
 // SITE SETTINGS
 // ═══════════════════════════════════════════════════════════════════════
@@ -280,6 +297,67 @@ export const addAboutValue = mutation({
 
 export const deleteAboutValue = mutation({
   args: { id: v.id("aboutValues") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    await ctx.db.delete(id);
+    return null;
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════════════
+// INSTAGRAM POSTS (Projects section)
+// ═══════════════════════════════════════════════════════════════════════
+
+export const getInstagramPosts = query({
+  args: {},
+  returns: v.array(instagramPostValidator),
+  handler: async (ctx) => {
+    return await ctx.db.query("instagramPosts").withIndex("by_order").collect();
+  },
+});
+
+export const addInstagramPost = mutation({
+  args: { embedUrl: v.string() },
+  returns: v.id("instagramPosts"),
+  handler: async (ctx, { embedUrl }) => {
+    await requireAuth(ctx);
+    const normalized = normalizeInstagramEmbedUrl(embedUrl);
+    if (!normalized) {
+      throw new Error(
+        "Invalid Instagram URL. Use a post or reel link like https://www.instagram.com/reel/…",
+      );
+    }
+    const existing = await ctx.db.query("instagramPosts").collect();
+    const maxOrder = existing.reduce((max, p) => Math.max(max, p.order), 0);
+    return await ctx.db.insert("instagramPosts", {
+      embedUrl: normalized,
+      order: maxOrder + 1,
+    });
+  },
+});
+
+export const updateInstagramPost = mutation({
+  args: {
+    id: v.id("instagramPosts"),
+    embedUrl: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, { id, embedUrl }) => {
+    await requireAuth(ctx);
+    const normalized = normalizeInstagramEmbedUrl(embedUrl);
+    if (!normalized) {
+      throw new Error(
+        "Invalid Instagram URL. Use a post or reel link like https://www.instagram.com/reel/…",
+      );
+    }
+    await ctx.db.patch(id, { embedUrl: normalized });
+    return null;
+  },
+});
+
+export const deleteInstagramPost = mutation({
+  args: { id: v.id("instagramPosts") },
   returns: v.null(),
   handler: async (ctx, { id }) => {
     await requireAuth(ctx);
