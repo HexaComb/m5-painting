@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import {
   ArrowLeft,
-  Instagram,
+  Image as ImageIcon,
   Loader2,
   Pencil,
   Plus,
@@ -144,7 +144,7 @@ export default function ProjectsPage() {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-1 items-start gap-3">
                     <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-pink-500/10">
-                      <Instagram className="h-4 w-4 text-pink-600" />
+                      <ImageIcon className="h-4 w-4 text-pink-600" />
                     </div>
                     <div className="min-w-0">
                       <p className="truncate text-sm font-medium">{post.embedUrl}</p>

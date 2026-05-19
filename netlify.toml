@@ -1,9 +1,13 @@
 [build]
-  command = "bun install --frozen-lockfile && bun run build"
+  command = "bun run build"
   publish = "out"
 
 [build.environment]
   NODE_VERSION = "20"
+  BUN_FLAGS = "--frozen-lockfile"
+  NEXT_TELEMETRY_DISABLED = "1"
 
 [[plugins]]
-  package = "@netlify/plugin-nextjs"
+  package = "netlify-plugin-cache"
+  [plugins.inputs]
+    paths = [".next/cache"]
