@@ -6,12 +6,20 @@ import { Reveal } from "@/components/ui/reveal";
 import { Phone, Star } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import type { HeroContent } from "@/lib/content-types";
+import type { HeroContent, SiteSettings } from "@/lib/content-types";
 
-export function Hero({ initialHero }: { initialHero?: HeroContent | null }) {
+export function Hero({
+  initialHero,
+  initialSettings,
+}: {
+  initialHero?: HeroContent | null;
+  initialSettings?: SiteSettings | null;
+}) {
   const queryHero = useQuery(api.content.getHeroContent);
+  const querySettings = useQuery(api.content.getSiteSettings);
   const hero = queryHero === undefined ? initialHero : queryHero;
-  if (!hero) return null;
+  const settings = querySettings === undefined ? initialSettings : querySettings;
+  if (!hero || !settings) return null;
   return (
     <section className="relative overflow-hidden bg-primary pt-16 lg:pt-[4.5rem]">
       {/* Subtle paint texture on the blue */}
@@ -71,14 +79,14 @@ export function Hero({ initialHero }: { initialHero?: HeroContent | null }) {
                     {hero.ctaText}
                   </Button>
                 </a>
-                <a href={`tel:${hero.ctaPhone.replace(/\D/g, "")}`} data-track="hero-phone">
+                <a href={`tel:${settings.phone.replace(/\D/g, "")}`} data-track="hero-phone">
                   <Button
                     variant="outline"
                     size="lg"
                     className="h-auto border-white/25 bg-transparent px-6 py-3.5 text-base font-semibold text-primary-foreground hover:bg-white/10"
                   >
                     <Phone className="mr-2 h-4 w-4" />
-                    {hero.ctaPhone}
+                    {settings.phone}
                   </Button>
                 </a>
               </div>

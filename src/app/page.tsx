@@ -43,7 +43,10 @@ export default function Home() {
     <>
       <Header initialSettings={content.siteSettings} />
       <main>
-        <Hero initialHero={content.heroContent} />
+        <Hero
+          initialHero={content.heroContent}
+          initialSettings={content.siteSettings}
+        />
 
         <Separator className="bg-border" />
 
@@ -61,12 +64,12 @@ export default function Home() {
 
         <Separator className="bg-border" />
 
-        <Contact initialContact={content.contactContent} />
+        <Contact
+          initialContact={content.contactContent}
+          initialSettings={content.siteSettings}
+        />
       </main>
-      <Footer
-        initialSettings={content.siteSettings}
-        initialContact={content.contactContent}
-      />
+      <Footer initialSettings={content.siteSettings} />
     </>
   );
 }

@@ -9,16 +9,24 @@ import { Phone, Mail, MapPin, Loader2 } from "lucide-react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
-import type { ContactContent } from "@/lib/content-types";
+import type { ContactContent, SiteSettings } from "@/lib/content-types";
 
-export function Contact({ initialContact }: { initialContact?: ContactContent | null }) {
+export function Contact({
+  initialContact,
+  initialSettings,
+}: {
+  initialContact?: ContactContent | null;
+  initialSettings?: SiteSettings | null;
+}) {
   const queryContact = useQuery(api.content.getContactContent);
+  const querySettings = useQuery(api.content.getSiteSettings);
   const contact = queryContact === undefined ? initialContact : queryContact;
+  const settings = querySettings === undefined ? initialSettings : querySettings;
   const submitLead = useMutation(api.content.submitLead);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  if (!contact) return null;
+  if (!contact || !settings) return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -88,7 +96,7 @@ export function Contact({ initialContact }: { initialContact?: ContactContent | 
 
                 <div className="space-y-4 pt-2">
                   <a
-                    href={`tel:${contact.phone.replace(/\D/g, "")}`}
+                    href={`tel:${settings.phone.replace(/\D/g, "")}`}
                     className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
@@ -98,7 +106,7 @@ export function Contact({ initialContact }: { initialContact?: ContactContent | 
                       <p className="text-xs font-medium text-muted-foreground">
                         Give us a call
                       </p>
-                      <p className="text-sm font-bold">{contact.phone}</p>
+                      <p className="text-sm font-bold">{settings.phone}</p>
                     </div>
                   </a>
                   <div className="flex items-center gap-3 text-foreground/80">
@@ -110,12 +118,12 @@ export function Contact({ initialContact }: { initialContact?: ContactContent | 
                         Based in
                       </p>
                       <p className="text-sm font-bold">
-                        {contact.location}
+                        {settings.address}
                       </p>
                     </div>
                   </div>
                   <a
-                    href={`mailto:${contact.email}`}
+                    href={`mailto:${settings.email}`}
                     className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -126,7 +134,7 @@ export function Contact({ initialContact }: { initialContact?: ContactContent | 
                         Email us
                       </p>
                       <p className="text-sm font-bold">
-                        {contact.email}
+                        {settings.email}
                       </p>
                     </div>
                   </a>
