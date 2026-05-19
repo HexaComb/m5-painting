@@ -23,14 +23,52 @@ export function Hero({
   return (
     <section className="relative overflow-hidden bg-primary pt-16 lg:pt-[4.5rem]">
       {/* Subtle paint texture on the blue */}
-      <div className="absolute inset-0 opacity-[0.03]" style={{
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='18' r='1.2' fill='white'/%3E%3Ccircle cx='48' cy='8' r='0.8' fill='white'/%3E%3Ccircle cx='78' cy='42' r='1' fill='white'/%3E%3Ccircle cx='28' cy='65' r='0.7' fill='white'/%3E%3Ccircle cx='62' cy='75' r='1.3' fill='white'/%3E%3Ccircle cx='8' cy='85' r='0.8' fill='white'/%3E%3Ccircle cx='88' cy='15' r='0.6' fill='white'/%3E%3Ccircle cx='55' cy='52' r='0.9' fill='white'/%3E%3C/svg%3E")`
-      }} />
+      <div
+        className="absolute inset-0 z-[1] opacity-[0.03]"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='18' r='1.2' fill='white'/%3E%3Ccircle cx='48' cy='8' r='0.8' fill='white'/%3E%3Ccircle cx='78' cy='42' r='1' fill='white'/%3E%3Ccircle cx='28' cy='65' r='0.7' fill='white'/%3E%3Ccircle cx='62' cy='75' r='1.3' fill='white'/%3E%3Ccircle cx='8' cy='85' r='0.8' fill='white'/%3E%3Ccircle cx='88' cy='15' r='0.6' fill='white'/%3E%3Ccircle cx='55' cy='52' r='0.9' fill='white'/%3E%3C/svg%3E")`,
+        }}
+      />
 
-      <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-        <div className="grid gap-8 py-16 sm:py-20 md:grid-cols-12 md:items-center md:gap-12 md:py-24 lg:py-28">
-          {/* Text — takes 7 columns on desktop for asymmetry */}
-          <div className="md:col-span-7 lg:col-span-7">
+      {/* Central Valley backdrop — mountains as atmosphere, not a cropped side card */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 z-0">
+        {/* Desktop: right-side panorama bleeding to the viewport edge */}
+        <div className="absolute inset-y-0 right-0 hidden w-[min(58vw,720px)] lg:block">
+          <Image
+            src="/images/hero-banner.webp"
+            alt=""
+            fill
+            className="object-cover object-[62%_12%] saturate-[0.92]"
+            priority
+            sizes="60vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-primary from-10% via-primary/75 via-35% to-primary/5" />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-primary/25" />
+        </div>
+
+        {/* Mobile & tablet: low horizon band so the peaks stay visible */}
+        <div className="absolute inset-x-0 bottom-0 h-[min(42vh,320px)] lg:hidden">
+          <Image
+            src="/images/hero-banner.webp"
+            alt=""
+            fill
+            className="object-cover object-[50%_8%] saturate-[0.92]"
+            priority
+            sizes="100vw"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-primary from-15% via-primary/85 via-55% to-primary/20" />
+        </div>
+      </div>
+
+      {/* Accessible description for screen readers */}
+      <span className="sr-only">
+        The M5 Painting team at work in the Central Valley, with Sierra Nevada
+        mountains in the distance
+      </span>
+
+      <div className="relative z-[2] mx-auto max-w-6xl px-5 sm:px-6">
+        <div className="py-16 sm:py-20 md:py-24 lg:py-28">
+          <div className="max-w-2xl lg:max-w-xl xl:max-w-2xl">
             <Reveal>
               <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-primary-foreground/90">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-white/80" />
@@ -120,26 +158,6 @@ export function Hero({
                     Licensed, Bonded &amp; Insured
                   </span>
                 </div>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Hero image — takes 5 columns, pushed right */}
-          <div className="md:col-span-5 lg:col-span-5">
-            <Reveal delay={2}>
-              <div className="relative mx-auto max-w-sm md:max-w-none">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-2xl shadow-black/25 ring-1 ring-white/10">
-                  <Image
-                    src="/images/hero-banner.webp"
-                    alt="The M5 Painting team at work in the Central Valley"
-                    fill
-                    className="object-cover"
-                    priority
-                    sizes="(max-width: 768px) 90vw, 40vw"
-                  />
-                </div>
-                {/* Offset background shape */}
-                <div className="absolute -bottom-3 -right-3 -z-10 h-full w-full rounded-2xl bg-white/8" />
               </div>
             </Reveal>
           </div>
