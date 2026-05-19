@@ -8,11 +8,14 @@ function decodePrivateKey(key: string | undefined): string | undefined {
   if (!key) return undefined;
   if (key.includes("\n")) return key;
   if (key.startsWith("-----BEGIN")) {
-    return key
-      .replace("-----BEGIN PRIVATE KEY----- ", "-----BEGIN PRIVATE KEY-----\n")
-      .replace(" -----END PRIVATE KEY-----", "\n-----END PRIVATE KEY-----")
-      .split(" ")
-      .join("\n");
+    const body = key
+      .replace(/^-----BEGIN PRIVATE KEY-----\s*/, "")
+      .replace(/\s*-----END PRIVATE KEY-----$/, "");
+    return [
+      "-----BEGIN PRIVATE KEY-----",
+      ...body.split(/\s+/),
+      "-----END PRIVATE KEY-----",
+    ].join("\n");
   }
   try {
     return atob(key);
