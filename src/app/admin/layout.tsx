@@ -4,7 +4,6 @@ import { Authenticated, Unauthenticated } from "convex/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
-import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -59,11 +58,9 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   return (
-    <ConvexClientProvider>
-      <TooltipProvider>
-        <Toaster />
-        <AuthGuard>{children}</AuthGuard>
-      </TooltipProvider>
-    </ConvexClientProvider>
+    <TooltipProvider>
+      <Toaster />
+      <AuthGuard>{children}</AuthGuard>
+    </TooltipProvider>
   );
 }
