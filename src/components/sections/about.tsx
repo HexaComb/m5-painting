@@ -1,20 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { Heart, Handshake, Shield, Palette } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { AboutContent, AboutValue } from "@/lib/content-types";
-
-const iconMap = {
-  Heart,
-  Handshake,
-  Shield,
-  Palette,
-} as const;
-
-type IconName = keyof typeof iconMap;
 
 export function About({
   initialAbout,
@@ -28,15 +18,16 @@ export function About({
   const about = queryAbout === undefined ? initialAbout : queryAbout;
   const values = queryValues === undefined ? initialValues : queryValues;
   if (!about || !values) return null;
+
   return (
     <section id="about" className="relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="grid gap-14 lg:grid-cols-12 lg:items-start">
-          {/* Image column — 5 cols, sticky on scroll */}
+          {/* Image column */}
           <div className="lg:col-span-5 lg:sticky lg:top-24">
             <Reveal>
               <div className="relative mx-auto max-w-sm lg:max-w-none">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl shadow-primary/10">
+                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15">
                   <Image
                     src="/images/team-collage.webp"
                     alt="Matt and the M5 Painting crew on a job site"
@@ -45,19 +36,15 @@ export function About({
                     sizes="(max-width: 1024px) 90vw, 40vw"
                   />
                 </div>
-                {/* Blue accent bar at bottom */}
-                <div className="absolute -bottom-2 left-4 right-4 h-2 rounded-full brand-gradient-blue opacity-60" />
               </div>
             </Reveal>
           </div>
 
-          {/* Content column — 7 cols */}
+          {/* Content column */}
           <div className="space-y-10 lg:col-span-7">
             <Reveal>
               <div>
-                <p className="text-label-light">
-                  {about.subtitle}
-                </p>
+                <p className="text-label-light">{about.subtitle}</p>
                 <h2 className="mt-2 text-headline font-bold text-foreground">
                   {about.title}
                 </h2>
@@ -75,28 +62,32 @@ export function About({
               </div>
             </Reveal>
 
-            {/* Values — 2x2 grid with left border accent */}
-            <div className="grid gap-6 sm:grid-cols-2">
-              {values.map((value, idx) => {
-                const Icon = iconMap[value.iconName as IconName] ?? Heart;
-                return (
-                  <Reveal key={value._id} delay={Math.min(idx + 1, 4) as 0 | 1 | 2 | 3 | 4}>
-                    <div className="space-y-2.5">
-                      <div className="flex items-center gap-2.5">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
-                          <Icon className="h-4 w-4" />
-                        </div>
-                        <h3 className="text-sm font-bold text-foreground">
-                          {value.title}
-                        </h3>
-                      </div>
-                      <p className="text-sm leading-relaxed text-muted-foreground">
+            {/* Values — numbered list with rule separators */}
+            <div className="divide-y divide-border">
+              {values.map((value, idx) => (
+                <Reveal
+                  key={value._id}
+                  delay={Math.min(idx + 1, 4) as 0 | 1 | 2 | 3 | 4}
+                  className="py-5"
+                >
+                  <div className="flex gap-5">
+                    <span
+                      aria-hidden="true"
+                      className="shrink-0 pt-px text-[0.65rem] font-bold leading-none tracking-[0.15em] text-brand-blue/60"
+                    >
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <div>
+                      <h3 className="text-sm font-bold text-foreground">
+                        {value.title}
+                      </h3>
+                      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
                         {value.description}
                       </p>
                     </div>
-                  </Reveal>
-                );
-              })}
+                  </div>
+                </Reveal>
+              ))}
             </div>
           </div>
         </div>
