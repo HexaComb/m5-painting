@@ -24,7 +24,7 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
   const queryServices = useQuery(api.content.getServices);
   const services = queryServices === undefined ? initialServices : queryServices;
   return (
-    <section id="services" className="relative py-20 sm:py-28 paint-texture">
+    <section id="services" className="surface-paint-shop paint-texture relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         {/* Section header */}
         <Reveal>

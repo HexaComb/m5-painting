@@ -20,7 +20,11 @@ export function About({
   if (!about || !values) return null;
 
   return (
-    <section id="about" className="relative py-20 sm:py-28">
+    <section id="about" className="brand-surface-dark relative overflow-hidden py-20 sm:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-20 top-24 h-56 w-[min(70vw,420px)] brand-swoosh"
+      />
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="grid gap-14 lg:grid-cols-12 lg:items-start">
           {/* Image column */}
@@ -44,8 +48,8 @@ export function About({
           <div className="space-y-10 lg:col-span-7">
             <Reveal>
               <div>
-                <p className="text-label-light">{about.subtitle}</p>
-                <h2 className="mt-2 text-headline font-bold text-foreground">
+                <p className="text-label text-brand-electric">{about.subtitle}</p>
+                <h2 className="mt-2 text-headline font-bold text-on-dark">
                   {about.title}
                 </h2>
                 <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
@@ -55,7 +59,7 @@ export function About({
             <Reveal delay={1}>
               <div className="space-y-4">
                 {about.paragraphs.map((p, i) => (
-                  <p key={i} className="text-body-lg text-muted-foreground">
+                  <p key={i} className="text-body-lg text-on-dark-secondary">
                     {p}
                   </p>
                 ))}
@@ -63,7 +67,7 @@ export function About({
             </Reveal>
 
             {/* Values — numbered list with rule separators */}
-            <div className="divide-y divide-border">
+            <div className="divide-y divide-white/10">
               {values.map((value, idx) => (
                 <Reveal
                   key={value._id}
@@ -73,15 +77,15 @@ export function About({
                   <div className="flex gap-5">
                     <span
                       aria-hidden="true"
-                      className="shrink-0 pt-px text-[0.65rem] font-bold leading-none tracking-[0.15em] text-brand-blue/60"
+                      className="shrink-0 pt-px text-[0.65rem] font-bold leading-none tracking-[0.15em] text-brand-electric/80"
                     >
                       {String(idx + 1).padStart(2, "0")}
                     </span>
                     <div>
-                      <h3 className="text-sm font-bold text-foreground">
+                      <h3 className="text-sm font-bold text-on-dark">
                         {value.title}
                       </h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+                      <p className="mt-1.5 text-sm leading-relaxed text-on-dark-secondary">
                         {value.description}
                       </p>
                     </div>

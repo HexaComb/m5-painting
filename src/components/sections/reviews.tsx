@@ -1,14 +1,11 @@
 "use client";
 
-import { Star, Quote } from "lucide-react";
-import { Reveal } from "@/components/ui/reveal";
+import { Star } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { Review } from "@/lib/content-types";
 
-/** Warm star tint: reads as gold on dark without default Tailwind yellow. */
-const starClass =
-  "h-3.5 w-3.5 fill-[oklch(0.78_0.055_78)] text-[oklch(0.78_0.055_78)]";
+const starClass = "chrome-star h-3.5 w-3.5";
 
 function StarRow({
   className,
@@ -33,11 +30,17 @@ function StarRow({
 function formatReviewDate(iso: string) {
   if (!iso) return null;
   const d = new Date(iso);
-  if (Number.isNaN(d.getTime())) return null;
+  if (Number.isNaN(d.getTime())) return iso;
   return d.toLocaleDateString("en-US", {
     month: "short",
     year: "numeric",
   });
+}
+
+function sourceSummary(reviews: Review[]) {
+  return Array.from(
+    new Set(reviews.map((review) => review.source).filter(Boolean))
+  ).join(" and ");
 }
 
 export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }) {
@@ -45,105 +48,87 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
   const reviews = queryReviews === undefined ? initialReviews : queryReviews;
   if (!reviews || reviews.length === 0) return null;
 
+  const sources = sourceSummary(reviews);
+
   return (
     <section
       id="reviews"
-      className="brand-surface-dark relative py-20 sm:py-28"
+      className="surface-proof-wall paint-texture relative py-20 sm:py-28"
       aria-labelledby="reviews-heading"
     >
-      <div
-        className="absolute inset-0 opacity-[0.025]"
-        style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='18' r='1' fill='white'/%3E%3Ccircle cx='48' cy='8' r='0.7' fill='white'/%3E%3Ccircle cx='65' cy='42' r='0.9' fill='white'/%3E%3Ccircle cx='28' cy='65' r='0.6' fill='white'/%3E%3Ccircle cx='55' cy='75' r='1.1' fill='white'/%3E%3C/svg%3E")`,
-        }}
-      />
-
-      <div className="relative mx-auto max-w-6xl px-5 sm:px-6">
-        <Reveal>
-          <header className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-label text-brand-chrome">
-              Local word
-            </p>
+      <div className="mx-auto max-w-6xl px-5 sm:px-6">
+        <div className="grid gap-12 lg:grid-cols-12 lg:items-start">
+          <div className="lg:col-span-4 lg:sticky lg:top-28">
+            <p className="text-label-light">Local word</p>
             <h2
               id="reviews-heading"
-              className="mt-2 text-headline font-bold text-white"
+              className="mt-2 text-headline font-bold text-foreground"
             >
-              From homeowners around Sanger, Fresno, and nearby
+              Good work gets talked about.
             </h2>
-            <div className="mx-auto mt-3 h-0.5 w-14 brand-gradient-blue" />
-          </header>
-        </Reveal>
+            <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
+            <p className="mt-5 text-body-lg text-muted-foreground">
+              Homeowners around the Valley call out the same things: careful
+              prep, clean finishes, and a crew that follows through.
+            </p>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          {reviews.map((review, i) => {
-            const featured = i === 0;
-            const dateLabel = formatReviewDate(review.date);
+            <div className="mt-7 border-y border-border py-5">
+              <StarRow />
+              <div className="mt-3 space-y-1">
+                <p className="text-sm font-bold text-foreground">
+                  Five-star rated by local customers
+                </p>
+                {sources ? (
+                  <p className="text-sm text-muted-foreground">
+                    Reviews gathered from {sources}.
+                  </p>
+                ) : null}
+              </div>
+            </div>
+          </div>
 
-            return (
-              <Reveal
-                key={review._id}
-                delay={Math.min(i + 1, 4) as 0 | 1 | 2 | 3 | 4}
-                className={featured ? "lg:col-span-2" : undefined}
-              >
-                <figure
-                  className={
-                    featured
-                      ? "relative overflow-hidden rounded-2xl border border-white/[0.12] bg-brand-navy/55 p-8 shadow-xl shadow-brand-navy/25 ring-1 ring-white/[0.06] sm:p-10"
-                      : "relative flex h-full flex-col rounded-xl border border-white/[0.10] bg-brand-black/40 p-6 ring-1 ring-white/[0.04] sm:p-7"
-                  }
-                >
-                  {featured ? (
-                    <Quote
-                      className="pointer-events-none absolute right-6 top-6 h-16 w-16 text-brand-electric/[0.12] sm:h-20 sm:w-20"
-                      aria-hidden
-                    />
-                  ) : null}
+          <div className="lg:col-span-8">
+            <div className="divide-y divide-border border-y border-border">
+              {reviews.map((review, i) => {
+                const dateLabel = formatReviewDate(review.date);
 
-                  <div
-                    className={
-                      featured
-                        ? "mb-6 flex flex-wrap items-center justify-between gap-4"
-                        : "mb-4 flex items-center justify-between gap-3"
-                    }
-                  >
-                    <StarRow className={featured ? "scale-110 gap-1" : undefined} />
-                    {!featured ? (
-                      <Quote
-                        className="h-5 w-5 shrink-0 text-white/15"
-                        aria-hidden
-                      />
-                    ) : null}
-                  </div>
+                return (
+                  <div key={review._id} className="py-7 sm:py-8">
+                    <figure className="grid gap-5 sm:grid-cols-[7rem_1fr] sm:gap-8">
+                      <div className="space-y-2">
+                        <p className="text-[0.65rem] font-bold leading-none tracking-[0.15em] text-brand-blue/60">
+                          {String(i + 1).padStart(2, "0")}
+                        </p>
+                        <StarRow />
+                      </div>
 
-                  <blockquote
-                    className={
-                      featured
-                        ? "max-w-[65ch] text-body-lg leading-relaxed text-on-dark-secondary"
-                        : "text-[0.95rem] leading-relaxed text-on-dark-secondary"
-                    }
-                  >
-                    <p className="text-pretty">&ldquo;{review.text}&rdquo;</p>
-                    <footer className="mt-5 flex flex-col gap-1 border-t border-white/10 pt-4 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-2 sm:gap-y-1">
-                      <span className="font-heading text-base font-semibold text-white">
-                        {review.author}
-                      </span>
-                      {dateLabel ? (
-                        <span className="text-sm text-on-dark-muted">
-                          <span className="mx-1 hidden text-on-dark-muted sm:inline">
-                            ·
+                      <blockquote>
+                        <p className="text-pretty text-body-lg text-foreground">
+                          &ldquo;{review.text}&rdquo;
+                        </p>
+                        <footer className="mt-5 flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-baseline sm:gap-x-2">
+                          <span className="font-heading text-base font-semibold text-foreground">
+                            {review.author}
                           </span>
-                          {dateLabel}
-                        </span>
-                      ) : null}
-                      <cite className="text-label not-italic text-brand-chrome sm:ml-auto sm:text-right">
-                        {review.source}
-                      </cite>
-                    </footer>
-                  </blockquote>
-                </figure>
-              </Reveal>
-            );
-          })}
+                          {dateLabel ? (
+                            <span className="text-sm text-muted-foreground">
+                              <span className="mx-1 hidden text-muted-foreground sm:inline">
+                                ·
+                              </span>
+                              {dateLabel}
+                            </span>
+                          ) : null}
+                          <cite className="text-sm font-semibold not-italic text-brand-blue sm:ml-auto sm:text-right">
+                            {review.source}
+                          </cite>
+                        </footer>
+                      </blockquote>
+                    </figure>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </section>

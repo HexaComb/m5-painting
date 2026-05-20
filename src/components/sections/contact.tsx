@@ -74,7 +74,7 @@ export function Contact({
   };
 
   return (
-    <section id="contact" className="relative py-20 sm:py-28">
+    <section id="contact" className="surface-estimate-blue relative py-20 sm:py-28">
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="grid gap-14 lg:grid-cols-12">
           {/* Left: info — 5 cols */}
@@ -110,7 +110,7 @@ export function Contact({
                     </div>
                   </a>
                   <div className="flex items-center gap-3 text-foreground">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-blue/20 bg-brand-blue/10 text-brand-navy">
                       <MapPin className="h-5 w-5" />
                     </div>
                     <div>
@@ -126,7 +126,7 @@ export function Contact({
                     href={`mailto:${settings.email}`}
                     className="flex items-center gap-3 text-foreground transition-colors hover:text-foreground"
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-blue/20 bg-brand-blue/10 text-brand-navy">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
@@ -146,7 +146,7 @@ export function Contact({
           {/* Right: form — 7 cols */}
           <div className="lg:col-span-7">
             <Reveal delay={1}>
-              <div className="rounded-xl border border-border bg-card p-6 shadow-lg shadow-brand-navy/5 sm:p-8">
+              <div className="rounded-xl border border-brand-navy/15 bg-card/95 p-6 shadow-xl shadow-brand-navy/20 sm:p-8">
                 {submitted ? (
                   <div className="py-12 text-center">
                     <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">

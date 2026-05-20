@@ -31,7 +31,7 @@ export function Projects({
   }, [posts]);
 
   return (
-    <section id="projects" className="relative bg-muted/40 py-20 sm:py-28">
+    <section id="projects" className="surface-chrome-yard relative py-20 sm:py-28">
       <Script
         src="https://www.instagram.com/embed.js"
         strategy="lazyOnload"
