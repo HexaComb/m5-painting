@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Lora, Lato } from "next/font/google";
+import { Montserrat, Lato } from "next/font/google";
 import { Tracker } from "@/components/Tracker";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import "./globals.css";
 
-const lora = Lora({
-  variable: "--font-lora",
+const montserrat = Montserrat({
+  variable: "--font-montserrat",
   subsets: ["latin"],
-  weight: ["400", "600", "700"],
+  weight: ["600", "700", "800"],
   display: "swap",
 });
 
@@ -51,7 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${lora.variable} ${lato.variable} font-sans antialiased`}>
+      <body className={`${montserrat.variable} ${lato.variable} font-sans antialiased`}>
         <ConvexClientProvider>
           {children}
           <Tracker />

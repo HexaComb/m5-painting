@@ -6,7 +6,6 @@ import { About } from "@/components/sections/about";
 import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
-import { Separator } from "@/components/ui/separator";
 import type { SiteContent } from "@/lib/content-types";
 import {
   defaultSiteSettings,
@@ -48,8 +47,6 @@ export default function Home() {
           initialSettings={content.siteSettings}
         />
 
-        <Separator className="bg-border" />
-
         <Services initialServices={content.services} />
         <Projects initialPosts={content.instagramPosts} />
 
@@ -58,11 +55,7 @@ export default function Home() {
           initialValues={content.aboutValues}
         />
 
-        <Separator className="bg-primary" />
-
         <Reviews initialReviews={content.reviews} />
-
-        <Separator className="bg-border" />
 
         <Contact
           initialContact={content.contactContent}

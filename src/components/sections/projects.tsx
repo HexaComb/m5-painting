@@ -39,13 +39,13 @@ export function Projects({
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <Reveal>
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-primary">
+            <p className="text-label text-brand-blue">
               Our Work
             </p>
             <h2 className="mt-2 text-headline font-bold text-foreground">
               Projects We&apos;re Proud Of
             </h2>
-            <div className="mx-auto mt-3 h-0.5 w-14 bg-primary" />
+            <div className="mx-auto mt-3 h-0.5 w-14 brand-gradient-blue" />
             <p className="mt-5 text-body-lg text-muted-foreground">
               Every home and business has a story. Here are a few
               transformations we&apos;ve been lucky to be part of.
@@ -69,7 +69,7 @@ export function Projects({
               <Button
                 variant="outline"
                 size="lg"
-                className="h-auto border-primary/20 px-7 py-3.5 text-base font-semibold hover:bg-primary hover:text-primary-foreground"
+                className="brand-gradient-blue h-auto border-0 px-7 py-3.5 text-base font-bold text-white brand-glow hover:opacity-95"
               >
                 Let&apos;s Start Your Project
               </Button>

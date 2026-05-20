@@ -46,7 +46,7 @@ export function About({
                   />
                 </div>
                 {/* Blue accent bar at bottom */}
-                <div className="absolute -bottom-2 left-4 right-4 h-2 rounded-full bg-primary/30" />
+                <div className="absolute -bottom-2 left-4 right-4 h-2 rounded-full brand-gradient-blue opacity-60" />
               </div>
             </Reveal>
           </div>
@@ -55,13 +55,13 @@ export function About({
           <div className="space-y-10 lg:col-span-7">
             <Reveal>
               <div>
-                <p className="text-sm font-semibold uppercase tracking-wider text-primary">
+                <p className="text-label text-brand-blue">
                   {about.subtitle}
                 </p>
                 <h2 className="mt-2 text-headline font-bold text-foreground">
                   {about.title}
                 </h2>
-                <div className="mt-3 h-0.5 w-14 bg-primary" />
+                <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
               </div>
             </Reveal>
 
@@ -83,7 +83,7 @@ export function About({
                   <Reveal key={value._id} delay={Math.min(idx + 1, 4) as 0 | 1 | 2 | 3 | 4}>
                     <div className="space-y-2.5">
                       <div className="flex items-center gap-2.5">
-                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
                           <Icon className="h-4 w-4" />
                         </div>
                         <h3 className="text-sm font-bold text-foreground">

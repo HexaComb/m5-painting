@@ -82,13 +82,13 @@ export function Contact({
             <Reveal>
               <div className="space-y-6">
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-wider text-primary">
+                  <p className="text-label text-brand-blue">
                     {contact.subtitle}
                   </p>
                   <h2 className="mt-2 text-headline font-bold text-foreground">
                     {contact.title}
                   </h2>
-                  <div className="mt-3 h-0.5 w-14 bg-primary" />
+                  <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
                   <p className="mt-5 text-body-lg text-muted-foreground">
                     {contact.description}
                   </p>
@@ -99,7 +99,7 @@ export function Contact({
                     href={`tel:${settings.phone.replace(/\D/g, "")}`}
                     className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg brand-gradient-blue text-white shadow-md brand-glow">
                       <Phone className="h-5 w-5" />
                     </div>
                     <div>
@@ -110,7 +110,7 @@ export function Contact({
                     </div>
                   </a>
                   <div className="flex items-center gap-3 text-foreground/80">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
                       <MapPin className="h-5 w-5" />
                     </div>
                     <div>
@@ -126,7 +126,7 @@ export function Contact({
                     href={`mailto:${settings.email}`}
                     className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
                   >
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                    <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
@@ -146,7 +146,7 @@ export function Contact({
           {/* Right: form — 7 cols */}
           <div className="lg:col-span-7">
             <Reveal delay={1}>
-              <div className="rounded-2xl bg-muted/60 p-6 sm:p-8">
+              <div className="rounded-xl border border-border bg-card p-6 shadow-lg shadow-brand-navy/5 sm:p-8">
                 {submitted ? (
                   <div className="py-12 text-center">
                     <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
