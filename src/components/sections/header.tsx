@@ -20,19 +20,34 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
   const [scrolled, setScrolled] = useState(false);
   const querySettings = useQuery(api.content.getSiteSettings);
   const settings = querySettings === undefined ? initialSettings : querySettings;
+  const isHeaderSolid = scrolled || mobileOpen;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMobileOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen]);
 
   if (!settings) return null;
 
   return (
     <header
       className={`fixed top-0 z-50 w-full border-b transition-all duration-500 ease-out ${
-        scrolled
+        isHeaderSolid
           ? "border-white/10 bg-brand-black/95 shadow-lg shadow-black/50 backdrop-blur-md"
           : "border-transparent bg-transparent shadow-none backdrop-blur-none"
       }`}
@@ -56,7 +71,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               href={link.href}
               data-track={link.track}
               className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-300 ${
-                scrolled
+                isHeaderSolid
                   ? "text-on-dark-secondary hover:text-on-dark"
                   : "text-white/90 hover:text-white"
               }`}
@@ -72,7 +87,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               variant="ghost"
               size="sm"
               className={`font-medium transition-colors duration-300 ${
-                scrolled
+                isHeaderSolid
                   ? "text-on-dark-secondary hover:bg-white/10 hover:text-on-dark"
                   : "text-white/90 hover:bg-white/10 hover:text-white"
               }`}
@@ -92,41 +107,55 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className={`ml-1 inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50 md:hidden ${
-              scrolled ? "text-on-dark-secondary hover:text-on-dark" : "text-white/90 hover:text-white"
+              isHeaderSolid ? "text-on-dark-secondary hover:text-on-dark" : "text-white/90 hover:text-white"
             }`}
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             aria-expanded={mobileOpen}
+            aria-controls="mobile-navigation"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {mobileOpen && (
-        <div className="border-t border-white/10 bg-brand-black px-5 pb-5 pt-3 md:hidden">
-          <nav className="flex flex-col gap-1">
+      <div
+        id="mobile-navigation"
+        aria-hidden={!mobileOpen}
+        inert={!mobileOpen}
+        className={`grid overflow-hidden border-t border-white/10 bg-brand-black/98 transition-[grid-template-rows,opacity] duration-300 ease-out md:hidden ${
+          mobileOpen ? "grid-rows-[1fr] opacity-100" : "pointer-events-none grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="min-h-0">
+          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-5 pb-5 pt-3 sm:px-6" aria-label="Mobile navigation">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 data-track={link.track}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-dark-secondary transition-colors hover:bg-white/10 hover:text-on-dark"
+                className="rounded-lg px-3 py-3 text-base font-bold text-on-dark-secondary transition-colors hover:bg-white/10 hover:text-on-dark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50"
               >
                 {link.label}
               </a>
             ))}
+            <a href="#contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
+              <Button className="brand-gradient-blue min-h-12 w-full border-0 font-bold text-white shadow-md brand-glow hover:opacity-95">
+                Free Estimate
+              </Button>
+            </a>
             <a
               href={`tel:${settings.phone.replace(/\D/g, "")}`}
               data-track="header-phone"
-              className="mt-2 flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold text-brand-electric"
+              onClick={() => setMobileOpen(false)}
+              className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm font-bold text-brand-electric transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50"
             >
               <Phone className="h-4 w-4" />
               {settings.phone}
             </a>
           </nav>
         </div>
-      )}
+      </div>
     </header>
   );
 }
