@@ -55,7 +55,7 @@ export function About({
           <div className="space-y-10 lg:col-span-7">
             <Reveal>
               <div>
-                <p className="text-label text-brand-blue">
+                <p className="text-label-light">
                   {about.subtitle}
                 </p>
                 <h2 className="mt-2 text-headline font-bold text-foreground">

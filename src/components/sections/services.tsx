@@ -29,7 +29,7 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
         {/* Section header */}
         <Reveal>
           <div className="mb-14 max-w-xl">
-            <p className="text-label text-brand-blue">
+            <p className="text-label-light">
               How We Can Help
             </p>
             <h2 className="mt-2 text-headline font-bold text-foreground">
@@ -59,14 +59,14 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
                       {service.title}
                     </h3>
                   </div>
-                  <p className="relative mb-6 text-[0.95rem] leading-relaxed text-brand-chrome/85">
+                  <p className="relative mb-6 text-[0.95rem] leading-relaxed text-on-dark-secondary">
                     {service.description}
                   </p>
                   <div className="mt-auto grid grid-cols-2 gap-x-6 gap-y-2">
                     {service.items.map((item) => (
                       <p
                         key={item}
-                        className="flex items-center gap-2 text-sm text-brand-chrome/90"
+                        className="flex items-center gap-2 text-sm text-on-dark-secondary"
                       >
                         <span className="h-1 w-1 shrink-0 rounded-full bg-brand-electric" />
                         {item}

@@ -65,7 +65,7 @@ export function Hero({
         <div className="py-14 sm:py-20 md:py-24 lg:py-28">
           <div className="max-w-2xl">
             <Reveal>
-              <p className="text-label mb-4 inline-flex items-center gap-2 rounded-full border border-brand-electric/30 bg-brand-electric/10 px-4 py-1.5 text-brand-chrome">
+              <p className="text-label mb-4 inline-flex items-center gap-2 rounded-full border border-brand-electric/40 bg-brand-electric/15 px-4 py-1.5 text-on-dark-secondary">
                 <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand-electric shadow-[0_0_8px_var(--brand-electric)]" />
                 {hero.badgeText}
               </p>
@@ -75,7 +75,7 @@ export function Hero({
               <h1 className="text-display font-extrabold text-white">
                 {hero.headline}
                 <br />
-                <span className="relative inline-block bg-gradient-to-r from-white via-brand-chrome to-brand-electric bg-clip-text text-transparent">
+                <span className="relative inline-block text-brand-electric">
                   {hero.highlightText}
                   <svg
                     viewBox="0 0 300 12"
@@ -103,7 +103,7 @@ export function Hero({
             </Reveal>
 
             <Reveal delay={2}>
-              <p className="mt-6 text-body-lg text-brand-chrome/90">
+              <p className="mt-6 text-body-lg text-on-dark-secondary">
                 {hero.bodyText}
               </p>
             </Reveal>
@@ -142,7 +142,7 @@ export function Hero({
                       />
                     ))}
                   </div>
-                  <span className="text-sm font-semibold text-brand-chrome">
+                  <span className="text-sm font-semibold text-on-dark-secondary">
                     5-Star Rated
                   </span>
                 </div>
@@ -154,7 +154,7 @@ export function Hero({
                     height={28}
                     className="h-7 w-7 rounded-full ring-1 ring-brand-electric/30"
                   />
-                  <span className="text-sm font-semibold text-brand-chrome">
+                  <span className="text-sm font-semibold text-on-dark-secondary">
                     Licensed, Bonded &amp; Insured
                   </span>
                 </div>

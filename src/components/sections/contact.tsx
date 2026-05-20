@@ -82,7 +82,7 @@ export function Contact({
             <Reveal>
               <div className="space-y-6">
                 <div>
-                  <p className="text-label text-brand-blue">
+                  <p className="text-label-light">
                     {contact.subtitle}
                   </p>
                   <h2 className="mt-2 text-headline font-bold text-foreground">
@@ -97,7 +97,7 @@ export function Contact({
                 <div className="space-y-4 pt-2">
                   <a
                     href={`tel:${settings.phone.replace(/\D/g, "")}`}
-                    className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
+                    className="flex items-center gap-3 text-foreground transition-colors hover:text-foreground"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg brand-gradient-blue text-white shadow-md brand-glow">
                       <Phone className="h-5 w-5" />
@@ -109,7 +109,7 @@ export function Contact({
                       <p className="text-sm font-bold">{settings.phone}</p>
                     </div>
                   </a>
-                  <div className="flex items-center gap-3 text-foreground/80">
+                  <div className="flex items-center gap-3 text-foreground">
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
                       <MapPin className="h-5 w-5" />
                     </div>
@@ -124,7 +124,7 @@ export function Contact({
                   </div>
                   <a
                     href={`mailto:${settings.email}`}
-                    className="flex items-center gap-3 text-foreground/80 transition-colors hover:text-foreground"
+                    className="flex items-center gap-3 text-foreground transition-colors hover:text-foreground"
                   >
                     <div className="flex h-11 w-11 items-center justify-center rounded-lg border border-brand-electric/20 bg-brand-electric/10 text-brand-blue">
                       <Mail className="h-5 w-5" />

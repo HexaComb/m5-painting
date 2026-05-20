@@ -57,8 +57,8 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               data-track={link.track}
               className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-300 ${
                 scrolled
-                  ? "text-brand-chrome/90 hover:text-brand-electric"
-                  : "text-white/85 hover:text-white"
+                  ? "text-on-dark-secondary hover:text-on-dark"
+                  : "text-white/90 hover:text-white"
               }`}
             >
               {link.label}
@@ -73,8 +73,8 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               size="sm"
               className={`font-medium transition-colors duration-300 ${
                 scrolled
-                  ? "text-brand-chrome hover:bg-white/10 hover:text-white"
-                  : "text-white/85 hover:bg-white/10 hover:text-white"
+                  ? "text-on-dark-secondary hover:bg-white/10 hover:text-on-dark"
+                  : "text-white/90 hover:bg-white/10 hover:text-white"
               }`}
             >
               <Phone className="mr-1.5 h-3.5 w-3.5" />
@@ -91,7 +91,9 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
           </a>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md text-brand-chrome hover:bg-white/10 hover:text-white md:hidden"
+            className={`ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-white/10 md:hidden ${
+              scrolled ? "text-on-dark-secondary hover:text-on-dark" : "text-white/90 hover:text-white"
+            }`}
             aria-label="Toggle menu"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -108,7 +110,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
                 href={link.href}
                 data-track={link.track}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg px-3 py-2.5 text-sm font-semibold text-brand-chrome transition-colors hover:bg-white/10 hover:text-white"
+                className="rounded-lg px-3 py-2.5 text-sm font-semibold text-on-dark-secondary transition-colors hover:bg-white/10 hover:text-on-dark"
               >
                 {link.label}
               </a>

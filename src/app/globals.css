@@ -50,6 +50,9 @@
     --color-brand-blue: var(--brand-blue);
     --color-brand-electric: var(--brand-electric);
     --color-brand-chrome: var(--brand-chrome);
+    --color-on-dark: var(--on-dark);
+    --color-on-dark-secondary: var(--on-dark-secondary);
+    --color-on-dark-muted: var(--on-dark-muted);
     --radius-sm: calc(var(--radius) * 0.6);
     --radius-md: calc(var(--radius) * 0.8);
     --radius-lg: var(--radius);
@@ -66,6 +69,11 @@
     --brand-blue: oklch(0.50 0.12 252);      /* #3568AC family */
     --brand-electric: oklch(0.64 0.16 248);  /* bright logo blue */
     --brand-chrome: oklch(0.72 0.01 262);     /* silver taglines */
+
+    /* Readable text on brand-surface-dark (WCAG AA 4.5:1+ on navy) */
+    --on-dark: oklch(0.97 0.006 262);
+    --on-dark-secondary: oklch(0.88 0.012 262);
+    --on-dark-muted: oklch(0.76 0.012 262);
 
     /* Neutrals — cool, not warm blue-tinted */
     --background: oklch(0.985 0.004 262);
@@ -84,7 +92,7 @@
     --secondary-foreground: oklch(0.20 0.02 262);
 
     --muted: oklch(0.96 0.006 262);
-    --muted-foreground: oklch(0.48 0.02 262);
+    --muted-foreground: oklch(0.42 0.025 262);
 
     --accent: oklch(0.92 0.03 252);
     --accent-foreground: oklch(0.28 0.08 262);
@@ -236,6 +244,26 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+/* Section labels on light backgrounds — brand-blue is 5.7:1 on white */
+.text-label-light {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brand-blue);
+}
+
+/* Text hierarchy on brand-surface-dark (hero, reviews, footer) */
+.text-on-dark {
+  color: var(--on-dark);
+}
+.text-on-dark-secondary {
+  color: var(--on-dark-secondary);
+}
+.text-on-dark-muted {
+  color: var(--on-dark-muted);
 }
 
 /* ── Scroll reveal ── */

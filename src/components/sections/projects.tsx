@@ -39,7 +39,7 @@ export function Projects({
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <Reveal>
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-label text-brand-blue">
+            <p className="text-label-light">
               Our Work
             </p>
             <h2 className="mt-2 text-headline font-bold text-foreground">

@@ -34,7 +34,7 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
         {/* Section header */}
         <Reveal>
           <div className="mx-auto mb-14 max-w-2xl text-center">
-            <p className="text-label text-brand-electric/80">
+            <p className="text-label text-brand-chrome">
               Straight From Our Neighbors
             </p>
             <h2 className="mt-2 text-headline font-bold text-white">
@@ -54,7 +54,7 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
                     <StarRow />
                     <Quote className="h-5 w-5 text-white/20" />
                   </div>
-                  <blockquote className="text-[0.95rem] leading-relaxed text-brand-chrome/95">
+                  <blockquote className="text-[0.95rem] leading-relaxed text-on-dark-secondary">
                     &ldquo;{review.text}&rdquo;
                   </blockquote>
                 </div>
@@ -62,7 +62,7 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
                   <p className="text-sm font-semibold text-white">
                     {review.author}
                   </p>
-                  <span className="rounded-full border border-brand-electric/30 bg-brand-electric/10 px-2.5 py-1 text-xs font-medium text-brand-chrome">
+                  <span className="rounded-full border border-brand-electric/30 bg-brand-electric/10 px-2.5 py-1 text-xs font-medium text-on-dark-secondary">
                     {review.source}
                   </span>
                 </div>
