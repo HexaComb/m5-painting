@@ -38,9 +38,56 @@ const content = buildContent ?? {
   contactContent: defaultContactContent,
 };
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://m5painting.com";
+
+const settings = content.siteSettings ?? defaultSiteSettings;
+
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "@id": `${siteUrl}/#business`,
+  name: settings.businessName,
+  description:
+    settings.metaDescription ||
+    "Family-owned painting contractor serving the Central Valley, California.",
+  url: siteUrl,
+  telephone: settings.phone,
+  email: settings.email,
+  image: `${siteUrl}/images/hero-banner.webp`,
+  logo: `${siteUrl}/images/logo.webp`,
+  priceRange: "$$",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Sanger",
+    addressRegion: "CA",
+    addressCountry: "US",
+  },
+  areaServed: [
+    { "@type": "City", name: "Sanger" },
+    { "@type": "City", name: "Fresno" },
+    { "@type": "City", name: "Clovis" },
+    { "@type": "AdministrativeArea", name: "Central Valley, California" },
+  ],
+  hasOfferCatalog: {
+    "@type": "OfferCatalog",
+    name: "Painting Services",
+    itemListElement: [
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Interior Painting" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Exterior Painting" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Commercial Painting" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Cabinet Refinishing" } },
+      { "@type": "Offer", itemOffered: { "@type": "Service", name: "Free Consultation" } },
+    ],
+  },
+};
+
 export default function Home() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessJsonLd) }}
+      />
       <Header initialSettings={content.siteSettings} />
       <main>
         <Hero
