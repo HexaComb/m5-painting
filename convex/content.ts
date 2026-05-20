@@ -157,6 +157,28 @@ export const updateHeroContent = mutation({
   },
 });
 
+/** One-time: remove legacy badgeText from heroContent (dev + prod). */
+export const stripHeroBadgeText = internalMutation({
+  args: {},
+  returns: v.number(),
+  handler: async (ctx) => {
+    const rows = await ctx.db.query("heroContent").collect();
+    let updated = 0;
+    for (const hero of rows) {
+      if (!("badgeText" in hero)) continue;
+      await ctx.db.replace(hero._id, {
+        headline: hero.headline,
+        highlightText: hero.highlightText,
+        bodyText: hero.bodyText,
+        ctaText: hero.ctaText,
+        ctaPhone: hero.ctaPhone,
+      });
+      updated += 1;
+    }
+    return updated;
+  },
+});
+
 // ═══════════════════════════════════════════════════════════════════════
 // SERVICES
 // ═══════════════════════════════════════════════════════════════════════
