@@ -6,7 +6,7 @@ import { About } from "@/components/sections/about";
 import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
-import { PaintDrip, PaintDripAlt } from "@/components/ui/paint-decorations";
+import { Separator } from "@/components/ui/separator";
 import type { SiteContent } from "@/lib/content-types";
 import {
   defaultSiteSettings,
@@ -48,10 +48,7 @@ export default function Home() {
           initialSettings={content.siteSettings}
         />
 
-        {/* Hero → Services: brand navy drips into light section */}
-        <div className="bg-background">
-          <PaintDrip color="var(--brand-navy)" className="-mb-px" />
-        </div>
+        <Separator className="h-px bg-brand-navy/25" />
 
         <Services initialServices={content.services} />
         <Projects initialPosts={content.instagramPosts} />
@@ -61,17 +58,11 @@ export default function Home() {
           initialValues={content.aboutValues}
         />
 
-        {/* About → Reviews: light section drips into dark band */}
-        <div className="brand-surface-dark">
-          <PaintDripAlt color="var(--background)" className="-mb-px" />
-        </div>
+        <Separator className="h-px bg-brand-blue/35" />
 
         <Reviews initialReviews={content.reviews} />
 
-        {/* Reviews → Contact: electric blue drips into light section */}
-        <div className="bg-background">
-          <PaintDrip color="var(--brand-blue)" className="-mb-px" />
-        </div>
+        <Separator className="h-px bg-brand-electric/30" />
 
         <Contact
           initialContact={content.contactContent}
