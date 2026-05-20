@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Script from "next/script";
 import { useQuery } from "convex/react";
 import { useEffect } from "react";
@@ -16,28 +15,6 @@ declare global {
   }
 }
 
-const projectGallery = [
-  {
-    src: "/images/project-shop.webp",
-    alt: "Freshly painted M5 shop exterior with crisp blue and white finishes",
-    label: "Commercial refresh",
-  },
-  {
-    src: "/images/project-door.webp",
-    alt: "Detailed front door paint work with clean edges and a smooth finish",
-    label: "Entry details",
-  },
-  {
-    src: "/images/project-spray.webp",
-    alt: "M5 painter applying an even spray finish on a prepared surface",
-    label: "Spray finish",
-  },
-  {
-    src: "/images/project-aerial.webp",
-    alt: "Exterior painting project viewed from above with a clean roofline",
-    label: "Exterior work",
-  },
-] as const;
 
 export function Projects({
   initialPosts,
@@ -74,36 +51,6 @@ export function Projects({
               Every home and business has a story. Here are a few
               transformations we&apos;ve been lucky to be part of.
             </p>
-          </div>
-        </Reveal>
-
-        <Reveal>
-          <div className="grid auto-rows-[220px] gap-4 sm:auto-rows-[260px] md:grid-cols-4">
-            {projectGallery.map((project, index) => (
-              <figure
-                key={project.src}
-                className={`group relative overflow-hidden rounded-xl bg-brand-black shadow-lg shadow-brand-navy/10 ${
-                  index === 0 ? "md:col-span-2 md:row-span-2" : ""
-                }`}
-              >
-                <Image
-                  src={project.src}
-                  alt={project.alt}
-                  fill
-                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]"
-                  sizes={
-                    index === 0
-                      ? "(max-width: 768px) 90vw, 50vw"
-                      : "(max-width: 768px) 90vw, 25vw"
-                  }
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-black/85 via-brand-black/35 to-transparent p-4 pt-16">
-                  <figcaption className="text-sm font-bold text-on-dark">
-                    {project.label}
-                  </figcaption>
-                </div>
-              </figure>
-            ))}
           </div>
         </Reveal>
 
