@@ -39,22 +39,19 @@ export function Hero({
         }}
       />
 
-      {/* Mountain silhouette — crop to the bottom edge of the branded asset only (no logo) */}
+      {/* Mountain silhouette — bottom ridge only; soft mask instead of color overlay */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-20 overflow-hidden sm:h-28 md:h-32"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-[1] h-24 sm:h-32 md:h-36"
       >
-        <div className="absolute bottom-0 left-0 right-0 aspect-[2292/4302] w-full">
-          <Image
-            src="/images/hero-banner.webp"
-            alt=""
-            fill
-            className="object-cover object-bottom opacity-70"
-            priority
-            sizes="100vw"
-          />
-        </div>
-        <div className="absolute inset-0 bg-gradient-to-t from-brand-navy from-25% via-brand-navy/80 via-70% to-transparent" />
+        <Image
+          src="/images/hero-banner.webp"
+          alt=""
+          fill
+          className="object-cover object-bottom opacity-50 [mask-image:linear-gradient(to_top,black_70%,transparent)] [-webkit-mask-image:linear-gradient(to_top,black_70%,transparent)]"
+          priority
+          sizes="100vw"
+        />
       </div>
 
       <span className="sr-only">

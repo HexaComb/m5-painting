@@ -7,6 +7,7 @@ import { Reviews } from "@/components/sections/reviews";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
 import { Separator } from "@/components/ui/separator";
+import { PaintDrip } from "@/components/ui/paint-decorations";
 import type { SiteContent } from "@/lib/content-types";
 import {
   defaultSiteSettings,
@@ -48,7 +49,9 @@ export default function Home() {
           initialSettings={content.siteSettings}
         />
 
-        <Separator className="h-px bg-brand-navy/25" />
+        <div className="relative z-10 bg-brand-navy">
+          <PaintDrip color="var(--background)" />
+        </div>
 
         <Services initialServices={content.services} />
         <Projects initialPosts={content.instagramPosts} />
