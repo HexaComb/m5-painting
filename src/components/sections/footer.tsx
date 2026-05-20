@@ -32,7 +32,7 @@ export function Footer({
               alt={settings.businessName}
               width={1024}
               height={1024}
-              className="h-14 w-auto max-w-[220px]"
+              className="h-14 w-14 object-contain"
             />
             <p className="text-label text-brand-electric">{settings.tagline}</p>
             <p className="max-w-xs text-sm leading-relaxed text-on-dark-secondary">

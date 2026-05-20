@@ -16,7 +16,7 @@ declare global {
   }
 }
 
-const projectFallbacks = [
+const projectGallery = [
   {
     src: "/images/project-shop.webp",
     alt: "Freshly painted M5 shop exterior with crisp blue and white finishes",
@@ -77,45 +77,50 @@ export function Projects({
           </div>
         </Reveal>
 
+        <Reveal>
+          <div className="grid auto-rows-[220px] gap-4 sm:auto-rows-[260px] md:grid-cols-4">
+            {projectGallery.map((project, index) => (
+              <figure
+                key={project.src}
+                className={`group relative overflow-hidden rounded-xl bg-brand-black shadow-lg shadow-brand-navy/10 ${
+                  index === 0 ? "md:col-span-2 md:row-span-2" : ""
+                }`}
+              >
+                <Image
+                  src={project.src}
+                  alt={project.alt}
+                  fill
+                  className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]"
+                  sizes={
+                    index === 0
+                      ? "(max-width: 768px) 90vw, 50vw"
+                      : "(max-width: 768px) 90vw, 25vw"
+                  }
+                />
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-black/85 via-brand-black/35 to-transparent p-4 pt-16">
+                  <figcaption className="text-sm font-bold text-on-dark">
+                    {project.label}
+                  </figcaption>
+                </div>
+              </figure>
+            ))}
+          </div>
+        </Reveal>
+
         {posts && posts.length > 0 ? (
           <Reveal>
-            <div className="projects-instagram-feed grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {posts.map((post) => (
-                <InstagramEmbed key={post._id} permalink={post.embedUrl} />
-              ))}
+            <div className="mt-10">
+              <p className="mb-4 text-center text-sm font-bold text-muted-foreground">
+                Recent updates from the jobsite
+              </p>
+              <div className="projects-instagram-feed grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {posts.map((post) => (
+                  <InstagramEmbed key={post._id} permalink={post.embedUrl} />
+                ))}
+              </div>
             </div>
           </Reveal>
-        ) : (
-          <Reveal>
-            <div className="grid auto-rows-[220px] gap-4 sm:auto-rows-[260px] md:grid-cols-4">
-              {projectFallbacks.map((project, index) => (
-                <figure
-                  key={project.src}
-                  className={`group relative overflow-hidden rounded-xl bg-brand-black shadow-lg shadow-brand-navy/10 ${
-                    index === 0 ? "md:col-span-2 md:row-span-2" : ""
-                  }`}
-                >
-                  <Image
-                    src={project.src}
-                    alt={project.alt}
-                    fill
-                    className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.035]"
-                    sizes={
-                      index === 0
-                        ? "(max-width: 768px) 90vw, 50vw"
-                        : "(max-width: 768px) 90vw, 25vw"
-                    }
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-brand-black/85 via-brand-black/35 to-transparent p-4 pt-16">
-                    <figcaption className="text-sm font-bold text-on-dark">
-                      {project.label}
-                    </figcaption>
-                  </div>
-                </figure>
-              ))}
-            </div>
-          </Reveal>
-        )}
+        ) : null}
 
         <Reveal>
           <div className="mt-10 text-center">

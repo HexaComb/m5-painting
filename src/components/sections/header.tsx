@@ -44,7 +44,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
             alt={settings.businessName}
             width={1024}
             height={1024}
-            className="h-11 w-auto sm:h-[3.25rem]"
+            className="h-11 w-11 object-contain sm:h-[3.25rem] sm:w-[3.25rem]"
             priority
           />
         </a>
