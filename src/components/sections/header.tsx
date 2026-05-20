@@ -31,10 +31,10 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full border-b transition-all duration-300 ${
+      className={`fixed top-0 z-50 w-full border-b transition-all duration-500 ease-out ${
         scrolled
-          ? "border-white/10 bg-brand-black/95 shadow-lg shadow-black/40 backdrop-blur-md"
-          : "border-transparent bg-brand-black/70 backdrop-blur-sm"
+          ? "border-white/10 bg-brand-black/95 shadow-lg shadow-black/50 backdrop-blur-md"
+          : "border-transparent bg-transparent shadow-none backdrop-blur-none"
       }`}
     >
       <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[4.75rem]">
@@ -55,7 +55,11 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               key={link.href}
               href={link.href}
               data-track={link.track}
-              className="rounded-md px-3 py-2 text-sm font-semibold text-brand-chrome/90 transition-colors hover:text-white"
+              className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-300 ${
+                scrolled
+                  ? "text-brand-chrome/90 hover:text-brand-electric"
+                  : "text-white/85 hover:text-white"
+              }`}
             >
               {link.label}
             </a>
@@ -67,7 +71,11 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
             <Button
               variant="ghost"
               size="sm"
-              className="font-medium text-brand-chrome hover:bg-white/10 hover:text-white"
+              className={`font-medium transition-colors duration-300 ${
+                scrolled
+                  ? "text-brand-chrome hover:bg-white/10 hover:text-white"
+                  : "text-white/85 hover:bg-white/10 hover:text-white"
+              }`}
             >
               <Phone className="mr-1.5 h-3.5 w-3.5" />
               {settings.phone}
