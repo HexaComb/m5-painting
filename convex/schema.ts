@@ -17,7 +17,6 @@ const schema = defineSchema({
 
   // Hero section (single document)
   heroContent: defineTable({
-    badgeText: v.string(),
     headline: v.string(),
     highlightText: v.string(),
     bodyText: v.string(),

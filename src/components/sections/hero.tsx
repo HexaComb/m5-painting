@@ -62,13 +62,6 @@ export function Hero({
         <div className="py-14 sm:py-20 md:py-24 lg:py-28">
           <div className="max-w-2xl">
             <Reveal>
-              <p className="text-label mb-4 inline-flex items-center gap-2 rounded-full border border-brand-electric/40 bg-brand-electric/15 px-4 py-1.5 text-on-dark-secondary">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-brand-electric shadow-[0_0_8px_var(--brand-electric)]" />
-                {hero.badgeText}
-              </p>
-            </Reveal>
-
-            <Reveal delay={1}>
               <h1 className="text-display font-extrabold text-white">
                 {hero.headline}
                 <br />
@@ -99,13 +92,13 @@ export function Hero({
               </h1>
             </Reveal>
 
-            <Reveal delay={2}>
+            <Reveal delay={1}>
               <p className="mt-6 text-body-lg text-on-dark-secondary">
                 {hero.bodyText}
               </p>
             </Reveal>
 
-            <Reveal delay={3}>
+            <Reveal delay={2}>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a href="#contact" data-track="hero-estimate">
                   <Button
@@ -128,7 +121,7 @@ export function Hero({
               </div>
             </Reveal>
 
-            <Reveal delay={4}>
+            <Reveal delay={3}>
               <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-white/10 pt-6">
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-0.5">

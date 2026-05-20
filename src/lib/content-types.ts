@@ -12,7 +12,6 @@ export interface SiteSettings {
 export interface HeroContent {
   _id: string;
   _creationTime: number;
-  badgeText: string;
   headline: string;
   highlightText: string;
   bodyText: string;

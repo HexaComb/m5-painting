@@ -24,7 +24,6 @@ export const defaultSiteSettings: SiteSettings = {
 export const defaultHeroContent: HeroContent = {
   _id: "default",
   _creationTime: Date.now(),
-  badgeText: "Family-Owned in the Central Valley",
   headline: "Painting done right,",
   highlightText: "by people who care.",
   bodyText:

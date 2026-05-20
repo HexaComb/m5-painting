@@ -112,7 +112,6 @@ export const getHeroContent = query({
     v.object({
       _id: v.id("heroContent"),
       _creationTime: v.number(),
-      badgeText: v.string(),
       headline: v.string(),
       highlightText: v.string(),
       bodyText: v.string(),
@@ -122,13 +121,22 @@ export const getHeroContent = query({
     v.null(),
   ),
   handler: async (ctx) => {
-    return await ctx.db.query("heroContent").first();
+    const hero = await ctx.db.query("heroContent").first();
+    if (!hero) return null;
+    return {
+      _id: hero._id,
+      _creationTime: hero._creationTime,
+      headline: hero.headline,
+      highlightText: hero.highlightText,
+      bodyText: hero.bodyText,
+      ctaText: hero.ctaText,
+      ctaPhone: hero.ctaPhone,
+    };
   },
 });
 
 export const updateHeroContent = mutation({
   args: {
-    badgeText: v.string(),
     headline: v.string(),
     highlightText: v.string(),
     bodyText: v.string(),
@@ -598,7 +606,6 @@ export const seed = internalMutation({
 
     // Hero
     await ctx.db.insert("heroContent", {
-      badgeText: "Family-Owned in the Central Valley",
       headline: "Painting done right,",
       highlightText: "by people who care.",
       bodyText:

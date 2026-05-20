@@ -22,7 +22,6 @@ export default function HeroPage() {
   const hero = useQuery(api.content.getHeroContent);
   const update = useMutation(api.content.updateHeroContent);
   const [form, setForm] = useState({
-    badgeText: "",
     headline: "",
     highlightText: "",
     bodyText: "",
@@ -33,7 +32,6 @@ export default function HeroPage() {
   useEffect(() => {
     if (hero) {
       setForm({
-        badgeText: hero.badgeText,
         headline: hero.headline,
         highlightText: hero.highlightText,
         bodyText: hero.bodyText,
@@ -91,20 +89,6 @@ export default function HeroPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="space-y-2">
-            <Label>Badge Text</Label>
-            <Input
-              value={form.badgeText}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, badgeText: e.target.value }))
-              }
-              placeholder="Family-Owned in the Central Valley"
-            />
-            <p className="text-xs text-muted-foreground">
-              Small label shown above the headline
-            </p>
-          </div>
-
           <div className="space-y-2">
             <Label>Headline</Label>
             <Input
