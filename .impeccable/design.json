@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-20T00:00:00-07:00",
+  "title": "Design System: M5 Painting",
+  "extensions": {
+    "colorMeta": {
+      "brand-black": {
+        "role": "primary",
+        "displayName": "Shop Black",
+        "canonical": "oklch(0.10 0.012 262)",
+        "tonalRamp": [
+          "oklch(0.10 0.012 262)",
+          "oklch(0.14 0.02 262)",
+          "oklch(0.18 0.03 262)"
+        ]
+      },
+      "brand-navy": {
+        "role": "primary",
+        "displayName": "Deep Navy Paint",
+        "canonical": "oklch(0.26 0.11 262)",
+        "tonalRamp": [
+          "oklch(0.20 0.08 262)",
+          "oklch(0.26 0.11 262)",
+          "oklch(0.32 0.10 258)"
+        ]
+      },
+      "brand-blue": {
+        "role": "primary",
+        "displayName": "M5 Blue",
+        "canonical": "oklch(0.50 0.12 252)",
+        "tonalRamp": [
+          "oklch(0.42 0.14 248)",
+          "oklch(0.50 0.12 252)",
+          "oklch(0.58 0.14 250)"
+        ]
+      },
+      "brand-electric": {
+        "role": "primary",
+        "displayName": "Electric Roller Blue",
+        "canonical": "oklch(0.64 0.16 248)",
+        "tonalRamp": [
+          "oklch(0.56 0.15 248)",
+          "oklch(0.64 0.16 248)",
+          "oklch(0.78 0.10 248)"
+        ]
+      },
+      "brand-chrome": {
+        "role": "secondary",
+        "displayName": "Chrome Silver",
+        "canonical": "oklch(0.72 0.01 262)",
+        "tonalRamp": [
+          "oklch(0.58 0.02 262)",
+          "oklch(0.72 0.01 262)",
+          "oklch(0.92 0.01 262)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Cool Worksite White",
+        "canonical": "oklch(0.985 0.004 262)",
+        "tonalRamp": [
+          "oklch(0.94 0.008 262)",
+          "oklch(0.96 0.006 262)",
+          "oklch(0.985 0.004 262)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Hero headlines and first-view brand promises only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles and major trust-building statements."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Service titles, compact marketing panels, and card headings."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Readable marketing copy, forms, and supporting details."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Short section kickers and compact categorical marks."
+      }
+    },
+    "elevation": {
+      "brandGlow": {
+        "boxShadow": "0 0 0 1px oklch(0.64 0.16 248 / 25%), 0 8px 32px oklch(0.50 0.12 252 / 35%), 0 2px 8px oklch(0 0 0 / 40%)",
+        "purpose": "Primary CTAs and icon marks on dark brand surfaces."
+      },
+      "headerLock": {
+        "boxShadow": "0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.5)",
+        "purpose": "Fixed header after scroll."
+      },
+      "formLift": {
+        "boxShadow": "0 10px 15px -3px oklch(0.26 0.11 262 / 5%), 0 4px 6px -4px oklch(0.26 0.11 262 / 5%)",
+        "purpose": "Contact form surface."
+      },
+      "serviceWeight": {
+        "boxShadow": "0 20px 25px -5px oklch(0.26 0.11 262 / 20%), 0 8px 10px -6px oklch(0.26 0.11 262 / 20%)",
+        "purpose": "Dark service panels."
+      }
+    },
+    "motion": {
+      "reveal": {
+        "duration": "0.8s",
+        "easing": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "transform": "translateY(32px) to translateY(0)",
+        "reducedMotion": "opacity: 1; animation: none"
+      },
+      "header": {
+        "duration": "500ms",
+        "easing": "ease-out",
+        "purpose": "Transparent to locked dark header state."
+      }
+    },
+    "breakpoints": {
+      "sm": "40rem",
+      "md": "48rem",
+      "lg": "64rem"
+    },
+    "componentNotes": {
+      "buttons": "Rounded-lg practical rectangles. Primary actions use M5 Blue or the brand blue gradient with visible focus rings.",
+      "cards": "Use cards for actual repeated items, forms, and panels. Avoid turning every section into a card.",
+      "inputs": "Public contact inputs should be 44px tall, rounded-lg, and focus with electric-blue ring.",
+      "navigation": "Transparent over hero, then locked Shop Black after scroll. Mobile menu is a dark panel with direct phone action.",
+      "paintMarks": "Brush strokes, roller edges, drips, texture, and electric glows are signature brand marks. Use for meaning and rhythm."
+    },
+    "rules": {
+      "northStar": "The Well-Painted Shop Truck",
+      "dos": [
+        "Lead with real work, real badges, real reviews, and clear contact actions.",
+        "Use the committed blue system as paint-like material.",
+        "Keep CTA text direct and local.",
+        "Vary section composition.",
+        "Preserve WCAG AA contrast and reduced-motion support."
+      ],
+      "donts": [
+        "Do not use generic contractor website templates.",
+        "Do not use cold corporate SaaS aesthetics.",
+        "Do not make the site overly minimalist and empty.",
+        "Do not create busy small-business clutter.",
+        "Do not make M5 Painting look like a Silicon Valley startup.",
+        "Do not use thick colored side-stripe borders.",
+        "Do not use gradient text."
+      ]
+    }
+  }
+}

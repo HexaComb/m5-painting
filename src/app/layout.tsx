@@ -22,6 +22,10 @@ export const metadata: Metadata = {
   title: "M5 Painting | Residential & Commercial Painting in Central Valley, CA",
   description:
     "M5 Painting is a family-owned painting business in Central Valley, California. Expert residential and commercial painting services — interior, exterior, and more. Contact us for a free estimate.",
+  icons: {
+    icon: "/images/logo.webp",
+    apple: "/images/logo.webp",
+  },
   keywords: [
     "painting",
     "residential painting",

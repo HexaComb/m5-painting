@@ -84,17 +84,18 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
           <a href="#contact" data-track="header-estimate">
             <Button
               size="sm"
-              className="brand-gradient-blue border-0 font-bold text-white shadow-md brand-glow hover:opacity-95"
+              className="brand-gradient-blue min-h-11 border-0 px-4 font-bold text-white shadow-md brand-glow hover:opacity-95 md:min-h-9"
             >
               Free Estimate
             </Button>
           </a>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className={`ml-1 inline-flex h-9 w-9 items-center justify-center rounded-md hover:bg-white/10 md:hidden ${
+            className={`ml-1 inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50 md:hidden ${
               scrolled ? "text-on-dark-secondary hover:text-on-dark" : "text-white/90 hover:text-white"
             }`}
-            aria-label="Toggle menu"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileOpen}
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
