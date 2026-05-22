@@ -103,6 +103,15 @@ export function Footer({
                 />
                 <span>5-Star Rated on Yelp &amp; Angi</span>
               </div>
+              <div className="flex items-center gap-2.5 text-sm text-on-dark-secondary">
+                <span
+                  aria-hidden="true"
+                  className="flex h-5.5 w-5.5 items-center justify-center rounded-full bg-white text-[0.45rem] font-extrabold tracking-tight text-brand-black ring-1 ring-brand-electric/30"
+                >
+                  BBB
+                </span>
+                <span>BBB Accredited Business</span>
+              </div>
             </div>
           </div>
         </div>

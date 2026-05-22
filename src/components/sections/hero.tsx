@@ -148,6 +148,17 @@ export function Hero({
                     Licensed, Bonded &amp; Insured
                   </span>
                 </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    aria-hidden="true"
+                    className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-[0.6rem] font-extrabold tracking-tight text-brand-black ring-1 ring-brand-electric/30"
+                  >
+                    BBB
+                  </span>
+                  <span className="text-sm font-semibold text-on-dark-secondary">
+                    BBB Accredited
+                  </span>
+                </div>
               </div>
             </Reveal>
           </div>
