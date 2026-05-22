@@ -1,6 +1,5 @@
 import { Header } from "@/components/sections/header";
 import { Hero } from "@/components/sections/hero";
-import { Accreditation } from "@/components/sections/accreditation";
 import { Services } from "@/components/sections/services";
 import { Projects } from "@/components/sections/projects";
 import { About } from "@/components/sections/about";
@@ -95,10 +94,6 @@ export default function Home() {
           initialHero={content.heroContent}
           initialSettings={content.siteSettings}
         />
-
-        <Separator className="h-px bg-brand-blue/25" />
-
-        <Accreditation />
 
         <Separator className="h-px bg-brand-blue/25" />
 
