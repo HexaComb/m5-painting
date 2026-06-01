@@ -7,6 +7,7 @@ import {
   type MutationCtx,
   type QueryCtx,
 } from "./_generated/server";
+import { isReviewEnabled, reviewValidator } from "./reviewTypes";
 
 // ─── Auth helper ────────────────────────────────────────────────────────
 async function requireAuth(ctx: QueryCtx) {
@@ -67,6 +68,7 @@ export const getSiteSettings = query({
       email: v.string(),
       address: v.string(),
       metaDescription: v.string(),
+      googlePlaceId: v.optional(v.string()),
     }),
     v.null(),
   ),
@@ -83,6 +85,7 @@ export const updateSiteSettings = mutation({
     email: v.string(),
     address: v.string(),
     metaDescription: v.string(),
+    googlePlaceId: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
@@ -428,18 +431,18 @@ export const deleteInstagramPost = mutation({
 
 export const getReviews = query({
   args: {},
-  returns: v.array(
-    v.object({
-      _id: v.id("reviews"),
-      _creationTime: v.number(),
-      order: v.number(),
-      text: v.string(),
-      author: v.string(),
-      date: v.string(),
-      source: v.string(),
-    }),
-  ),
+  returns: v.array(reviewValidator),
   handler: async (ctx) => {
+    const all = await ctx.db.query("reviews").withIndex("by_order").collect();
+    return all.filter((r) => isReviewEnabled(r.enabled));
+  },
+});
+
+export const getReviewsAdmin = query({
+  args: {},
+  returns: v.array(reviewValidator),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
     return await ctx.db.query("reviews").withIndex("by_order").collect();
   },
 });
@@ -451,6 +454,7 @@ export const updateReview = mutation({
     author: v.string(),
     date: v.string(),
     source: v.string(),
+    rating: v.optional(v.number()),
   },
   returns: v.null(),
   handler: async (ctx, { id, ...data }) => {
@@ -466,13 +470,57 @@ export const addReview = mutation({
     author: v.string(),
     date: v.string(),
     source: v.string(),
+    rating: v.optional(v.number()),
   },
   returns: v.id("reviews"),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
     const existing = await ctx.db.query("reviews").collect();
     const maxOrder = existing.reduce((max, r) => Math.max(max, r.order), 0);
-    return await ctx.db.insert("reviews", { ...args, order: maxOrder + 1 });
+    return await ctx.db.insert("reviews", {
+      ...args,
+      order: maxOrder + 1,
+      enabled: true,
+    });
+  },
+});
+
+export const toggleReviewEnabled = mutation({
+  args: { id: v.id("reviews") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    const review = await ctx.db.get(id);
+    if (!review) throw new Error("Review not found");
+    const currentlyEnabled = isReviewEnabled(review.enabled);
+    await ctx.db.patch(id, { enabled: !currentlyEnabled });
+    return null;
+  },
+});
+
+export const updateGooglePlaceId = mutation({
+  args: { googlePlaceId: v.string() },
+  returns: v.null(),
+  handler: async (ctx, { googlePlaceId }) => {
+    await requireAuth(ctx);
+    const trimmed = googlePlaceId.trim();
+    const existing = await ctx.db.query("siteSettings").first();
+    if (existing) {
+      await ctx.db.patch(existing._id, {
+        googlePlaceId: trimmed.length > 0 ? trimmed : undefined,
+      });
+    } else {
+      await ctx.db.insert("siteSettings", {
+        businessName: "",
+        tagline: "",
+        phone: "",
+        email: "",
+        address: "",
+        metaDescription: "",
+        googlePlaceId: trimmed.length > 0 ? trimmed : undefined,
+      });
+    }
+    return null;
   },
 });
 
@@ -754,6 +802,7 @@ export const seed = internalMutation({
         author: "Kara B.",
         date: "June 2025",
         source: "Yelp",
+        enabled: true,
       },
       {
         order: 2,
@@ -761,6 +810,7 @@ export const seed = internalMutation({
         author: "Nick C.",
         date: "June 2025",
         source: "Yelp",
+        enabled: true,
       },
       {
         order: 3,
@@ -768,6 +818,7 @@ export const seed = internalMutation({
         author: "Krystle P.",
         date: "June 2025",
         source: "Angi",
+        enabled: true,
       },
       {
         order: 4,
@@ -775,6 +826,7 @@ export const seed = internalMutation({
         author: "Victoria F.",
         date: "June 2025",
         source: "Angi",
+        enabled: true,
       },
     ];
     for (const r of reviewsData) {

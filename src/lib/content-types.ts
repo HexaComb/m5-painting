@@ -61,6 +61,11 @@ export interface Review {
   author: string;
   date: string;
   source: string;
+  enabled?: boolean;
+  rating?: number;
+  googleReviewId?: string;
+  profilePhotoUrl?: string;
+  authorUri?: string;
 }
 
 export interface ContactContent {

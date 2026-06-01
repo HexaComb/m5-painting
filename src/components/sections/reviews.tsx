@@ -8,12 +8,15 @@ import type { Review } from "@/lib/content-types";
 const starClass = "chrome-star h-3.5 w-3.5";
 
 function StarRow({
+  rating = 5,
   className,
-  "aria-label": ariaLabel = "5 out of 5 stars",
 }: {
+  rating?: number;
   className?: string;
-  "aria-label"?: string;
 }) {
+  const stars = Math.min(5, Math.max(1, Math.round(rating)));
+  const ariaLabel = `${stars} out of 5 stars`;
+
   return (
     <div
       className={`flex gap-0.5 ${className ?? ""}`}
@@ -21,7 +24,13 @@ function StarRow({
       aria-label={ariaLabel}
     >
       {[...Array(5)].map((_, i) => (
-        <Star key={i} className={starClass} aria-hidden />
+        <Star
+          key={i}
+          className={`${starClass} ${
+            i < stars ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground/25"
+          }`}
+          aria-hidden
+        />
       ))}
     </div>
   );

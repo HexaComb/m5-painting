@@ -162,6 +162,8 @@ export const defaultReviews: Review[] = [
     author: "Kara B.",
     date: "June 2025",
     source: "Yelp",
+    enabled: true,
+    rating: 5,
   },
   {
     _id: "r2",
@@ -170,7 +172,11 @@ export const defaultReviews: Review[] = [
     text: "Matt and his M5 painting team were amazing. Signed, Sealed and Delivered. Finished the inside of my rental home in one day! On time and very professional. I would recommend M5 to anyone.",
     author: "Nick C.",
     date: "June 2025",
+    enabled: true,
+    rating: 5,
     source: "Yelp",
+    enabled: true,
+    rating: 5,
   },
   {
     _id: "r3",
@@ -179,7 +185,11 @@ export const defaultReviews: Review[] = [
     text: "I highly recommend M5 Painting for any exterior paint work! They did an outstanding job on my home. From the stucco to the trim, everything looks fresh, clean, and professionally done. They helped me choose the perfect color for the stucco, and their attention to detail on the trimming made a huge difference.",
     author: "Krystle P.",
     date: "June 2025",
+    enabled: true,
+    rating: 5,
     source: "Angi",
+    enabled: true,
+    rating: 5,
   },
   {
     _id: "r4",
@@ -188,7 +198,11 @@ export const defaultReviews: Review[] = [
     text: "Matt and his crew did an amazing job of meeting all our needs and expectations! The time and quality of work was outstanding. Would highly recommend!",
     author: "Victoria F.",
     date: "June 2025",
+    enabled: true,
+    rating: 5,
     source: "Angi",
+    enabled: true,
+    rating: 5,
   },
 ];
 

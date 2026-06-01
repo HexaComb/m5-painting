@@ -13,6 +13,8 @@ const schema = defineSchema({
     email: v.string(),
     address: v.string(),
     metaDescription: v.string(),
+    /** Google Maps Place ID for syncing reviews (Places API). */
+    googlePlaceId: v.optional(v.string()),
   }),
 
   // Hero section (single document)
@@ -61,7 +63,17 @@ const schema = defineSchema({
     author: v.string(),
     date: v.string(),
     source: v.string(),
-  }).index("by_order", ["order"]),
+    /** When false, hidden from the public site (admin can still manage). */
+    enabled: v.optional(v.boolean()),
+    /** 1–5 star rating; manual reviews default to 5 in the UI when unset. */
+    rating: v.optional(v.number()),
+    /** Stable ID from Google Places API for sync/dedup. */
+    googleReviewId: v.optional(v.string()),
+    profilePhotoUrl: v.optional(v.string()),
+    authorUri: v.optional(v.string()),
+  })
+    .index("by_order", ["order"])
+    .index("by_google_review_id", ["googleReviewId"]),
 
   // Contact section (single document)
   contactContent: defineTable({
