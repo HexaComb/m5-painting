@@ -160,7 +160,7 @@ export default function ReviewsPage() {
     try {
       const result = await syncFromGoogle();
       toast.success(
-        `Synced ${result.fetched} Google review${result.fetched === 1 ? "" : "s"} (${result.imported} new, ${result.updated} updated). Toggle reviews on to show them on the site.`,
+        `Synced ${result.fetched} newest Google review${result.fetched === 1 ? "" : "s"} (${result.imported} new, ${result.updated} updated). Toggle reviews on to show them on the site.`,
       );
     } catch (error) {
       const message =
@@ -209,9 +209,8 @@ export default function ReviewsPage() {
         <CardHeader>
           <CardTitle className="text-lg">Google Reviews</CardTitle>
           <CardDescription>
-            Sync real reviews from your Google Business Profile. Google&apos;s Places API
-            returns up to 5 reviews per sync. New imports are hidden until you turn them on
-            for the website.
+            Import the 10 newest Google reviews through SerpApi (1–2 SerpApi searches per sync).
+            New imports are hidden until you turn them on for the website.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

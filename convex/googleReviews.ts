@@ -7,21 +7,28 @@ import {
 } from "./_generated/server";
 import { internal } from "./_generated/api";
 
-type GooglePlacesReview = {
-  name?: string;
+type SerpApiReview = {
+  review_id?: string;
   rating?: number;
-  text?: { text?: string };
-  publishTime?: string;
-  relativePublishTimeDescription?: string;
-  authorAttribution?: {
-    displayName?: string;
-    uri?: string;
-    photoUri?: string;
+  snippet?: string;
+  extracted_snippet?: { original?: string };
+  iso_date?: string;
+  date?: string;
+  link?: string;
+  user?: {
+    name?: string;
+    link?: string;
+    thumbnail?: string;
   };
 };
 
-type GooglePlacesResponse = {
-  reviews?: GooglePlacesReview[];
+type SerpApiReviewsResponse = {
+  search_metadata?: { status?: string };
+  error?: string;
+  reviews?: SerpApiReview[];
+  serpapi_pagination?: {
+    next_page_token?: string;
+  };
 };
 
 const upsertedReviewValidator = v.object({
@@ -33,6 +40,9 @@ const upsertedReviewValidator = v.object({
   profilePhotoUrl: v.optional(v.string()),
   authorUri: v.optional(v.string()),
 });
+
+/** How many recent Google reviews to import per sync. */
+const SYNC_REVIEW_LIMIT = 10;
 
 export const requireAdmin = internalQuery({
   args: {},
@@ -120,17 +130,16 @@ function normalizePlaceId(placeId: string): string {
   return placeId.trim().replace(/^places\//, "");
 }
 
-function mapGoogleReview(review: GooglePlacesReview) {
-  const googleReviewId = review.name?.trim();
+function mapSerpApiReview(review: SerpApiReview) {
+  const googleReviewId = review.review_id?.trim();
   if (!googleReviewId) return null;
 
-  const text = review.text?.text?.trim() ?? "";
-  const author =
-    review.authorAttribution?.displayName?.trim() || "Google user";
-  const date =
-    review.publishTime?.trim() ||
-    review.relativePublishTimeDescription?.trim() ||
+  const text =
+    review.extracted_snippet?.original?.trim() ||
+    review.snippet?.trim() ||
     "";
+  const author = review.user?.name?.trim() || "Google user";
+  const date = review.iso_date?.trim() || review.date?.trim() || "";
   const rating =
     typeof review.rating === "number"
       ? Math.min(5, Math.max(1, Math.round(review.rating)))
@@ -144,46 +153,93 @@ function mapGoogleReview(review: GooglePlacesReview) {
     author,
     date,
     rating,
-    profilePhotoUrl: review.authorAttribution?.photoUri,
-    authorUri: review.authorAttribution?.uri,
+    profilePhotoUrl: review.user?.thumbnail,
+    authorUri: review.user?.link ?? review.link,
   };
 }
 
-async function fetchPlaceReviews(placeId: string, apiKey: string) {
-  const normalizedId = normalizePlaceId(placeId);
-  const url = `https://places.googleapis.com/v1/places/${encodeURIComponent(normalizedId)}`;
-  const response = await fetch(url, {
-    headers: {
-      "X-Goog-Api-Key": apiKey,
-      "X-Goog-FieldMask": "reviews",
-    },
+async function fetchSerpApiReviewsPage(
+  apiKey: string,
+  placeId: string,
+  options: { nextPageToken?: string; num?: number },
+): Promise<SerpApiReviewsResponse> {
+  const params = new URLSearchParams({
+    engine: "google_maps_reviews",
+    place_id: normalizePlaceId(placeId),
+    api_key: apiKey,
+    hl: "en",
+    sort_by: "newestFirst",
   });
+
+  if (options.nextPageToken) {
+    params.set("next_page_token", options.nextPageToken);
+    params.set("num", String(Math.min(20, Math.max(1, options.num ?? 20))));
+  }
+
+  const url = `https://serpapi.com/search.json?${params.toString()}`;
+  const response = await fetch(url);
 
   if (!response.ok) {
     const body = await response.text();
     throw new Error(
-      `Google Places API returned ${response.status}: ${body.slice(0, 300)}`,
+      `SerpApi returned ${response.status}: ${body.slice(0, 300)}`,
     );
   }
 
-  return (await response.json()) as GooglePlacesResponse;
+  const data = (await response.json()) as SerpApiReviewsResponse;
+
+  if (data.error) {
+    throw new Error(`SerpApi error: ${data.error}`);
+  }
+
+  if (data.search_metadata?.status === "Error") {
+    throw new Error("SerpApi search failed. Check your API key and Place ID.");
+  }
+
+  return data;
 }
 
-/** Pull the latest Google reviews into the CMS (max 5 per Places API). */
+async function fetchNewestSerpApiReviews(placeId: string, apiKey: string) {
+  const allReviews: SerpApiReview[] = [];
+  let nextPageToken: string | undefined;
+  let pagesFetched = 0;
+
+  while (allReviews.length < SYNC_REVIEW_LIMIT) {
+    const remaining = SYNC_REVIEW_LIMIT - allReviews.length;
+    const page = await fetchSerpApiReviewsPage(apiKey, placeId, {
+      nextPageToken,
+      num: nextPageToken ? remaining : undefined,
+    });
+    allReviews.push(...(page.reviews ?? []));
+    pagesFetched += 1;
+    nextPageToken = page.serpapi_pagination?.next_page_token;
+    if (!nextPageToken || allReviews.length >= SYNC_REVIEW_LIMIT) {
+      break;
+    }
+  }
+
+  return {
+    reviews: allReviews.slice(0, SYNC_REVIEW_LIMIT),
+    pagesFetched,
+  };
+}
+
+/** Pull the 10 newest Google reviews via SerpApi into the CMS for admin curation. */
 export const syncFromGoogle = action({
   args: {},
   returns: v.object({
     imported: v.number(),
     updated: v.number(),
     fetched: v.number(),
+    pagesFetched: v.number(),
   }),
   handler: async (ctx) => {
     await ctx.runQuery(internal.googleReviews.requireAdmin);
 
-    const apiKey = process.env.GOOGLE_PLACES_API_KEY;
+    const apiKey = process.env.SERPAPI_API_KEY;
     if (!apiKey) {
       throw new Error(
-        "GOOGLE_PLACES_API_KEY is not set in the Convex dashboard environment.",
+        "SERPAPI_API_KEY is not set in the Convex dashboard environment.",
       );
     }
 
@@ -194,10 +250,19 @@ export const syncFromGoogle = action({
       );
     }
 
-    const payload = await fetchPlaceReviews(settings.googlePlaceId, apiKey);
-    const mapped = (payload.reviews ?? [])
-      .map(mapGoogleReview)
-      .filter((r): r is NonNullable<typeof r> => r !== null);
+    const { reviews, pagesFetched } = await fetchNewestSerpApiReviews(
+      settings.googlePlaceId,
+      apiKey,
+    );
+
+    const seen = new Set<string>();
+    const mapped = reviews
+      .map(mapSerpApiReview)
+      .filter((r): r is NonNullable<typeof r> => {
+        if (r === null || seen.has(r.googleReviewId)) return false;
+        seen.add(r.googleReviewId);
+        return true;
+      });
 
     const result = await ctx.runMutation(
       internal.googleReviews.upsertGoogleReviews,
@@ -207,6 +272,7 @@ export const syncFromGoogle = action({
     return {
       ...result,
       fetched: mapped.length,
+      pagesFetched,
     };
   },
 });
