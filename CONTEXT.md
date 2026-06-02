@@ -31,7 +31,7 @@ The maximum number of **published review**s shown on the public site at once: **
 _Avoid_: Limit, max reviews
 
 **Review sync**:
-An automatic pull of the newest Google reviews from SerpApi into the CMS, on a fixed schedule (every 10 days). Admins do not trigger sync manually. Imports land unpublished until the admin selects them. After sync, unpublished Google imports that were not in this fetch are removed; **published review**s are kept even if they are no longer in the newest batch.
+A pull of the newest Google reviews from SerpApi into the CMS—either on a fixed schedule (every 10 days) or when an admin runs sync from **Admin → Settings**. Same rules either way: imports land unpublished until the admin selects them; after sync, unpublished Google imports that were not in this fetch are removed; **published review**s are kept even if they are no longer in the newest batch.
 _Avoid_: Fetch, scrape, crawl
 
 **Google Place ID**:

@@ -4,7 +4,7 @@ Google reviews sync automatically into the CMS. Admins choose which ones appear 
 
 ## How it works
 
-1. **SerpApi** fetches the **10 newest** reviews for your Google **Place ID** every **10 days** (Convex cron).
+1. **SerpApi** fetches the **10 newest** reviews for your saved Google **Place ID** every **10 days** (Convex cron), or when you click **Sync Google reviews** in **Admin → Settings**.
 2. Reviews are stored in the `reviews` table with `source: "Google"` and `googleReviewId`.
 3. **New imports are hidden** until you publish them in **Admin → Reviews**.
 4. The homepage shows at most **6** published reviews (lowest `order` first).
@@ -30,11 +30,12 @@ The key must live in your **Convex deployment** environment, not only in `.env.l
 2. Use Google’s [Place ID finder](https://developers.google.com/maps/documentation/javascript/examples/places-placeid-finder) or copy the ID from the Maps URL (`ChIJ…`).
 3. In **Admin → Settings**, paste it under **Google Place ID** and save.
 
-### 3. Publish reviews
+### 3. Sync and publish reviews
 
-1. Go to **Admin → Reviews** after the first cron run (or ask a developer to run a one-off sync in the Convex dashboard).
-2. Toggle **Published** for reviews you want on the site.
-3. Up to **6** published reviews (by list order) appear on the homepage. Others show **Published (not on homepage)** until you unpublish or reorder.
+1. In **Admin → Settings**, save your Place ID, then click **Sync Google reviews** (or wait for the next scheduled sync).
+2. Go to **Admin → Reviews** to publish imports.
+3. Toggle **Published** for reviews you want on the site.
+4. Up to **6** published reviews (by list order) appear on the homepage. Others show **Published (not on homepage)** until you unpublish or reorder.
 
 ## SerpApi usage
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowLeft, Loader2, Save } from "lucide-react";
+import { ArrowLeft, Loader2, RefreshCw, Save } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
@@ -32,11 +32,22 @@ const emptyForm: SettingsForm = {
   googlePlaceId: "",
 };
 
+function formatSyncSuccessToast(result: {
+  fetched: number;
+  imported: number;
+  updated: number;
+  pruned: number;
+}): string {
+  return `Synced ${result.fetched} reviews: ${result.imported} new, ${result.updated} updated, ${result.pruned} removed.`;
+}
+
 export default function SettingsPage() {
   const settings = useQuery(api.content.getSiteSettings);
   const update = useMutation(api.content.updateSiteSettings);
+  const syncGoogleReviews = useAction(api.googleReviews.syncGoogleReviewsNow);
   const [form, setForm] = useState<SettingsForm>(emptyForm);
   const [saving, setSaving] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   useEffect(() => {
     if (settings) {
@@ -69,6 +80,40 @@ export default function SettingsPage() {
       toast.error("Failed to save");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const savedPlaceId = (settings?.googlePlaceId ?? "").trim();
+  const formPlaceId = form.googlePlaceId.trim();
+  const placeIdDirty = formPlaceId !== savedPlaceId;
+  const canSync = savedPlaceId.length > 0 && !placeIdDirty && !syncing && !saving;
+
+  const handleSyncReviews = async () => {
+    if (placeIdDirty) {
+      toast.error("Save settings first to sync with this Place ID.");
+      return;
+    }
+    if (!savedPlaceId) {
+      toast.error("Add and save a Google Place ID before syncing.");
+      return;
+    }
+
+    setSyncing(true);
+    try {
+      const result = await syncGoogleReviews();
+      if (result.skipped) {
+        toast.error(
+          result.skipReason ?? "Add and save a Google Place ID before syncing.",
+        );
+        return;
+      }
+      toast.success(formatSyncSuccessToast(result));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to sync Google reviews";
+      toast.error(message);
+    } finally {
+      setSyncing(false);
     }
   };
 
@@ -168,23 +213,49 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Google Reviews</CardTitle>
           <CardDescription>
-            Used for automatic review sync every 10 days. Set{" "}
+            Used for review sync every 10 days and on demand below. Set{" "}
             <code className="text-xs">SERP_API_KEY</code> in your Convex dashboard environment
             variables.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-2">
-          <Label htmlFor="google-place-id">Google Place ID</Label>
-          <Input
-            id="google-place-id"
-            value={form.googlePlaceId}
-            onChange={(e) => setForm((f) => ({ ...f, googlePlaceId: e.target.value }))}
-            placeholder="ChIJ…"
-          />
-          <p className="text-xs text-muted-foreground">
-            Find this with Google&apos;s Place ID finder or from your Maps business URL. See{" "}
-            <code className="text-xs">docs/GOOGLE_REVIEWS.md</code> in the repo.
-          </p>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="google-place-id">Google Place ID</Label>
+            <Input
+              id="google-place-id"
+              value={form.googlePlaceId}
+              onChange={(e) => setForm((f) => ({ ...f, googlePlaceId: e.target.value }))}
+              placeholder="ChIJ…"
+            />
+            <p className="text-xs text-muted-foreground">
+              Find this with Google&apos;s Place ID finder or from your Maps business URL. See{" "}
+              <code className="text-xs">docs/GOOGLE_REVIEWS.md</code> in the repo.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleSyncReviews}
+              disabled={!canSync}
+            >
+              {syncing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="mr-2 h-4 w-4" />
+              )}
+              Sync Google reviews
+            </Button>
+            {placeIdDirty ? (
+              <p className="text-xs text-muted-foreground">
+                Save settings first to sync with this Place ID.
+              </p>
+            ) : !savedPlaceId ? (
+              <p className="text-xs text-muted-foreground">
+                Save a Place ID to enable sync.
+              </p>
+            ) : null}
+          </div>
         </CardContent>
       </Card>
 
