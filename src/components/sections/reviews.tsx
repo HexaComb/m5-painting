@@ -8,12 +8,14 @@ import type { Review } from "@/lib/content-types";
 const starClass = "chrome-star h-3.5 w-3.5";
 
 function StarRow({
+  rating = 5,
   className,
-  "aria-label": ariaLabel = "5 out of 5 stars",
 }: {
+  rating?: number;
   className?: string;
-  "aria-label"?: string;
 }) {
+  const stars = Math.min(5, Math.max(1, Math.round(rating)));
+  const ariaLabel = `${stars} out of 5 stars`;
   return (
     <div
       className={`flex gap-0.5 ${className ?? ""}`}
@@ -21,7 +23,11 @@ function StarRow({
       aria-label={ariaLabel}
     >
       {[...Array(5)].map((_, i) => (
-        <Star key={i} className={starClass} aria-hidden />
+        <Star
+          key={i}
+          className={`${starClass} ${i < stars ? "" : "opacity-25"}`}
+          aria-hidden
+        />
       ))}
     </div>
   );
@@ -73,7 +79,7 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
             </p>
 
             <div className="mt-7 border-y border-border py-5">
-              <StarRow />
+              <StarRow rating={5} />
               <div className="mt-3 space-y-1">
                 <p className="text-sm font-bold text-foreground">
                   Five-star rated by local customers
@@ -99,7 +105,7 @@ export function Reviews({ initialReviews }: { initialReviews?: Review[] | null }
                         <p className="text-[0.65rem] font-bold leading-none tracking-[0.15em] text-brand-blue/60">
                           {String(i + 1).padStart(2, "0")}
                         </p>
-                        <StarRow />
+                        <StarRow rating={review.rating ?? 5} />
                       </div>
 
                       <blockquote>

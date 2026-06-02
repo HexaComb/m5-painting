@@ -12,65 +12,192 @@ import { ArrowLeft, Loader2, Save } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 
+type SettingsForm = {
+  businessName: string;
+  tagline: string;
+  phone: string;
+  email: string;
+  address: string;
+  metaDescription: string;
+  googlePlaceId: string;
+};
+
+const emptyForm: SettingsForm = {
+  businessName: "",
+  tagline: "",
+  phone: "",
+  email: "",
+  address: "",
+  metaDescription: "",
+  googlePlaceId: "",
+};
+
 export default function SettingsPage() {
   const settings = useQuery(api.content.getSiteSettings);
   const update = useMutation(api.content.updateSiteSettings);
-  const [form, setForm] = useState({ businessName: "", tagline: "", phone: "", email: "", address: "", metaDescription: "" });
+  const [form, setForm] = useState<SettingsForm>(emptyForm);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (settings) {
-      setForm({ businessName: settings.businessName, tagline: settings.tagline, phone: settings.phone, email: settings.email, address: settings.address, metaDescription: settings.metaDescription });
+      setForm({
+        businessName: settings.businessName,
+        tagline: settings.tagline,
+        phone: settings.phone,
+        email: settings.email,
+        address: settings.address,
+        metaDescription: settings.metaDescription,
+        googlePlaceId: settings.googlePlaceId ?? "",
+      });
     }
   }, [settings]);
 
   const handleSave = async () => {
     setSaving(true);
-    try { await update(form); toast.success("Site settings updated!"); }
-    catch { toast.error("Failed to save"); }
-    finally { setSaving(false); }
+    try {
+      await update({
+        businessName: form.businessName,
+        tagline: form.tagline,
+        phone: form.phone,
+        email: form.email,
+        address: form.address,
+        metaDescription: form.metaDescription,
+        googlePlaceId: form.googlePlaceId,
+      });
+      toast.success("Site settings updated!");
+    } catch {
+      toast.error("Failed to save");
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (settings === undefined) {
-    return <div className="flex items-center justify-center p-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
+    return (
+      <div className="flex items-center justify-center p-12">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto max-w-3xl space-y-6 p-6">
       <div className="flex items-center gap-3">
-        <Link href="/admin/dashboard"><Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button></Link>
+        <Link href="/admin/dashboard">
+          <Button variant="ghost" size="icon">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
         <div>
           <h1 className="text-2xl font-bold">Site Settings</h1>
           <p className="text-sm text-muted-foreground">
-            Phone, email, and address update across the header, hero, contact section, and footer
+            Phone, email, and address update across the header, hero, contact section, and
+            footer
           </p>
         </div>
       </div>
 
       <Card>
-        <CardHeader><CardTitle>Business Info</CardTitle><CardDescription>Single source for phone, email, and location shown site-wide (header, hero, contact, footer)</CardDescription></CardHeader>
+        <CardHeader>
+          <CardTitle>Business Info</CardTitle>
+          <CardDescription>
+            Single source for phone, email, and location shown site-wide
+          </CardDescription>
+        </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2"><Label>Business Name</Label><Input value={form.businessName} onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))} placeholder="M5 Painting" /></div>
-            <div className="space-y-2"><Label>Tagline</Label><Input value={form.tagline} onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))} placeholder="Family-Owned Since Day One" /></div>
+            <div className="space-y-2">
+              <Label>Business Name</Label>
+              <Input
+                value={form.businessName}
+                onChange={(e) => setForm((f) => ({ ...f, businessName: e.target.value }))}
+                placeholder="M5 Painting"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Tagline</Label>
+              <Input
+                value={form.tagline}
+                onChange={(e) => setForm((f) => ({ ...f, tagline: e.target.value }))}
+                placeholder="Family-Owned Since Day One"
+              />
+            </div>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2"><Label>Phone</Label><Input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="559-451-1022" /></div>
-            <div className="space-y-2"><Label>Email</Label><Input value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="m5paintingco@gmail.com" /></div>
+            <div className="space-y-2">
+              <Label>Phone</Label>
+              <Input
+                value={form.phone}
+                onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
+                placeholder="559-451-1022"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input
+                value={form.email}
+                onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                placeholder="m5paintingco@gmail.com"
+              />
+            </div>
           </div>
-          <div className="space-y-2"><Label>Address / Location</Label><Input value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} placeholder="Sanger, CA · Central Valley" /></div>
+          <div className="space-y-2">
+            <Label>Address / Location</Label>
+            <Input
+              value={form.address}
+              onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
+              placeholder="Sanger, CA · Central Valley"
+            />
+          </div>
           <div className="space-y-2">
             <Label>Meta Description</Label>
-            <Textarea value={form.metaDescription} onChange={(e) => setForm((f) => ({ ...f, metaDescription: e.target.value }))} rows={3} placeholder="SEO description for search engines..." />
-            <p className="text-xs text-muted-foreground">Shown in Google search results. Keep it under 160 characters.</p>
-          </div>
-          <div className="flex justify-end pt-2">
-            <Button onClick={handleSave} disabled={saving}>
-              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}Save Settings
-            </Button>
+            <Textarea
+              value={form.metaDescription}
+              onChange={(e) => setForm((f) => ({ ...f, metaDescription: e.target.value }))}
+              rows={3}
+              placeholder="SEO description for search engines..."
+            />
+            <p className="text-xs text-muted-foreground">
+              Shown in Google search results. Keep it under 160 characters.
+            </p>
           </div>
         </CardContent>
       </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Google Reviews</CardTitle>
+          <CardDescription>
+            Used for automatic review sync every 10 days. Set{" "}
+            <code className="text-xs">SERP_API_KEY</code> in your Convex dashboard environment
+            variables.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <Label htmlFor="google-place-id">Google Place ID</Label>
+          <Input
+            id="google-place-id"
+            value={form.googlePlaceId}
+            onChange={(e) => setForm((f) => ({ ...f, googlePlaceId: e.target.value }))}
+            placeholder="ChIJ…"
+          />
+          <p className="text-xs text-muted-foreground">
+            Find this with Google&apos;s Place ID finder or from your Maps business URL. See{" "}
+            <code className="text-xs">docs/GOOGLE_REVIEWS.md</code> in the repo.
+          </p>
+        </CardContent>
+      </Card>
+
+      <div className="flex justify-end">
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? (
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          ) : (
+            <Save className="mr-2 h-4 w-4" />
+          )}
+          Save Settings
+        </Button>
+      </div>
     </div>
   );
 }

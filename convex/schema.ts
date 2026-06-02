@@ -13,6 +13,7 @@ const schema = defineSchema({
     email: v.string(),
     address: v.string(),
     metaDescription: v.string(),
+    googlePlaceId: v.optional(v.string()),
   }),
 
   // Hero section (single document)
@@ -61,7 +62,14 @@ const schema = defineSchema({
     author: v.string(),
     date: v.string(),
     source: v.string(),
-  }).index("by_order", ["order"]),
+    enabled: v.optional(v.boolean()),
+    rating: v.optional(v.number()),
+    googleReviewId: v.optional(v.string()),
+    profilePhotoUrl: v.optional(v.string()),
+    authorUri: v.optional(v.string()),
+  })
+    .index("by_order", ["order"])
+    .index("by_google_review_id", ["googleReviewId"]),
 
   // Contact section (single document)
   contactContent: defineTable({

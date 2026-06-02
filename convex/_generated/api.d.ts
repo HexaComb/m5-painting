@@ -11,8 +11,11 @@
 import type * as adminAuth from "../adminAuth.js";
 import type * as auth from "../auth.js";
 import type * as content from "../content.js";
+import type * as crons from "../crons.js";
 import type * as eventLogs from "../eventLogs.js";
+import type * as googleReviews from "../googleReviews.js";
 import type * as http from "../http.js";
+import type * as reviewTypes from "../reviewTypes.js";
 import type * as seedAdmin from "../seedAdmin.js";
 import type * as trackingEvents from "../trackingEvents.js";
 import type * as userManagement from "../userManagement.js";
@@ -27,8 +30,11 @@ declare const fullApi: ApiFromModules<{
   adminAuth: typeof adminAuth;
   auth: typeof auth;
   content: typeof content;
+  crons: typeof crons;
   eventLogs: typeof eventLogs;
+  googleReviews: typeof googleReviews;
   http: typeof http;
+  reviewTypes: typeof reviewTypes;
   seedAdmin: typeof seedAdmin;
   trackingEvents: typeof trackingEvents;
   userManagement: typeof userManagement;
