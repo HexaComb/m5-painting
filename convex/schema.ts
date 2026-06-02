@@ -23,6 +23,8 @@ const schema = defineSchema({
     bodyText: v.string(),
     ctaText: v.string(),
     ctaPhone: v.string(),
+    /** Legacy field; stripped via content.stripHeroBadgeText after deploy. */
+    badgeText: v.optional(v.string()),
   }),
 
   // Services (multiple items)
