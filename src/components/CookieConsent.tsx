@@ -63,9 +63,9 @@ function CookieBanner({
             className="text-sm leading-relaxed text-on-dark-secondary"
           >
             We use cookies and similar technologies to understand how visitors use
-            our site (for example, Google Analytics) and to measure marketing
-            performance. You can accept analytics cookies or continue with only
-            essential cookies.
+            our site (including Vercel Web Analytics and Google Analytics) and to
+            measure marketing performance. You can accept analytics cookies or
+            continue with only essential cookies.
           </p>
         </div>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">

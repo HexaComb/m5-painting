@@ -3,6 +3,7 @@ import { Montserrat, Lato } from "next/font/google";
 import { Analytics } from "@/components/Analytics";
 import { CookieConsentProvider } from "@/components/CookieConsent";
 import { Tracker } from "@/components/Tracker";
+import { VercelAnalytics } from "@/components/VercelAnalytics";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import type { SiteContent } from "@/lib/content-types";
 import "./globals.css";
@@ -97,6 +98,7 @@ export default function RootLayout({
         <ConvexClientProvider>
           <CookieConsentProvider>
             {children}
+            <VercelAnalytics />
             <Analytics />
             <Tracker />
           </CookieConsentProvider>
