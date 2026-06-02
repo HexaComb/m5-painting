@@ -4,6 +4,7 @@ import {
   internalAction,
   internalMutation,
   internalQuery,
+  type ActionCtx,
 } from "./_generated/server";
 import { isReviewEnabled } from "./reviewTypes";
 
@@ -236,58 +237,74 @@ async function fetchNewestSerpApiReviews(placeId: string, apiKey: string) {
   };
 }
 
+const syncGoogleReviewsReturns = v.object({
+  imported: v.number(),
+  updated: v.number(),
+  pruned: v.number(),
+  fetched: v.number(),
+  pagesFetched: v.number(),
+  skipped: v.boolean(),
+  skipReason: v.optional(v.string()),
+});
+
+type SyncGoogleReviewsResult = {
+  imported: number;
+  updated: number;
+  pruned: number;
+  fetched: number;
+  pagesFetched: number;
+  skipped: boolean;
+  skipReason?: string;
+};
+
+async function syncGoogleReviewsHandler(
+  ctx: ActionCtx,
+): Promise<SyncGoogleReviewsResult> {
+  const apiKey = getSerpApiKey();
+
+  const settings = await ctx.runQuery(internal.googleReviews.getPlaceId);
+  if (!settings?.googlePlaceId?.trim()) {
+    return {
+      imported: 0,
+      updated: 0,
+      pruned: 0,
+      fetched: 0,
+      pagesFetched: 0,
+      skipped: true,
+      skipReason: "Google Place ID is not set in site settings.",
+    };
+  }
+
+  const { reviews, pagesFetched } = await fetchNewestSerpApiReviews(
+    settings.googlePlaceId,
+    apiKey,
+  );
+
+  const seen = new Set<string>();
+  const mapped = reviews
+    .map(mapSerpApiReview)
+    .filter((r): r is NonNullable<typeof r> => {
+      if (r === null || seen.has(r.googleReviewId)) return false;
+      seen.add(r.googleReviewId);
+      return true;
+    });
+
+  const result = await ctx.runMutation(
+    internal.googleReviews.upsertGoogleReviews,
+    { reviews: mapped },
+  );
+
+  return {
+    ...result,
+    fetched: mapped.length,
+    pagesFetched,
+    skipped: false,
+  };
+}
+
 /** Scheduled SerpApi pull (every 10 days via crons.ts). */
 export const syncGoogleReviews = internalAction({
   args: {},
-  returns: v.object({
-    imported: v.number(),
-    updated: v.number(),
-    pruned: v.number(),
-    fetched: v.number(),
-    pagesFetched: v.number(),
-    skipped: v.boolean(),
-    skipReason: v.optional(v.string()),
-  }),
-  handler: async (ctx) => {
-    const apiKey = getSerpApiKey();
-
-    const settings = await ctx.runQuery(internal.googleReviews.getPlaceId);
-    if (!settings?.googlePlaceId?.trim()) {
-      return {
-        imported: 0,
-        updated: 0,
-        pruned: 0,
-        fetched: 0,
-        pagesFetched: 0,
-        skipped: true,
-        skipReason: "Google Place ID is not set in site settings.",
-      };
-    }
-
-    const { reviews, pagesFetched } = await fetchNewestSerpApiReviews(
-      settings.googlePlaceId,
-      apiKey,
-    );
-
-    const seen = new Set<string>();
-    const mapped = reviews
-      .map(mapSerpApiReview)
-      .filter((r): r is NonNullable<typeof r> => {
-        if (r === null || seen.has(r.googleReviewId)) return false;
-        seen.add(r.googleReviewId);
-        return true;
-      });
-
-    const result = await ctx.runMutation(
-      internal.googleReviews.upsertGoogleReviews,
-      { reviews: mapped },
-    );
-
-    return {
-      ...result,
-      fetched: mapped.length,
-      pagesFetched,
-      skipped: false,
-    };
-  },
+  returns: syncGoogleReviewsReturns,
+  handler: syncGoogleReviewsHandler,
 });
