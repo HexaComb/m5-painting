@@ -1,6 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
+import { useCookieConsent } from "@/components/CookieConsent";
+import {
+  dispatchAnalyticsEvent,
+  getConvexSiteUrl,
+  getSessionId,
+  isPublicSitePath,
+  logAnalyticsHit,
+} from "@/lib/analytics";
 
 interface TrackingEvent {
   name: string;
@@ -10,47 +18,18 @@ interface TrackingEvent {
   trigger: "click" | "form_submit";
 }
 
-// Declare global types for analytics providers
-declare global {
-  interface Window {
-    gtag?: (...args: unknown[]) => void;
-    fbq?: (...args: unknown[]) => void;
-    dataLayer?: Record<string, unknown>[];
-  }
-}
-
 /**
- * Generate a random session ID (persisted per browser session).
- */
-function getSessionId(): string {
-  const key = "__m5_session";
-  let id = sessionStorage.getItem(key);
-  if (!id) {
-    id = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-    sessionStorage.setItem(key, id);
-  }
-  return id;
-}
-
-/**
- * Lightweight client-side tracker.
- *
- * 1. Fetches active event configs from the Convex `/api/events` endpoint
- * 2. Finds matching DOM elements via `data-track` attributes
- * 3. Attaches listeners and fires analytics events on trigger
- * 4. Logs each hit back to Convex `/api/events/log` for the analytics dashboard
- *
- * Dispatches to:
- *   - GA4 (gtag)
- *   - Meta Pixel (fbq)
- *   - Custom `track` event on window (for any future provider)
+ * Fetches active event configs from Convex and attaches listeners to
+ * matching `data-track` elements on the public site.
  */
 export function Tracker() {
-  useEffect(() => {
-    const siteUrl = process.env.NEXT_PUBLIC_CONVEX_SITE_URL;
-    if (!siteUrl) return;
+  const { hasAnalyticsConsent } = useCookieConsent();
 
-    const apiBase = siteUrl.replace(/\/$/, "");
+  useEffect(() => {
+    if (!hasAnalyticsConsent || !isPublicSitePath()) return;
+
+    const apiBase = getConvexSiteUrl();
+    if (!apiBase) return;
 
     let aborted = false;
     const cleanups: (() => void)[] = [];
@@ -77,58 +56,8 @@ export function Tracker() {
               event.trigger === "form_submit" ? "submit" : "click";
 
             const handler = () => {
-              // GA4 / gtag
-              if (window.gtag) {
-                window.gtag("event", event.name, {
-                  event_category: event.category,
-                  event_label: event.label,
-                });
-              }
-
-              // Meta Pixel
-              if (window.fbq) {
-                window.fbq("trackCustom", event.name, {
-                  category: event.category,
-                  label: event.label,
-                });
-              }
-
-              // dataLayer (GTM)
-              if (window.dataLayer) {
-                window.dataLayer.push({
-                  event: event.name,
-                  event_category: event.category,
-                  event_label: event.label,
-                });
-              }
-
-              // Custom DOM event for any listener
-              window.dispatchEvent(
-                new CustomEvent("track", {
-                  detail: {
-                    name: event.name,
-                    category: event.category,
-                    label: event.label,
-                    targetElement: event.targetElement,
-                  },
-                }),
-              );
-
-              // Log hit to Convex analytics (fire-and-forget)
-              fetch(`${apiBase}/api/events/log`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  eventName: event.name,
-                  category: event.category,
-                  label: event.label,
-                  targetElement: event.targetElement,
-                  url: window.location.href,
-                  sessionId,
-                }),
-              }).catch(() => {
-                // Silently fail — tracking should never break the site
-              });
+              dispatchAnalyticsEvent(event);
+              logAnalyticsHit(event, sessionId);
             };
 
             el.addEventListener(eventType, handler);
@@ -136,11 +65,10 @@ export function Tracker() {
           }
         }
       } catch {
-        // Silently fail — tracking should never break the site
+        // Tracking should never break the site
       }
     }
 
-    // Wait a tick for the DOM to settle after hydration
     const timer = setTimeout(init, 100);
 
     return () => {
@@ -148,7 +76,7 @@ export function Tracker() {
       clearTimeout(timer);
       cleanups.forEach((fn) => fn());
     };
-  }, []);
+  }, [hasAnalyticsConsent]);
 
   return null;
 }

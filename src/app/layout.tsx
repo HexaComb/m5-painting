@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Lato } from "next/font/google";
+import { Analytics } from "@/components/Analytics";
+import { CookieConsentProvider } from "@/components/CookieConsent";
 import { Tracker } from "@/components/Tracker";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import type { SiteContent } from "@/lib/content-types";
@@ -93,8 +95,11 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth">
       <body className={`${montserrat.variable} ${lato.variable} font-sans antialiased`}>
         <ConvexClientProvider>
-          {children}
-          <Tracker />
+          <CookieConsentProvider>
+            {children}
+            <Analytics />
+            <Tracker />
+          </CookieConsentProvider>
         </ConvexClientProvider>
       </body>
     </html>

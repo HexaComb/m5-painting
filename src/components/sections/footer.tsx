@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { useCookieConsent } from "@/components/CookieConsent";
 import type { SiteSettings } from "@/lib/content-types";
 
 const navLinks = [
@@ -21,6 +22,7 @@ export function Footer({
 }) {
   const querySettings = useQuery(api.content.getSiteSettings);
   const settings = querySettings === undefined ? initialSettings : querySettings;
+  const { openPreferences } = useCookieConsent();
   if (!settings) return null;
   return (
     <footer className="brand-surface-dark border-t border-white/10 text-white">
@@ -111,9 +113,18 @@ export function Footer({
           <p className="text-xs text-on-dark-muted">
             &copy; {new Date().getFullYear()} {settings.businessName}. All Rights Reserved.
           </p>
-          <p className="text-xs text-on-dark-muted">
-            Proudly serving {settings.address}
-          </p>
+          <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
+            <button
+              type="button"
+              onClick={openPreferences}
+              className="text-xs text-on-dark-muted underline-offset-2 transition-colors hover:text-on-dark-secondary hover:underline"
+            >
+              Cookie preferences
+            </button>
+            <p className="text-xs text-on-dark-muted">
+              Proudly serving {settings.address}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

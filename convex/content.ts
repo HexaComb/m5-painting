@@ -13,6 +13,7 @@ import {
   reviewValidator,
   selectHomepageReviews,
 } from "./reviewTypes";
+import { internal } from "./_generated/api";
 
 // ─── Auth helper ────────────────────────────────────────────────────────
 async function requireAuth(ctx: QueryCtx) {
@@ -850,6 +851,8 @@ export const seed = internalMutation({
       email: "m5paintingco@gmail.com",
       location: "Sanger, CA · Central Valley",
     });
+
+    await ctx.runMutation(internal.trackingEvents.seedDefaults);
 
     return null;
   },
