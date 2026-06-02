@@ -7,6 +7,7 @@ export interface SiteSettings {
   email: string;
   address: string;
   metaDescription: string;
+  googlePlaceId?: string;
 }
 
 export interface HeroContent {
@@ -61,11 +62,6 @@ export interface Review {
   author: string;
   date: string;
   source: string;
-  enabled?: boolean;
-  rating?: number;
-  googleReviewId?: string;
-  profilePhotoUrl?: string;
-  authorUri?: string;
 }
 
 export interface ContactContent {

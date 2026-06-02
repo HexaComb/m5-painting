@@ -7,6 +7,7 @@ import {
   type MutationCtx,
   type QueryCtx,
 } from "./_generated/server";
+import { M5_GOOGLE_PLACE_ID } from "./constants";
 import { isReviewEnabled, reviewValidator } from "./reviewTypes";
 
 // ─── Auth helper ────────────────────────────────────────────────────────
@@ -661,7 +662,14 @@ export const seed = internalMutation({
   handler: async (ctx) => {
     // Only seed if empty
     const existingSettings = await ctx.db.query("siteSettings").first();
-    if (existingSettings) return null;
+    if (existingSettings) {
+      if (!existingSettings.googlePlaceId) {
+        await ctx.db.patch(existingSettings._id, {
+          googlePlaceId: M5_GOOGLE_PLACE_ID,
+        });
+      }
+      return null;
+    }
 
     // Site Settings
     await ctx.db.insert("siteSettings", {
@@ -672,6 +680,7 @@ export const seed = internalMutation({
       address: "Sanger, CA · Central Valley",
       metaDescription:
         "M5 Painting — family-owned painting contractor in the Central Valley, California. Interior, exterior, and commercial painting services.",
+      googlePlaceId: M5_GOOGLE_PLACE_ID,
     });
 
     // Hero

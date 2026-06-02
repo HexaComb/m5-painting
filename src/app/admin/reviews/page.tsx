@@ -29,6 +29,7 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 import type { Review } from "@/lib/content-types";
+import { M5_GOOGLE_PLACE_ID } from "@/lib/site-constants";
 
 type ReviewForm = {
   text: string;
@@ -83,9 +84,7 @@ export default function ReviewsPage() {
   const [savingPlaceId, setSavingPlaceId] = useState(false);
 
   useEffect(() => {
-    if (settings?.googlePlaceId) {
-      setPlaceId(settings.googlePlaceId);
-    }
+    setPlaceId(settings?.googlePlaceId ?? M5_GOOGLE_PLACE_ID);
   }, [settings?.googlePlaceId]);
 
   const openEdit = (review: Review | null) => {
@@ -220,7 +219,7 @@ export default function ReviewsPage() {
               id="google-place-id"
               value={placeId}
               onChange={(e) => setPlaceId(e.target.value)}
-              placeholder="ChIJ..."
+              placeholder="ChIJ3XXXYjyWJWgR9O4wNA0xsaU"
             />
             <p className="text-xs text-muted-foreground">
               Find this in Google Maps → your business → Share → Embed a map, or use
