@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { useQuery } from "convex/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
@@ -23,28 +23,8 @@ export function Projects({
   const queryPosts = useQuery(api.content.getInstagramPosts);
   const posts = queryPosts === undefined ? initialPosts : queryPosts;
 
-  const feedRef = useRef<HTMLDivElement>(null);
-  const [loadEmbeds, setLoadEmbeds] = useState(false);
+  const hasPosts = Boolean(posts && posts.length > 0);
   const [embedScriptReady, setEmbedScriptReady] = useState(false);
-
-  // Start loading Instagram's script before the feed scrolls into view.
-  useEffect(() => {
-    const el = feedRef.current;
-    if (!el) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setLoadEmbeds(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin: "600px 0px" },
-    );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [posts?.length]);
 
   useEffect(() => {
     if (embedScriptReady && posts && posts.length > 0) {
@@ -54,7 +34,7 @@ export function Projects({
 
   return (
     <section id="projects" className="surface-chrome-yard relative py-20 sm:py-28">
-      {loadEmbeds ? (
+      {hasPosts ? (
         <Script
           src="https://www.instagram.com/embed.js"
           strategy="afterInteractive"
@@ -81,7 +61,7 @@ export function Projects({
         </Reveal>
 
         {posts && posts.length > 0 ? (
-          <div ref={feedRef} className="mt-10">
+          <div className="mt-10">
             <Reveal>
               <p className="mb-4 text-center text-sm font-bold text-muted-foreground">
                 Recent updates from the jobsite
