@@ -25,6 +25,7 @@ const schema = defineSchema({
     ctaText: v.string(),
     ctaPhone: v.string(),
     imageStorageId: v.optional(v.id("_storage")),
+    mediaType: v.optional(v.union(v.literal("image"), v.literal("video"))),
     imageAlt: v.optional(v.string()),
     /** Legacy field; stripped via content.stripHeroBadgeText after deploy. */
     badgeText: v.optional(v.string()),

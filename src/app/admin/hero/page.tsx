@@ -4,7 +4,6 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,32 +15,50 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowLeft, ImageIcon, Loader2, Save, Trash2, Upload } from "lucide-react";
+import { ArrowLeft, Film, Loader2, Save, Trash2, Upload } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { HeroMediaPreview } from "@/components/sections/hero-media";
+import type { HeroMediaType } from "@/lib/content-types";
 import {
-  DEFAULT_HERO_IMAGE,
-  DEFAULT_HERO_IMAGE_ALT,
+  DEFAULT_HERO_MEDIA_ALT,
+  DEFAULT_HERO_MEDIA_TYPE,
+  DEFAULT_HERO_VIDEO,
 } from "@/lib/content-types";
+
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_VIDEO_BYTES = 50 * 1024 * 1024;
+
+function mediaTypeFromFile(file: File): HeroMediaType | null {
+  if (file.type.startsWith("image/")) return "image";
+  if (file.type.startsWith("video/")) return "video";
+  return null;
+}
 
 export default function HeroPage() {
   const hero = useQuery(api.content.getHeroContent);
   const update = useMutation(api.content.updateHeroContent);
-  const generateUploadUrl = useMutation(api.content.generateHeroImageUploadUrl);
+  const generateUploadUrl = useMutation(api.content.generateHeroMediaUploadUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [form, setForm] = useState({
     headline: "",
     highlightText: "",
     bodyText: "",
     ctaText: "",
-    imageAlt: DEFAULT_HERO_IMAGE_ALT,
+    imageAlt: DEFAULT_HERO_MEDIA_ALT,
   });
-  const [previewUrl, setPreviewUrl] = useState(DEFAULT_HERO_IMAGE);
+  const [previewUrl, setPreviewUrl] = useState(DEFAULT_HERO_VIDEO);
+  const [previewType, setPreviewType] = useState<HeroMediaType>(
+    DEFAULT_HERO_MEDIA_TYPE,
+  );
   const [pendingStorageId, setPendingStorageId] = useState<
     Id<"_storage"> | undefined
   >(undefined);
-  const [clearImage, setClearImage] = useState(false);
-  const [hasCustomImage, setHasCustomImage] = useState(false);
+  const [pendingMediaType, setPendingMediaType] = useState<
+    HeroMediaType | undefined
+  >(undefined);
+  const [clearMedia, setClearMedia] = useState(false);
+  const [hasCustomMedia, setHasCustomMedia] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -52,25 +69,39 @@ export default function HeroPage() {
         highlightText: hero.highlightText,
         bodyText: hero.bodyText,
         ctaText: hero.ctaText,
-        imageAlt: hero.imageAlt ?? DEFAULT_HERO_IMAGE_ALT,
+        imageAlt: hero.mediaAlt ?? DEFAULT_HERO_MEDIA_ALT,
       });
-      setPreviewUrl(hero.imageUrl ?? DEFAULT_HERO_IMAGE);
-      setHasCustomImage(Boolean(hero.imageUrl));
+      if (hero.mediaUrl) {
+        setPreviewUrl(hero.mediaUrl);
+        setPreviewType(hero.mediaType ?? "image");
+        setHasCustomMedia(true);
+      } else {
+        setPreviewUrl(DEFAULT_HERO_VIDEO);
+        setPreviewType(DEFAULT_HERO_MEDIA_TYPE);
+        setHasCustomMedia(false);
+      }
       setPendingStorageId(undefined);
-      setClearImage(false);
+      setPendingMediaType(undefined);
+      setClearMedia(false);
     }
   }, [hero]);
 
-  const handleImageSelect = async (file: File | null) => {
+  const handleMediaSelect = async (file: File | null) => {
     if (!file) return;
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please choose an image file");
+    const mediaType = mediaTypeFromFile(file);
+    if (!mediaType) {
+      toast.error("Please choose an image or video file");
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Image must be 5 MB or smaller");
+    const maxBytes = mediaType === "video" ? MAX_VIDEO_BYTES : MAX_IMAGE_BYTES;
+    if (file.size > maxBytes) {
+      toast.error(
+        mediaType === "video"
+          ? "Video must be 50 MB or smaller"
+          : "Image must be 5 MB or smaller",
+      );
       return;
     }
 
@@ -92,12 +123,16 @@ export default function HeroPage() {
       };
 
       setPendingStorageId(storageId);
-      setClearImage(false);
-      setHasCustomImage(true);
+      setPendingMediaType(mediaType);
+      setClearMedia(false);
+      setHasCustomMedia(true);
+      setPreviewType(mediaType);
       setPreviewUrl(URL.createObjectURL(file));
-      toast.success("Image uploaded. Save changes to publish it.");
+      toast.success(
+        `${mediaType === "video" ? "Video" : "Image"} uploaded. Save changes to publish it.`,
+      );
     } catch {
-      toast.error("Failed to upload image");
+      toast.error("Failed to upload file");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -106,11 +141,13 @@ export default function HeroPage() {
     }
   };
 
-  const handleRemoveImage = () => {
+  const handleRemoveMedia = () => {
     setPendingStorageId(undefined);
-    setClearImage(true);
-    setHasCustomImage(false);
-    setPreviewUrl(DEFAULT_HERO_IMAGE);
+    setPendingMediaType(undefined);
+    setClearMedia(true);
+    setHasCustomMedia(false);
+    setPreviewUrl(DEFAULT_HERO_VIDEO);
+    setPreviewType(DEFAULT_HERO_MEDIA_TYPE);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -121,11 +158,14 @@ export default function HeroPage() {
     try {
       await update({
         ...form,
-        ...(pendingStorageId ? { imageStorageId: pendingStorageId } : {}),
-        ...(clearImage ? { clearImage: true } : {}),
+        ...(pendingStorageId && pendingMediaType
+          ? { imageStorageId: pendingStorageId, mediaType: pendingMediaType }
+          : {}),
+        ...(clearMedia ? { clearImage: true } : {}),
       });
       setPendingStorageId(undefined);
-      setClearImage(false);
+      setPendingMediaType(undefined);
+      setClearMedia(false);
       toast.success("Hero section updated!");
     } catch {
       toast.error("Failed to save");
@@ -160,21 +200,19 @@ export default function HeroPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Project Photo</CardTitle>
+          <CardTitle>Hero Media</CardTitle>
           <CardDescription>
-            The finished-project photo shown beside the headline on desktop and
-            below the call-to-action buttons on mobile.
+            Image or video shown beside the headline on desktop and below the
+            call-to-action buttons on mobile. Defaults to the M5 process video.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="overflow-hidden rounded-xl border bg-muted/30">
             <div className="relative aspect-[4/3] w-full max-w-md">
-              <Image
+              <HeroMediaPreview
                 src={previewUrl}
+                type={previewType}
                 alt={form.imageAlt}
-                fill
-                className="object-cover"
-                unoptimized
               />
             </div>
           </div>
@@ -183,9 +221,9 @@ export default function HeroPage() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               className="hidden"
-              onChange={(e) => handleImageSelect(e.target.files?.[0] ?? null)}
+              onChange={(e) => handleMediaSelect(e.target.files?.[0] ?? null)}
             />
             <Button
               type="button"
@@ -198,40 +236,40 @@ export default function HeroPage() {
               ) : (
                 <Upload className="mr-2 h-4 w-4" />
               )}
-              Upload Image
+              Upload Image or Video
             </Button>
-            {hasCustomImage && (
+            {hasCustomMedia && (
               <Button
                 type="button"
                 variant="outline"
                 disabled={uploading || saving}
-                onClick={handleRemoveImage}
+                onClick={handleRemoveMedia}
               >
                 <Trash2 className="mr-2 h-4 w-4" />
-                Use Default Photo
+                Use Default Video
               </Button>
             )}
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hero-image-alt">Image Description (alt text)</Label>
+            <Label htmlFor="hero-media-alt">Description (alt text)</Label>
             <Input
-              id="hero-image-alt"
+              id="hero-media-alt"
               value={form.imageAlt}
               onChange={(e) =>
                 setForm((f) => ({ ...f, imageAlt: e.target.value }))
               }
-              placeholder={DEFAULT_HERO_IMAGE_ALT}
+              placeholder={DEFAULT_HERO_MEDIA_ALT}
             />
             <p className="text-xs text-muted-foreground">
-              Describes the photo for screen readers and search engines.
+              Describes the media for screen readers and search engines.
             </p>
           </div>
 
-          {!hasCustomImage && (
+          {!hasCustomMedia && (
             <p className="flex items-start gap-2 text-xs text-muted-foreground">
-              <ImageIcon className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-              Using the default project photo until you upload a custom image.
+              <Film className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+              Using the default process video until you upload custom media.
             </p>
           )}
         </CardContent>

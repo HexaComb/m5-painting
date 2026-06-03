@@ -143,16 +143,18 @@ export const getHeroContent = query({
       bodyText: v.string(),
       ctaText: v.string(),
       ctaPhone: v.string(),
-      imageUrl: v.optional(v.string()),
-      imageAlt: v.optional(v.string()),
+      mediaUrl: v.optional(v.string()),
+      mediaType: v.optional(v.union(v.literal("image"), v.literal("video"))),
+      mediaAlt: v.optional(v.string()),
     }),
     v.null(),
   ),
   handler: async (ctx) => {
     const hero = await ctx.db.query("heroContent").first();
     if (!hero) return null;
-    const imageUrl = hero.imageStorageId
-      ? await ctx.storage.getUrl(hero.imageStorageId)
+    const storageId = hero.imageStorageId;
+    const mediaUrl = storageId
+      ? await ctx.storage.getUrl(storageId)
       : undefined;
     return {
       _id: hero._id,
@@ -162,13 +164,14 @@ export const getHeroContent = query({
       bodyText: hero.bodyText,
       ctaText: hero.ctaText,
       ctaPhone: hero.ctaPhone,
-      imageUrl: imageUrl ?? undefined,
-      imageAlt: hero.imageAlt,
+      mediaUrl: mediaUrl ?? undefined,
+      mediaType: hero.mediaType ?? (storageId ? "image" : undefined),
+      mediaAlt: hero.imageAlt,
     };
   },
 });
 
-export const generateHeroImageUploadUrl = mutation({
+export const generateHeroMediaUploadUrl = mutation({
   args: {},
   returns: v.string(),
   handler: async (ctx) => {
@@ -184,6 +187,7 @@ export const updateHeroContent = mutation({
     bodyText: v.string(),
     ctaText: v.string(),
     imageStorageId: v.optional(v.id("_storage")),
+    mediaType: v.optional(v.union(v.literal("image"), v.literal("video"))),
     imageAlt: v.optional(v.string()),
     clearImage: v.optional(v.boolean()),
   },
@@ -191,7 +195,8 @@ export const updateHeroContent = mutation({
   handler: async (ctx, args) => {
     await requireAuth(ctx);
     const settings = await ctx.db.query("siteSettings").first();
-    const { clearImage, imageStorageId, imageAlt, ...textFields } = args;
+    const { clearImage, imageStorageId, mediaType, imageAlt, ...textFields } =
+      args;
     const data: {
       headline: string;
       highlightText: string;
@@ -199,6 +204,7 @@ export const updateHeroContent = mutation({
       ctaText: string;
       ctaPhone: string;
       imageStorageId?: typeof imageStorageId | undefined;
+      mediaType?: "image" | "video";
       imageAlt?: string;
     } = {
       ...textFields,
@@ -206,8 +212,12 @@ export const updateHeroContent = mutation({
     };
     if (clearImage) {
       data.imageStorageId = undefined;
+      data.mediaType = undefined;
     } else if (imageStorageId !== undefined) {
       data.imageStorageId = imageStorageId;
+    }
+    if (mediaType !== undefined) {
+      data.mediaType = mediaType;
     }
     if (imageAlt !== undefined) {
       data.imageAlt = imageAlt;
@@ -776,7 +786,7 @@ export const seed = internalMutation({
       ctaText: "Get a Free Estimate",
       ctaPhone: "559-451-1022",
       imageAlt:
-        "Freshly painted home exterior with crisp trim work by M5 Painting",
+        "M5 Painting crew working on a home exterior in the Central Valley",
     });
 
     // Services

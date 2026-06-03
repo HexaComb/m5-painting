@@ -19,13 +19,21 @@ export interface HeroContent {
   bodyText: string;
   ctaText: string;
   ctaPhone: string;
-  imageUrl?: string;
-  imageAlt?: string;
+  mediaUrl?: string;
+  mediaType?: HeroMediaType;
+  mediaAlt?: string;
 }
 
+export type HeroMediaType = "image" | "video";
+
+export const DEFAULT_HERO_VIDEO = "/videos/m5easyprocess-720p.mp4";
+export const DEFAULT_HERO_VIDEO_ALT =
+  "M5 Painting crew working on a home exterior in the Central Valley";
 export const DEFAULT_HERO_IMAGE = "/images/project-door.webp";
 export const DEFAULT_HERO_IMAGE_ALT =
   "Freshly painted home exterior with crisp trim work by M5 Painting";
+export const DEFAULT_HERO_MEDIA_TYPE: HeroMediaType = "video";
+export const DEFAULT_HERO_MEDIA_ALT = DEFAULT_HERO_VIDEO_ALT;
 
 export interface Service {
   _id: string;

@@ -6,10 +6,12 @@ import { Reveal } from "@/components/ui/reveal";
 import { Phone, Star } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import type { HeroContent, SiteSettings } from "@/lib/content-types";
+import { HeroMedia } from "@/components/sections/hero-media";
+import type { HeroContent, HeroMediaType, SiteSettings } from "@/lib/content-types";
 import {
-  DEFAULT_HERO_IMAGE,
-  DEFAULT_HERO_IMAGE_ALT,
+  DEFAULT_HERO_MEDIA_ALT,
+  DEFAULT_HERO_MEDIA_TYPE,
+  DEFAULT_HERO_VIDEO,
 } from "@/lib/content-types";
 
 export function Hero({
@@ -24,8 +26,12 @@ export function Hero({
   const hero = queryHero === undefined ? initialHero : queryHero;
   const settings = querySettings === undefined ? initialSettings : querySettings;
   if (!hero || !settings) return null;
-  const heroImageSrc = hero.imageUrl ?? DEFAULT_HERO_IMAGE;
-  const heroImageAlt = hero.imageAlt ?? DEFAULT_HERO_IMAGE_ALT;
+  const heroMediaSrc = hero.mediaUrl ?? DEFAULT_HERO_VIDEO;
+  const heroMediaType: HeroMediaType =
+    hero.mediaUrl !== undefined
+      ? (hero.mediaType ?? "image")
+      : DEFAULT_HERO_MEDIA_TYPE;
+  const heroMediaAlt = hero.mediaAlt ?? DEFAULT_HERO_MEDIA_ALT;
   return (
     <section className="brand-surface-dark relative overflow-hidden pt-[4.25rem] lg:pt-[4.75rem]">
       {/* Electric glow — echoes logo swoosh */}
@@ -136,11 +142,10 @@ export function Hero({
                   className="pointer-events-none absolute -inset-4 rounded-3xl bg-brand-electric/15 blur-2xl"
                 />
                 <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15 ring-1 ring-white/10">
-                  <Image
-                    src={heroImageSrc}
-                    alt={heroImageAlt}
-                    fill
-                    className="object-cover"
+                  <HeroMedia
+                    src={heroMediaSrc}
+                    type={heroMediaType}
+                    alt={heroMediaAlt}
                     priority
                     sizes="(max-width: 1024px) 90vw, 45vw"
                   />
