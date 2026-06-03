@@ -208,7 +208,7 @@ export default function HeroPage() {
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="overflow-hidden rounded-xl border bg-muted/30">
-            <div className="relative aspect-[4/3] w-full max-w-md">
+            <div className="relative aspect-[6/5] w-full max-w-md sm:aspect-[5/4] lg:aspect-[4/5]">
               <HeroMediaPreview
                 src={previewUrl}
                 type={previewType}

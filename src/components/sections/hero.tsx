@@ -141,7 +141,7 @@ export function Hero({
                   aria-hidden
                   className="pointer-events-none absolute -inset-4 rounded-3xl bg-brand-electric/15 blur-2xl"
                 />
-                <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15 ring-1 ring-white/10">
+                <div className="relative aspect-[6/5] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15 ring-1 ring-white/10 sm:aspect-[5/4] lg:aspect-[4/5]">
                   <HeroMedia
                     src={heroMediaSrc}
                     type={heroMediaType}

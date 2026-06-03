@@ -33,7 +33,7 @@ export function HeroMedia({
     return (
       <video
         src={src}
-        className={`h-full w-full ${className}`}
+        className={`absolute inset-0 h-full w-full ${className}`}
         muted
         loop
         playsInline
@@ -69,7 +69,7 @@ export function HeroMediaPreview({
     return (
       <video
         src={src}
-        className="h-full w-full object-cover"
+        className="absolute inset-0 h-full w-full object-cover"
         controls
         playsInline
         aria-label={alt}
