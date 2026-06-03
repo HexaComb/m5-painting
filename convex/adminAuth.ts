@@ -3,13 +3,15 @@ import { retrieveAccount } from "@convex-dev/auth/server";
 import { Scrypt } from "lucia";
 import type { DataModel } from "./_generated/dataModel";
 
+export const ADMIN_CREDENTIALS_PROVIDER = "admin-credentials";
+
 /**
  * Simple admin credentials provider.
  * Accepts username (treated as email internally) + password.
  * No signup — admin accounts are seeded via the seedAdmin mutation.
  */
 export const AdminCredentials = ConvexCredentials<DataModel>({
-  id: "admin-credentials",
+  id: ADMIN_CREDENTIALS_PROVIDER,
   crypto: {
     async hashSecret(password: string) {
       return await new Scrypt().hash(password);
@@ -28,7 +30,7 @@ export const AdminCredentials = ConvexCredentials<DataModel>({
 
     // Lookup using the username as the account ID
     const result = await retrieveAccount(ctx, {
-      provider: "admin-credentials",
+      provider: ADMIN_CREDENTIALS_PROVIDER,
       account: {
         id: username.toLowerCase(),
         secret: password,

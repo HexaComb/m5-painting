@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
 import type { Id } from "../../../../convex/_generated/dataModel";
 import { useState } from "react";
@@ -33,6 +33,7 @@ import {
   ArrowLeft,
   Eye,
   EyeOff,
+  KeyRound,
   Loader2,
   Plus,
   Trash2,
@@ -41,14 +42,68 @@ import {
 import Link from "next/link";
 import { toast } from "sonner";
 
+function PasswordField({
+  id,
+  label,
+  value,
+  onChange,
+  placeholder,
+  showPassword,
+  onToggleShow,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  showPassword: boolean;
+  onToggleShow: () => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          type={showPassword ? "text" : "password"}
+          placeholder={placeholder}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          required
+          minLength={6}
+        />
+        <Button
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2"
+          onClick={onToggleShow}
+        >
+          {showPassword ? (
+            <EyeOff className="h-4 w-4" />
+          ) : (
+            <Eye className="h-4 w-4" />
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}
+
 export default function UsersPage() {
   const users = useQuery(api.userManagement.listUsers);
   const currentUser = useQuery(api.auth.currentUser);
   const addUser = useMutation(api.userManagement.addUser);
   const deleteUserMut = useMutation(api.userManagement.deleteUser);
+  const changeOwnPassword = useAction(api.userManagement.changeOwnPassword);
+  const resetUserPassword = useAction(api.userManagement.resetUserPassword);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<{
+    id: Id<"users">;
+    name: string;
+  } | null>(null);
+  const [resetTarget, setResetTarget] = useState<{
     id: Id<"users">;
     name: string;
   } | null>(null);
@@ -57,6 +112,17 @@ export default function UsersPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const [resetPassword, setResetPassword] = useState("");
+  const [showResetPassword, setShowResetPassword] = useState(false);
+  const [resettingPassword, setResettingPassword] = useState(false);
 
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,6 +144,59 @@ export default function UsersPage() {
       toast.error("Failed to create user");
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleChangeOwnPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!currentPassword || !newPassword || !confirmPassword) return;
+    if (newPassword !== confirmPassword) {
+      toast.error("New passwords do not match");
+      return;
+    }
+
+    setChangingPassword(true);
+    try {
+      const result = await changeOwnPassword({
+        currentPassword,
+        newPassword,
+      });
+      if (result.success) {
+        toast.success(result.message);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      } else {
+        toast.error(result.message);
+      }
+    } catch {
+      toast.error("Failed to update password");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  const handleResetUserPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!resetTarget || !resetPassword) return;
+
+    setResettingPassword(true);
+    try {
+      const result = await resetUserPassword({
+        userId: resetTarget.id,
+        newPassword: resetPassword,
+      });
+      if (result.success) {
+        toast.success(result.message);
+        setResetTarget(null);
+        setResetPassword("");
+      } else {
+        toast.error(result.message);
+      }
+    } catch {
+      toast.error("Failed to reset password");
+    } finally {
+      setResettingPassword(false);
     }
   };
 
@@ -210,6 +329,55 @@ export default function UsersPage() {
         </Dialog>
       </div>
 
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <KeyRound className="h-5 w-5" />
+            Change your password
+          </CardTitle>
+          <CardDescription>
+            Update the password you use to sign in to this dashboard
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleChangeOwnPassword} className="space-y-4 max-w-md">
+            <PasswordField
+              id="current-password"
+              label="Current password"
+              value={currentPassword}
+              onChange={setCurrentPassword}
+              placeholder="Your current password"
+              showPassword={showCurrentPassword}
+              onToggleShow={() => setShowCurrentPassword(!showCurrentPassword)}
+            />
+            <PasswordField
+              id="new-password"
+              label="New password"
+              value={newPassword}
+              onChange={setNewPassword}
+              placeholder="At least 6 characters"
+              showPassword={showNewPassword}
+              onToggleShow={() => setShowNewPassword(!showNewPassword)}
+            />
+            <PasswordField
+              id="confirm-password"
+              label="Confirm new password"
+              value={confirmPassword}
+              onChange={setConfirmPassword}
+              placeholder="Re-enter new password"
+              showPassword={showNewPassword}
+              onToggleShow={() => setShowNewPassword(!showNewPassword)}
+            />
+            <Button type="submit" disabled={changingPassword}>
+              {changingPassword && (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              )}
+              Update password
+            </Button>
+          </form>
+        </CardContent>
+      </Card>
+
       {/* Users list */}
       <Card>
         <CardHeader>
@@ -280,19 +448,36 @@ export default function UsersPage() {
                       </div>
                     </div>
                     {!isCurrentUser && (
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-muted-foreground hover:text-destructive shrink-0"
-                        onClick={() =>
-                          setDeleteTarget({
-                            id: user._id,
-                            name: user.name || "this user",
-                          })
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex shrink-0 items-center gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground hover:text-foreground"
+                          title="Reset password"
+                          onClick={() =>
+                            setResetTarget({
+                              id: user._id,
+                              name: user.name || "this user",
+                            })
+                          }
+                        >
+                          <KeyRound className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="text-muted-foreground hover:text-destructive"
+                          title="Delete user"
+                          onClick={() =>
+                            setDeleteTarget({
+                              id: user._id,
+                              name: user.name || "this user",
+                            })
+                          }
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     )}
                   </div>
                 );
@@ -301,6 +486,58 @@ export default function UsersPage() {
           )}
         </CardContent>
       </Card>
+
+      {/* Reset password dialog */}
+      <Dialog
+        open={resetTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setResetTarget(null);
+            setResetPassword("");
+          }
+        }}
+      >
+        <DialogContent>
+          <form onSubmit={handleResetUserPassword}>
+            <DialogHeader>
+              <DialogTitle>Reset password for {resetTarget?.name}?</DialogTitle>
+              <DialogDescription>
+                Set a new password for this user. Their existing sessions will
+                be signed out and they will need to sign in again.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <PasswordField
+                id="reset-password"
+                label="New password"
+                value={resetPassword}
+                onChange={setResetPassword}
+                placeholder="At least 6 characters"
+                showPassword={showResetPassword}
+                onToggleShow={() => setShowResetPassword(!showResetPassword)}
+              />
+            </div>
+            <DialogFooter>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setResetTarget(null);
+                  setResetPassword("");
+                }}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={resettingPassword}>
+                {resettingPassword && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                Reset password
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete confirmation dialog */}
       <Dialog

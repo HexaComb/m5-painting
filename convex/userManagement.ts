@@ -1,11 +1,46 @@
-import { createAccount, getAuthUserId } from "@convex-dev/auth/server";
+import {
+  createAccount,
+  getAuthUserId,
+  modifyAccountCredentials,
+  retrieveAccount,
+  invalidateSessions,
+} from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import {
   query,
   mutation,
+  action,
   internalAction,
+  internalQuery,
 } from "./_generated/server";
 import { internal } from "./_generated/api";
+import { ADMIN_CREDENTIALS_PROVIDER } from "./adminAuth";
+
+const MIN_PASSWORD_LENGTH = 6;
+
+function validateNewPassword(password: string): string | null {
+  if (password.length < MIN_PASSWORD_LENGTH) {
+    return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+  }
+  return null;
+}
+
+export const getCredentialsAccountId = internalQuery({
+  args: { userId: v.id("users") },
+  returns: v.string(),
+  handler: async (ctx, { userId }) => {
+    const account = await ctx.db
+      .query("authAccounts")
+      .withIndex("userIdAndProvider", (q) =>
+        q.eq("userId", userId).eq("provider", ADMIN_CREDENTIALS_PROVIDER),
+      )
+      .unique();
+    if (!account) {
+      throw new Error("No admin credentials found for this user");
+    }
+    return account.providerAccountId;
+  },
+});
 
 // ─── List all users ──────────────────────────────────────────────────
 export const listUsers = query({
@@ -46,7 +81,7 @@ export const createUser = internalAction({
   handler: async (ctx, { username, password, name }) => {
     try {
       await createAccount(ctx, {
-        provider: "admin-credentials",
+        provider: ADMIN_CREDENTIALS_PROVIDER,
         account: {
           id: username.toLowerCase(),
           secret: password,
@@ -116,5 +151,131 @@ export const deleteUser = mutation({
 
     await ctx.db.delete(userId);
     return null;
+  },
+});
+
+// ─── Change own password (requires current password) ─────────────────
+export const changeOwnPassword = action({
+  args: {
+    currentPassword: v.string(),
+    newPassword: v.string(),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    message: v.string(),
+  }),
+  handler: async (ctx, { currentPassword, newPassword }) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) {
+      return { success: false, message: "Not authenticated" };
+    }
+
+    const passwordError = validateNewPassword(newPassword);
+    if (passwordError) {
+      return { success: false, message: passwordError };
+    }
+    if (currentPassword === newPassword) {
+      return { success: false, message: "New password must be different" };
+    }
+
+    const accountId = await ctx.runQuery(
+      internal.userManagement.getCredentialsAccountId,
+      { userId },
+    );
+
+    try {
+      await retrieveAccount(ctx, {
+        provider: ADMIN_CREDENTIALS_PROVIDER,
+        account: { id: accountId, secret: currentPassword },
+      });
+    } catch {
+      return { success: false, message: "Current password is incorrect" };
+    }
+
+    try {
+      await modifyAccountCredentials(ctx, {
+        provider: ADMIN_CREDENTIALS_PROVIDER,
+        account: { id: accountId, secret: newPassword },
+      });
+      return { success: true, message: "Password updated" };
+    } catch (error) {
+      const msg =
+        error instanceof Error ? error.message : "Failed to update password";
+      return { success: false, message: msg };
+    }
+  },
+});
+
+// ─── Admin reset another user's password ─────────────────────────────
+export const resetUserPassword = action({
+  args: {
+    userId: v.id("users"),
+    newPassword: v.string(),
+  },
+  returns: v.object({
+    success: v.boolean(),
+    message: v.string(),
+  }),
+  handler: async (ctx, { userId: targetUserId, newPassword }) => {
+    const currentUserId = await getAuthUserId(ctx);
+    if (!currentUserId) {
+      return { success: false, message: "Not authenticated" };
+    }
+
+    if (targetUserId === currentUserId) {
+      return {
+        success: false,
+        message: "Use “Change your password” to update your own password",
+      };
+    }
+
+    const passwordError = validateNewPassword(newPassword);
+    if (passwordError) {
+      return { success: false, message: passwordError };
+    }
+
+    const targetUser = await ctx.runQuery(internal.userManagement.getUser, {
+      userId: targetUserId,
+    });
+    if (!targetUser) {
+      return { success: false, message: "User not found" };
+    }
+
+    const accountId = await ctx.runQuery(
+      internal.userManagement.getCredentialsAccountId,
+      { userId: targetUserId },
+    );
+
+    try {
+      await modifyAccountCredentials(ctx, {
+        provider: ADMIN_CREDENTIALS_PROVIDER,
+        account: { id: accountId, secret: newPassword },
+      });
+      await invalidateSessions(ctx, { userId: targetUserId });
+      return {
+        success: true,
+        message: `Password reset for ${targetUser.name ?? "user"}. They must sign in again.`,
+      };
+    } catch (error) {
+      const msg =
+        error instanceof Error ? error.message : "Failed to reset password";
+      return { success: false, message: msg };
+    }
+  },
+});
+
+export const getUser = internalQuery({
+  args: { userId: v.id("users") },
+  returns: v.union(
+    v.object({
+      _id: v.id("users"),
+      name: v.optional(v.string()),
+    }),
+    v.null(),
+  ),
+  handler: async (ctx, { userId }) => {
+    const user = await ctx.db.get(userId);
+    if (!user) return null;
+    return { _id: user._id, name: user.name };
   },
 });
