@@ -19,6 +19,7 @@ import {
   selectHomepageInstagramPosts,
 } from "./instagramTypes";
 import { internal } from "./_generated/api";
+import type { Id } from "./_generated/dataModel";
 
 // ─── Auth helper ────────────────────────────────────────────────────────
 async function requireAuth(ctx: QueryCtx) {
@@ -55,6 +56,92 @@ function normalizeInstagramEmbedUrl(url: string): string | null {
   const [, type, shortcode] = match;
   return `https://www.instagram.com/${type}/${shortcode}/`;
 }
+
+const certificationDocValidator = v.object({
+  _id: v.id("certifications"),
+  _creationTime: v.number(),
+  order: v.number(),
+  label: v.string(),
+  imageUrl: v.optional(v.string()),
+  showInHero: v.boolean(),
+  showInFooter: v.boolean(),
+  enabled: v.optional(v.boolean()),
+});
+
+async function resolveCertificationImageUrl(
+  ctx: QueryCtx,
+  cert: {
+    imageStorageId?: Id<"_storage">;
+    imagePath?: string;
+  },
+): Promise<string | undefined> {
+  if (cert.imageStorageId) {
+    const url = await ctx.storage.getUrl(cert.imageStorageId);
+    return url ?? undefined;
+  }
+  return cert.imagePath;
+}
+
+async function mapCertification(
+  ctx: QueryCtx,
+  cert: {
+    _id: Id<"certifications">;
+    _creationTime: number;
+    order: number;
+    label: string;
+    imageStorageId?: Id<"_storage">;
+    imagePath?: string;
+    showInHero: boolean;
+    showInFooter: boolean;
+    enabled?: boolean;
+  },
+) {
+  return {
+    _id: cert._id,
+    _creationTime: cert._creationTime,
+    order: cert.order,
+    label: cert.label,
+    imageUrl: await resolveCertificationImageUrl(ctx, cert),
+    showInHero: cert.showInHero,
+    showInFooter: cert.showInFooter,
+    enabled: cert.enabled,
+  };
+}
+
+const DEFAULT_CERTIFICATIONS = [
+  {
+    order: 1,
+    label: "Licensed, Bonded & Insured",
+    imagePath: "/images/lbi-badge.webp",
+    showInHero: true,
+    showInFooter: true,
+    enabled: true,
+  },
+  {
+    order: 2,
+    label: "BBB Accredited Business",
+    imagePath: "/images/bbb-badge.svg",
+    showInHero: true,
+    showInFooter: true,
+    enabled: true,
+  },
+  {
+    order: 3,
+    label: "SEA Certified",
+    imagePath: "/images/sea-badge.svg",
+    showInHero: true,
+    showInFooter: true,
+    enabled: true,
+  },
+  {
+    order: 4,
+    label: "5-Star Rated on Yelp & Angi",
+    imagePath: "/images/quality-badge.webp",
+    showInHero: false,
+    showInFooter: true,
+    enabled: true,
+  },
+] as const;
 
 // ═══════════════════════════════════════════════════════════════════════
 // SITE SETTINGS
@@ -687,6 +774,142 @@ export const updateContactContent = mutation({
 });
 
 // ═══════════════════════════════════════════════════════════════════════
+// CERTIFICATIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+export const getCertifications = query({
+  args: {},
+  returns: v.array(certificationDocValidator),
+  handler: async (ctx) => {
+    const rows = await ctx.db
+      .query("certifications")
+      .withIndex("by_order")
+      .collect();
+    const enabled = rows.filter((cert) => cert.enabled !== false);
+    return await Promise.all(enabled.map((cert) => mapCertification(ctx, cert)));
+  },
+});
+
+export const getCertificationsAdmin = query({
+  args: {},
+  returns: v.array(certificationDocValidator),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    const rows = await ctx.db
+      .query("certifications")
+      .withIndex("by_order")
+      .collect();
+    return await Promise.all(rows.map((cert) => mapCertification(ctx, cert)));
+  },
+});
+
+export const generateCertificationImageUploadUrl = mutation({
+  args: {},
+  returns: v.string(),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
+export const addCertification = mutation({
+  args: {
+    label: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
+    imagePath: v.optional(v.string()),
+    showInHero: v.boolean(),
+    showInFooter: v.boolean(),
+    enabled: v.optional(v.boolean()),
+  },
+  returns: v.id("certifications"),
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    const existing = await ctx.db.query("certifications").collect();
+    const maxOrder = existing.reduce((max, cert) => Math.max(max, cert.order), 0);
+    return await ctx.db.insert("certifications", {
+      ...args,
+      order: maxOrder + 1,
+    });
+  },
+});
+
+export const updateCertification = mutation({
+  args: {
+    id: v.id("certifications"),
+    label: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
+    imagePath: v.optional(v.string()),
+    showInHero: v.boolean(),
+    showInFooter: v.boolean(),
+    enabled: v.optional(v.boolean()),
+    clearImage: v.optional(v.boolean()),
+  },
+  returns: v.null(),
+  handler: async (ctx, { id, clearImage, imageStorageId, imagePath, ...rest }) => {
+    await requireAuth(ctx);
+    const patch: {
+      label: string;
+      showInHero: boolean;
+      showInFooter: boolean;
+      enabled?: boolean;
+      imageStorageId?: typeof imageStorageId;
+      imagePath?: string;
+    } = { ...rest };
+    if (clearImage) {
+      patch.imageStorageId = undefined;
+      patch.imagePath = undefined;
+    } else {
+      if (imageStorageId !== undefined) {
+        patch.imageStorageId = imageStorageId;
+        patch.imagePath = undefined;
+      }
+      if (imagePath !== undefined) {
+        patch.imagePath =
+          imagePath.trim().length > 0 ? imagePath.trim() : undefined;
+      }
+    }
+    await ctx.db.patch(id, patch);
+    return null;
+  },
+});
+
+export const deleteCertification = mutation({
+  args: { id: v.id("certifications") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    await ctx.db.delete(id);
+    return null;
+  },
+});
+
+export const reorderCertifications = mutation({
+  args: { orderedIds: v.array(v.id("certifications")) },
+  returns: v.null(),
+  handler: async (ctx, { orderedIds }) => {
+    await requireAuth(ctx);
+    for (let i = 0; i < orderedIds.length; i++) {
+      await ctx.db.patch(orderedIds[i], { order: i + 1 });
+    }
+    return null;
+  },
+});
+
+export const ensureDefaultCertifications = mutation({
+  args: {},
+  returns: v.boolean(),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    const existing = await ctx.db.query("certifications").first();
+    if (existing) return false;
+    for (const cert of DEFAULT_CERTIFICATIONS) {
+      await ctx.db.insert("certifications", cert);
+    }
+    return true;
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════════════
 // LEADS
 // ═══════════════════════════════════════════════════════════════════════
 
@@ -954,6 +1177,10 @@ export const seed = internalMutation({
     });
 
     await ctx.runMutation(internal.trackingEvents.seedDefaults);
+
+    for (const cert of DEFAULT_CERTIFICATIONS) {
+      await ctx.db.insert("certifications", cert);
+    }
 
     return null;
   },

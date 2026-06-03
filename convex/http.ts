@@ -22,6 +22,7 @@ http.route({
       instagramPosts,
       reviews,
       contactContent,
+      certifications,
     ] = await Promise.all([
       ctx.runQuery(api.content.getSiteSettings),
       ctx.runQuery(api.content.getHeroContent),
@@ -31,6 +32,7 @@ http.route({
       ctx.runQuery(api.content.getInstagramPosts),
       ctx.runQuery(api.content.getReviews),
       ctx.runQuery(api.content.getContactContent),
+      ctx.runQuery(api.content.getCertifications),
     ]);
 
     return new Response(
@@ -43,6 +45,7 @@ http.route({
         instagramPosts,
         reviews,
         contactContent,
+        certifications,
       }),
       {
         status: 200,

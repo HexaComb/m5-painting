@@ -82,6 +82,18 @@ const schema = defineSchema({
     .index("by_order", ["order"])
     .index("by_google_review_id", ["googleReviewId"]),
 
+  // Trust credentials / certifications (multiple items)
+  certifications: defineTable({
+    order: v.number(),
+    label: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
+    /** Static asset path, e.g. /images/lbi-badge.webp */
+    imagePath: v.optional(v.string()),
+    showInHero: v.boolean(),
+    showInFooter: v.boolean(),
+    enabled: v.optional(v.boolean()),
+  }).index("by_order", ["order"]),
+
   // Contact section (single document)
   contactContent: defineTable({
     subtitle: v.string(),

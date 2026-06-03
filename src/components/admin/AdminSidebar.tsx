@@ -4,6 +4,7 @@ import { useAuthActions } from "@convex-dev/auth/react";
 import { useQuery } from "convex/react";
 import {
   Activity,
+  Award,
   BarChart3,
   Image,
   Info,
@@ -41,6 +42,7 @@ const mainNav = [
 
 const contentNav = [
   { href: "/admin/hero", label: "Hero", icon: Sparkles },
+  { href: "/admin/certifications", label: "Certifications", icon: Award },
   { href: "/admin/services", label: "Services", icon: Paintbrush },
   { href: "/admin/about", label: "About", icon: Info },
   { href: "/admin/projects", label: "Projects", icon: Image },

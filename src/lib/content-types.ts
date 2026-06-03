@@ -87,6 +87,17 @@ export interface Review {
   authorUri?: string;
 }
 
+export interface Certification {
+  _id: string;
+  _creationTime: number;
+  order: number;
+  label: string;
+  imageUrl?: string;
+  showInHero: boolean;
+  showInFooter: boolean;
+  enabled?: boolean;
+}
+
 export interface ContactContent {
   _id: string;
   _creationTime: number;
@@ -106,5 +117,6 @@ export interface SiteContent {
   aboutValues: AboutValue[] | null;
   instagramPosts: InstagramPost[] | null;
   reviews: Review[] | null;
+  certifications: Certification[] | null;
   contactContent: ContactContent | null;
 }

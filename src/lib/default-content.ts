@@ -6,6 +6,7 @@ import type {
   AboutValue,
   InstagramPost,
   Review,
+  Certification,
   ContactContent,
 } from "./content-types";
 import {
@@ -197,6 +198,49 @@ export const defaultReviews: Review[] = [
     author: "Victoria F.",
     date: "June 2025",
     source: "Angi",
+  },
+];
+
+export const defaultCertifications: Certification[] = [
+  {
+    _id: "c1",
+    _creationTime: Date.now(),
+    order: 1,
+    label: "Licensed, Bonded & Insured",
+    imageUrl: "/images/lbi-badge.webp",
+    showInHero: true,
+    showInFooter: true,
+    enabled: true,
+  },
+  {
+    _id: "c2",
+    _creationTime: Date.now(),
+    order: 2,
+    label: "BBB Accredited Business",
+    imageUrl: "/images/bbb-badge.svg",
+    showInHero: true,
+    showInFooter: true,
+    enabled: true,
+  },
+  {
+    _id: "c3",
+    _creationTime: Date.now(),
+    order: 3,
+    label: "SEA Certified",
+    imageUrl: "/images/sea-badge.svg",
+    showInHero: true,
+    showInFooter: true,
+    enabled: true,
+  },
+  {
+    _id: "c4",
+    _creationTime: Date.now(),
+    order: 4,
+    label: "5-Star Rated on Yelp & Angi",
+    imageUrl: "/images/quality-badge.webp",
+    showInHero: false,
+    showInFooter: true,
+    enabled: true,
   },
 ];
 

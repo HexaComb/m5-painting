@@ -5,7 +5,9 @@ import { Phone, Mail, MapPin } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useCookieConsent } from "@/components/CookieConsent";
-import type { SiteSettings } from "@/lib/content-types";
+import { FooterCertifications, filterFooterCertifications } from "@/components/sections/certifications";
+import type { SiteSettings, Certification } from "@/lib/content-types";
+import { defaultCertifications } from "@/lib/default-content";
 
 const navLinks = [
   { label: "Services", href: "#services" },
@@ -17,13 +19,23 @@ const navLinks = [
 
 export function Footer({
   initialSettings,
+  initialCertifications,
 }: {
   initialSettings?: SiteSettings | null;
+  initialCertifications?: Certification[] | null;
 }) {
   const querySettings = useQuery(api.content.getSiteSettings);
+  const queryCertifications = useQuery(api.content.getCertifications);
   const settings = querySettings === undefined ? initialSettings : querySettings;
+  const certifications =
+    queryCertifications === undefined
+      ? (initialCertifications ?? defaultCertifications)
+      : queryCertifications.length > 0
+        ? queryCertifications
+        : defaultCertifications;
   const { openPreferences } = useCookieConsent();
   if (!settings) return null;
+  const footerCerts = filterFooterCertifications(certifications);
   return (
     <footer className="brand-surface-dark border-t border-white/10 text-white">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16">
@@ -82,31 +94,12 @@ export function Footer({
             </div>
           </div>
 
-          <div>
-            <h4 className="text-label mb-4 text-on-dark-muted">Credentials</h4>
-            <div className="space-y-3">
-              <div className="flex items-center gap-2.5 text-sm text-on-dark-secondary">
-                <Image
-                  src="/images/lbi-badge.webp"
-                  alt="Licensed, Bonded and Insured"
-                  width={22}
-                  height={22}
-                  className="h-5.5 w-5.5 rounded-full ring-1 ring-brand-electric/30"
-                />
-                <span>Licensed, Bonded &amp; Insured</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-sm text-on-dark-secondary">
-                <Image
-                  src="/images/quality-badge.webp"
-                  alt="Premium Quality"
-                  width={22}
-                  height={22}
-                  className="h-5.5 w-5.5 rounded-full ring-1 ring-brand-electric/30"
-                />
-                <span>5-Star Rated on Yelp &amp; Angi</span>
-              </div>
+          {footerCerts.length > 0 && (
+            <div>
+              <h4 className="text-label mb-4 text-on-dark-muted">Credentials</h4>
+              <FooterCertifications certifications={certifications} />
             </div>
-          </div>
+          )}
         </div>
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-8 sm:flex-row">

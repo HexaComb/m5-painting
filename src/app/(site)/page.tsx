@@ -16,6 +16,7 @@ import {
   defaultAboutValues,
   defaultInstagramPosts,
   defaultReviews,
+  defaultCertifications,
   defaultContactContent,
 } from "@/lib/default-content";
 
@@ -35,6 +36,7 @@ const content = buildContent ?? {
   aboutValues: defaultAboutValues,
   instagramPosts: defaultInstagramPosts,
   reviews: defaultReviews,
+  certifications: defaultCertifications,
   contactContent: defaultContactContent,
 };
 
@@ -93,6 +95,7 @@ export default function Home() {
         <Hero
           initialHero={content.heroContent}
           initialSettings={content.siteSettings}
+          initialCertifications={content.certifications}
         />
 
         <Separator className="h-px bg-brand-blue/25" />
@@ -116,7 +119,10 @@ export default function Home() {
           initialSettings={content.siteSettings}
         />
       </main>
-      <Footer initialSettings={content.siteSettings} />
+      <Footer
+        initialSettings={content.siteSettings}
+        initialCertifications={content.certifications}
+      />
     </>
   );
 }

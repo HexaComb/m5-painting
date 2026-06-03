@@ -6,8 +6,10 @@ import { Reveal } from "@/components/ui/reveal";
 import { Phone, Star } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
+import { HeroCertifications } from "@/components/sections/certifications";
 import { HeroMedia } from "@/components/sections/hero-media";
-import type { HeroContent, HeroMediaType, SiteSettings } from "@/lib/content-types";
+import type { HeroContent, HeroMediaType, SiteSettings, Certification } from "@/lib/content-types";
+import { defaultCertifications } from "@/lib/default-content";
 import {
   DEFAULT_HERO_MEDIA_ALT,
   DEFAULT_HERO_MEDIA_TYPE,
@@ -17,14 +19,23 @@ import {
 export function Hero({
   initialHero,
   initialSettings,
+  initialCertifications,
 }: {
   initialHero?: HeroContent | null;
   initialSettings?: SiteSettings | null;
+  initialCertifications?: Certification[] | null;
 }) {
   const queryHero = useQuery(api.content.getHeroContent);
   const querySettings = useQuery(api.content.getSiteSettings);
+  const queryCertifications = useQuery(api.content.getCertifications);
   const hero = queryHero === undefined ? initialHero : queryHero;
   const settings = querySettings === undefined ? initialSettings : querySettings;
+  const certifications =
+    queryCertifications === undefined
+      ? (initialCertifications ?? defaultCertifications)
+      : queryCertifications.length > 0
+        ? queryCertifications
+        : defaultCertifications;
   if (!hero || !settings) return null;
   const heroMediaSrc = hero.mediaUrl ?? DEFAULT_HERO_VIDEO;
   const heroMediaType: HeroMediaType =
@@ -169,18 +180,7 @@ export function Hero({
                       5-Star Rated
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Image
-                      src="/images/lbi-badge.webp"
-                      alt="Licensed, Bonded and Insured"
-                      width={28}
-                      height={28}
-                      className="h-7 w-7 rounded-full ring-1 ring-brand-electric/30"
-                    />
-                    <span className="text-sm font-semibold text-on-dark-secondary">
-                      Licensed, Bonded &amp; Insured
-                    </span>
-                  </div>
+                  <HeroCertifications certifications={certifications} />
                 </div>
               </Reveal>
             </div>

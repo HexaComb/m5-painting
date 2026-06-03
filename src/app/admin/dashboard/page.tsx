@@ -20,6 +20,7 @@ import {
   Sparkles,
   Image,
   Info,
+  Award,
 } from "lucide-react";
 
 const sections = [
@@ -29,6 +30,13 @@ const sections = [
     icon: Sparkles,
     href: "/admin/hero",
     color: "bg-blue-500/10 text-blue-600",
+  },
+  {
+    title: "Certifications",
+    description: "BBB, SEA, and other trust badges for hero and footer",
+    icon: Award,
+    href: "/admin/certifications",
+    color: "bg-sky-500/10 text-sky-600",
   },
   {
     title: "Services",
