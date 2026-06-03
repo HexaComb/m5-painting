@@ -161,6 +161,12 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
+    background-color: var(--background);
+  }
+
+  /* Overscroll/rubber-band reveals html, not body — match hero + footer chrome */
+  html:has(.site-front) {
+    background-color: var(--brand-black);
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-heading);
