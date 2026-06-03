@@ -211,12 +211,13 @@ export const resetUserPassword = action({
   args: {
     userId: v.id("users"),
     newPassword: v.string(),
+    userName: v.optional(v.string()),
   },
   returns: v.object({
     success: v.boolean(),
     message: v.string(),
   }),
-  handler: async (ctx, { userId: targetUserId, newPassword }) => {
+  handler: async (ctx, { userId: targetUserId, newPassword, userName }) => {
     const currentUserId = await getAuthUserId(ctx);
     if (!currentUserId) {
       return { success: false, message: "Not authenticated" };
@@ -234,13 +235,6 @@ export const resetUserPassword = action({
       return { success: false, message: passwordError };
     }
 
-    const targetUser = await ctx.runQuery(internal.userManagement.getUser, {
-      userId: targetUserId,
-    });
-    if (!targetUser) {
-      return { success: false, message: "User not found" };
-    }
-
     const accountId = await ctx.runQuery(
       internal.userManagement.getCredentialsAccountId,
       { userId: targetUserId },
@@ -254,28 +248,12 @@ export const resetUserPassword = action({
       await invalidateSessions(ctx, { userId: targetUserId });
       return {
         success: true,
-        message: `Password reset for ${targetUser.name ?? "user"}. They must sign in again.`,
+        message: `Password reset for ${userName ?? "user"}. They must sign in again.`,
       };
     } catch (error) {
       const msg =
         error instanceof Error ? error.message : "Failed to reset password";
       return { success: false, message: msg };
     }
-  },
-});
-
-export const getUser = internalQuery({
-  args: { userId: v.id("users") },
-  returns: v.union(
-    v.object({
-      _id: v.id("users"),
-      name: v.optional(v.string()),
-    }),
-    v.null(),
-  ),
-  handler: async (ctx, { userId }) => {
-    const user = await ctx.db.get(userId);
-    if (!user) return null;
-    return { _id: user._id, name: user.name };
   },
 });

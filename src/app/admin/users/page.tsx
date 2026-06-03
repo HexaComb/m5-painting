@@ -185,6 +185,7 @@ export default function UsersPage() {
       const result = await resetUserPassword({
         userId: resetTarget.id,
         newPassword: resetPassword,
+        userName: resetTarget.name,
       });
       if (result.success) {
         toast.success(result.message);
