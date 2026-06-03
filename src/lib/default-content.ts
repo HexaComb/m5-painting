@@ -8,6 +8,7 @@ import type {
   Review,
   ContactContent,
 } from "./content-types";
+import { DEFAULT_HERO_IMAGE, DEFAULT_HERO_IMAGE_ALT } from "./content-types";
 
 export const defaultSiteSettings: SiteSettings = {
   _id: "default",
@@ -30,6 +31,8 @@ export const defaultHeroContent: HeroContent = {
     "We're a family-run crew right here in the Valley. From the first walkthrough to the final coat, we treat your home like it's our own.",
   ctaText: "Get a Free Estimate",
   ctaPhone: "559-451-1022",
+  imageUrl: DEFAULT_HERO_IMAGE,
+  imageAlt: DEFAULT_HERO_IMAGE_ALT,
 };
 
 export const defaultServices: Service[] = [

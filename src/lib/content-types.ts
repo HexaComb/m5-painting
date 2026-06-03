@@ -19,7 +19,13 @@ export interface HeroContent {
   bodyText: string;
   ctaText: string;
   ctaPhone: string;
+  imageUrl?: string;
+  imageAlt?: string;
 }
+
+export const DEFAULT_HERO_IMAGE = "/images/project-door.webp";
+export const DEFAULT_HERO_IMAGE_ALT =
+  "Freshly painted home exterior with crisp trim work by M5 Painting";
 
 export interface Service {
   _id: string;

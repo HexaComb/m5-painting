@@ -24,6 +24,8 @@ const schema = defineSchema({
     bodyText: v.string(),
     ctaText: v.string(),
     ctaPhone: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
+    imageAlt: v.optional(v.string()),
     /** Legacy field; stripped via content.stripHeroBadgeText after deploy. */
     badgeText: v.optional(v.string()),
   }),

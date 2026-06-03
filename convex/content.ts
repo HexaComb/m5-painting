@@ -143,12 +143,17 @@ export const getHeroContent = query({
       bodyText: v.string(),
       ctaText: v.string(),
       ctaPhone: v.string(),
+      imageUrl: v.optional(v.string()),
+      imageAlt: v.optional(v.string()),
     }),
     v.null(),
   ),
   handler: async (ctx) => {
     const hero = await ctx.db.query("heroContent").first();
     if (!hero) return null;
+    const imageUrl = hero.imageStorageId
+      ? await ctx.storage.getUrl(hero.imageStorageId)
+      : undefined;
     return {
       _id: hero._id,
       _creationTime: hero._creationTime,
@@ -157,7 +162,18 @@ export const getHeroContent = query({
       bodyText: hero.bodyText,
       ctaText: hero.ctaText,
       ctaPhone: hero.ctaPhone,
+      imageUrl: imageUrl ?? undefined,
+      imageAlt: hero.imageAlt,
     };
+  },
+});
+
+export const generateHeroImageUploadUrl = mutation({
+  args: {},
+  returns: v.string(),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    return await ctx.storage.generateUploadUrl();
   },
 });
 
@@ -167,12 +183,35 @@ export const updateHeroContent = mutation({
     highlightText: v.string(),
     bodyText: v.string(),
     ctaText: v.string(),
+    imageStorageId: v.optional(v.id("_storage")),
+    imageAlt: v.optional(v.string()),
+    clearImage: v.optional(v.boolean()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
     const settings = await ctx.db.query("siteSettings").first();
-    const data = { ...args, ctaPhone: settings?.phone ?? "" };
+    const { clearImage, imageStorageId, imageAlt, ...textFields } = args;
+    const data: {
+      headline: string;
+      highlightText: string;
+      bodyText: string;
+      ctaText: string;
+      ctaPhone: string;
+      imageStorageId?: typeof imageStorageId | undefined;
+      imageAlt?: string;
+    } = {
+      ...textFields,
+      ctaPhone: settings?.phone ?? "",
+    };
+    if (clearImage) {
+      data.imageStorageId = undefined;
+    } else if (imageStorageId !== undefined) {
+      data.imageStorageId = imageStorageId;
+    }
+    if (imageAlt !== undefined) {
+      data.imageAlt = imageAlt;
+    }
     const existing = await ctx.db.query("heroContent").first();
     if (existing) {
       await ctx.db.patch(existing._id, data);
@@ -736,6 +775,8 @@ export const seed = internalMutation({
         "We're a family-run crew right here in the Valley. From the first walkthrough to the final coat, we treat your home like it's our own.",
       ctaText: "Get a Free Estimate",
       ctaPhone: "559-451-1022",
+      imageAlt:
+        "Freshly painted home exterior with crisp trim work by M5 Painting",
     });
 
     // Services
