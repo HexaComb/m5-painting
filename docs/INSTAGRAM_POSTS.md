@@ -4,7 +4,7 @@ Instagram reels sync automatically into the CMS. Admins choose which ones appear
 
 ## How it works
 
-1. **RapidAPI** fetches the **12 newest reels** for your saved Instagram **username** every **week** (Convex cron), or when you click **Sync Instagram posts** in **Admin → Settings**.
+1. **RapidAPI** fetches the **12 newest reels** for your saved Instagram **username** every **week** (Convex cron), or when you click **Sync Instagram posts** in **Admin → Settings**. Uses the `instagram120` **`/api/instagram/reels`** endpoint.
 2. Reels are stored in the `instagramPosts` table with `instagramMediaId`.
 3. **New imports are hidden** until you publish them in **Admin → Projects**.
 4. The homepage shows at most **3** published reels (lowest `order` first) as official Instagram embeds.
@@ -48,3 +48,7 @@ See your RapidAPI plan for pricing.
 ## Manual posts
 
 You can still add individual Instagram post or reel URLs with **Add Post**. Those default to published and are fully editable.
+
+## Debugging sync
+
+After running sync, open the [Convex dashboard](https://dashboard.convex.dev/) → your deployment → **Logs** and filter for `[instagram-sync]`. Logs include the username, HTTP status, response shape, item counts, and why items were skipped (missing shortcode, etc.). The API key is never logged.

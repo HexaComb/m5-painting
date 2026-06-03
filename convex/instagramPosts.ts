@@ -14,7 +14,31 @@ import { isInstagramPostEnabled } from "./instagramTypes";
 const SYNC_REEL_LIMIT = 12;
 
 const RAPIDAPI_HOST = "instagram120.p.rapidapi.com";
-const RAPIDAPI_POSTS_URL = `https://${RAPIDAPI_HOST}/api/instagram/posts`;
+const RAPIDAPI_REELS_URL = `https://${RAPIDAPI_HOST}/api/instagram/reels`;
+
+function logInstagramSync(message: string, data?: Record<string, unknown>) {
+  if (data) {
+    console.log(`[instagram-sync] ${message}`, JSON.stringify(data));
+  } else {
+    console.log(`[instagram-sync] ${message}`);
+  }
+}
+
+function describeValueShape(value: unknown): Record<string, unknown> {
+  if (Array.isArray(value)) {
+    const first = value[0];
+    return {
+      type: "array",
+      length: value.length,
+      firstItemKeys:
+        first && typeof first === "object" ? Object.keys(first as object) : [],
+    };
+  }
+  if (value && typeof value === "object") {
+    return { type: "object", keys: Object.keys(value as object) };
+  }
+  return { type: typeof value };
+}
 
 const upsertedPostValidator = v.object({
   instagramMediaId: v.string(),
@@ -72,10 +96,16 @@ function readNestedString(
 }
 
 function extractShortcode(post: RapidApiPost): string | undefined {
-  const direct = readString(post, "shortcode", "code", "short_code");
+  const direct = readString(post, "shortcode", "code", "short_code", "identifier");
   if (direct) return direct;
 
-  const permalink = readString(post, "permalink", "link", "url");
+  const permalink = readString(
+    post,
+    "permalink",
+    "link",
+    "url",
+    "pictureUrl",
+  );
   if (permalink) {
     const match = permalink.match(/instagram\.com\/(?:reel|p)\/([A-Za-z0-9_-]+)/i);
     if (match?.[1]) return match[1];
@@ -95,9 +125,19 @@ function extractThumbnail(post: RapidApiPost): string | undefined {
     "thumbnailUrl",
     "display_url",
     "displayUrl",
+    "display_uri",
     "thumbnail_src",
+    "pictureUrl",
   );
   if (direct) return direct;
+
+  const thumbnailResources = post.thumbnail_resources;
+  if (Array.isArray(thumbnailResources) && thumbnailResources.length > 0) {
+    const largest = thumbnailResources[thumbnailResources.length - 1];
+    if (largest && typeof largest === "object") {
+      return readString(largest as Record<string, unknown>, "src", "url");
+    }
+  }
 
   const candidates = post.image_versions2;
   if (candidates && typeof candidates === "object") {
@@ -130,8 +170,44 @@ function isReelPost(post: RapidApiPost): boolean {
   return false;
 }
 
-function extractPostsFromResponse(data: Record<string, unknown>): RapidApiPost[] {
-  const directArrays = [data.items, data.posts];
+function extractMediaFromEdge(edge: unknown): RapidApiPost | null {
+  if (!edge || typeof edge !== "object") return null;
+  const node = (edge as Record<string, unknown>).node;
+  if (!node || typeof node !== "object") return null;
+
+  const nodeObj = node as Record<string, unknown>;
+  const media = nodeObj.media;
+  if (media && typeof media === "object") {
+    return media as RapidApiPost;
+  }
+
+  return nodeObj;
+}
+
+function extractFromEdgesContainer(container: unknown): RapidApiPost[] {
+  if (!container || typeof container !== "object" || Array.isArray(container)) {
+    return [];
+  }
+
+  const edges = (container as Record<string, unknown>).edges;
+  if (!Array.isArray(edges)) return [];
+
+  return edges
+    .map(extractMediaFromEdge)
+    .filter((item): item is RapidApiPost => item !== null);
+}
+
+function extractPostsFromResponse(data: unknown): RapidApiPost[] {
+  if (Array.isArray(data)) {
+    return data.filter(
+      (item): item is RapidApiPost => !!item && typeof item === "object",
+    );
+  }
+
+  if (!data || typeof data !== "object") return [];
+
+  const record = data as Record<string, unknown>;
+  const directArrays = [record.items, record.posts, record.reels];
   for (const candidate of directArrays) {
     if (Array.isArray(candidate)) {
       return candidate.filter(
@@ -140,19 +216,19 @@ function extractPostsFromResponse(data: Record<string, unknown>): RapidApiPost[]
     }
   }
 
-  const nestedSources = [data.data, data.result];
-  for (const source of nestedSources) {
+  // instagram120 GraphQL shape: { result: { edges: [{ node: { media: {...} } }] } }
+  for (const source of [record.result, record.data, record]) {
+    const fromEdges = extractFromEdgesContainer(source);
+    if (fromEdges.length > 0) return fromEdges;
+
     if (source && typeof source === "object" && !Array.isArray(source)) {
       const nested = source as Record<string, unknown>;
-      if (Array.isArray(nested.items)) {
-        return nested.items.filter(
-          (item): item is RapidApiPost => !!item && typeof item === "object",
-        );
-      }
-      if (Array.isArray(nested.posts)) {
-        return nested.posts.filter(
-          (item): item is RapidApiPost => !!item && typeof item === "object",
-        );
+      for (const key of ["items", "posts", "reels"] as const) {
+        if (Array.isArray(nested[key])) {
+          return nested[key].filter(
+            (item): item is RapidApiPost => !!item && typeof item === "object",
+          );
+        }
       }
     }
   }
@@ -160,8 +236,11 @@ function extractPostsFromResponse(data: Record<string, unknown>): RapidApiPost[]
   return [];
 }
 
-function mapRapidApiPost(post: RapidApiPost): ParsedReel | null {
-  if (!isReelPost(post)) return null;
+function mapRapidApiPost(
+  post: RapidApiPost,
+  options: { fromReelsEndpoint?: boolean } = {},
+): ParsedReel | null {
+  if (!options.fromReelsEndpoint && !isReelPost(post)) return null;
 
   const shortcode = extractShortcode(post);
   const instagramMediaId = extractMediaId(post) ?? shortcode;
@@ -174,21 +253,62 @@ function mapRapidApiPost(post: RapidApiPost): ParsedReel | null {
   };
 }
 
+function describeUnmappedPost(post: RapidApiPost): Record<string, unknown> {
+  return {
+    keys: Object.keys(post),
+    shortcode: extractShortcode(post),
+    mediaId: extractMediaId(post),
+    isReel: isReelPost(post),
+  };
+}
+
 function extractNextMaxId(
-  data: Record<string, unknown>,
+  data: unknown,
   posts: RapidApiPost[],
 ): string | undefined {
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    const last = posts[posts.length - 1];
+    return last ? readString(last, "id", "pk") : undefined;
+  }
+
+  const record = data as Record<string, unknown>;
   const fromRoot = readString(
-    data,
+    record,
     "next_max_id",
     "nextMaxId",
     "maxId",
     "next_maxId",
+    "end_cursor",
+    "endCursor",
   );
   if (fromRoot) return fromRoot;
 
-  const nested = readNestedString(data, ["data", "next_max_id"]);
-  if (nested) return nested;
+  for (const container of [record.result, record.data, record]) {
+    if (!container || typeof container !== "object" || Array.isArray(container)) {
+      continue;
+    }
+    const nested = container as Record<string, unknown>;
+
+    const fromNested = readString(
+      nested,
+      "next_max_id",
+      "nextMaxId",
+      "maxId",
+      "end_cursor",
+      "endCursor",
+    );
+    if (fromNested) return fromNested;
+
+    const pageInfo = nested.page_info;
+    if (pageInfo && typeof pageInfo === "object") {
+      const cursor = readString(
+        pageInfo as Record<string, unknown>,
+        "end_cursor",
+        "endCursor",
+      );
+      if (cursor) return cursor;
+    }
+  }
 
   const last = posts[posts.length - 1];
   if (last) {
@@ -198,12 +318,21 @@ function extractNextMaxId(
   return undefined;
 }
 
-async function fetchRapidApiPostsPage(
+async function fetchRapidApiReelsPage(
   apiKey: string,
   username: string,
   maxId: string,
-): Promise<{ posts: RapidApiPost[]; nextMaxId?: string }> {
-  const response = await fetch(RAPIDAPI_POSTS_URL, {
+  pageNumber: number,
+): Promise<{ posts: RapidApiPost[]; nextMaxId?: string; raw: unknown }> {
+  const normalizedUsername = normalizeUsername(username);
+  logInstagramSync("fetching page", {
+    endpoint: RAPIDAPI_REELS_URL,
+    username: normalizedUsername,
+    maxId: maxId || "(empty)",
+    pageNumber,
+  });
+
+  const response = await fetch(RAPIDAPI_REELS_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -211,23 +340,51 @@ async function fetchRapidApiPostsPage(
       "x-rapidapi-key": apiKey,
     },
     body: JSON.stringify({
-      username: normalizeUsername(username),
+      username: normalizedUsername,
       maxId,
     }),
   });
 
+  const bodyText = await response.text();
+
   if (!response.ok) {
-    const body = await response.text();
+    logInstagramSync("RapidAPI error response", {
+      status: response.status,
+      bodyPreview: bodyText.slice(0, 500),
+    });
     throw new Error(
-      `RapidAPI returned ${response.status}: ${body.slice(0, 300)}`,
+      `RapidAPI returned ${response.status}: ${bodyText.slice(0, 300)}`,
     );
   }
 
-  const data = (await response.json()) as Record<string, unknown>;
-  const posts = extractPostsFromResponse(data);
-  const nextMaxId = extractNextMaxId(data, posts);
+  let raw: unknown;
+  try {
+    raw = JSON.parse(bodyText) as unknown;
+  } catch {
+    logInstagramSync("RapidAPI returned non-JSON body", {
+      bodyPreview: bodyText.slice(0, 500),
+    });
+    throw new Error("RapidAPI returned a non-JSON response.");
+  }
 
-  return { posts, nextMaxId };
+  const posts = extractPostsFromResponse(raw);
+  const nextMaxId = extractNextMaxId(raw, posts);
+
+  logInstagramSync("page parsed", {
+    pageNumber,
+    responseShape: describeValueShape(raw),
+    itemCount: posts.length,
+    nextMaxId: nextMaxId ?? null,
+    firstItem: posts[0] ? describeUnmappedPost(posts[0]) : null,
+  });
+
+  if (posts.length === 0) {
+    logInstagramSync("no items in response — check response shape", {
+      bodyPreview: bodyText.slice(0, 800),
+    });
+  }
+
+  return { posts, nextMaxId, raw };
 }
 
 async function fetchReelsFromRapidApi(username: string, apiKey: string) {
@@ -235,15 +392,36 @@ async function fetchReelsFromRapidApi(username: string, apiKey: string) {
   const seen = new Set<string>();
   let maxId = "";
   let pagesFetched = 0;
+  let totalRawItems = 0;
+  let totalSkippedUnmapped = 0;
   const maxPages = 5;
 
+  logInstagramSync("starting fetch", {
+    username: normalizeUsername(username),
+    reelLimit: SYNC_REEL_LIMIT,
+    hasApiKey: Boolean(apiKey),
+  });
+
   while (reels.length < SYNC_REEL_LIMIT && pagesFetched < maxPages) {
-    const page = await fetchRapidApiPostsPage(apiKey, username, maxId);
+    const page = await fetchRapidApiReelsPage(
+      apiKey,
+      username,
+      maxId,
+      pagesFetched + 1,
+    );
     pagesFetched += 1;
+    totalRawItems += page.posts.length;
 
     for (const post of page.posts) {
-      const mapped = mapRapidApiPost(post);
-      if (!mapped || seen.has(mapped.instagramMediaId)) continue;
+      const mapped = mapRapidApiPost(post, { fromReelsEndpoint: true });
+      if (!mapped) {
+        totalSkippedUnmapped += 1;
+        if (totalSkippedUnmapped <= 3) {
+          logInstagramSync("skipped unmapped item", describeUnmappedPost(post));
+        }
+        continue;
+      }
+      if (seen.has(mapped.instagramMediaId)) continue;
       seen.add(mapped.instagramMediaId);
       reels.push(mapped);
       if (reels.length >= SYNC_REEL_LIMIT) break;
@@ -254,6 +432,14 @@ async function fetchReelsFromRapidApi(username: string, apiKey: string) {
     }
     maxId = page.nextMaxId;
   }
+
+  logInstagramSync("fetch complete", {
+    pagesFetched,
+    totalRawItems,
+    totalSkippedUnmapped,
+    reelsMapped: reels.length,
+    sampleEmbedUrls: reels.slice(0, 3).map((r) => r.embedUrl),
+  });
 
   return {
     reels: reels.slice(0, SYNC_REEL_LIMIT),
@@ -358,11 +544,22 @@ type SyncInstagramPostsResult = {
 async function syncInstagramPostsHandler(
   ctx: ActionCtx,
 ): Promise<SyncInstagramPostsResult> {
-  const apiKey = getRapidApiKey();
+  logInstagramSync("sync started");
+
+  let apiKey: string;
+  try {
+    apiKey = getRapidApiKey();
+  } catch (error) {
+    logInstagramSync("missing API key", {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
 
   const settings = await ctx.runQuery(internal.instagramPosts.getInstagramUsername);
   const username = settings?.instagramUsername?.trim();
   if (!username) {
+    logInstagramSync("skipped — no username in site settings");
     return {
       imported: 0,
       updated: 0,
@@ -374,12 +571,23 @@ async function syncInstagramPostsHandler(
     };
   }
 
+  logInstagramSync("syncing for username", { username });
+
   const { reels, pagesFetched } = await fetchReelsFromRapidApi(username, apiKey);
 
   const result = await ctx.runMutation(
     internal.instagramPosts.upsertInstagramPosts,
     { posts: reels },
   );
+
+  logInstagramSync("sync finished", {
+    username,
+    fetched: reels.length,
+    pagesFetched,
+    imported: result.imported,
+    updated: result.updated,
+    pruned: result.pruned,
+  });
 
   return {
     ...result,

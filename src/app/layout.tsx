@@ -94,6 +94,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <link rel="dns-prefetch" href="https://www.instagram.com" />
+        <link rel="preconnect" href="https://www.instagram.com" crossOrigin="" />
+        <link rel="preconnect" href="https://static.cdninstagram.com" crossOrigin="" />
+      </head>
       <body className={`${montserrat.variable} ${lato.variable} font-sans antialiased`}>
         <ConvexClientProvider>
           <CookieConsentProvider>
