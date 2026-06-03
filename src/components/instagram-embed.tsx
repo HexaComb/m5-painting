@@ -28,6 +28,8 @@ declare global {
   }
 }
 
+const EMBED_LOAD_TIMEOUT_MS = 12_000;
+
 type InstagramEmbedProps = {
   permalink: string;
   thumbnailUrl?: string;
@@ -35,44 +37,87 @@ type InstagramEmbedProps = {
   embedReady?: boolean;
 };
 
+function watchEmbedIframe(
+  container: HTMLElement,
+  onReady: () => void,
+): () => void {
+  let disposed = false;
+  let fallbackTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const cleanup = () => {
+    disposed = true;
+    if (fallbackTimer !== undefined) clearTimeout(fallbackTimer);
+  };
+
+  const attach = (iframe: HTMLIFrameElement) => {
+    if (disposed || iframe.dataset.m5EmbedWatched === "true") return;
+    iframe.dataset.m5EmbedWatched = "true";
+
+    const markReady = () => {
+      if (fallbackTimer !== undefined) {
+        clearTimeout(fallbackTimer);
+        fallbackTimer = undefined;
+      }
+      if (!disposed) onReady();
+    };
+
+    iframe.addEventListener("load", markReady, { once: true });
+    fallbackTimer = setTimeout(markReady, EMBED_LOAD_TIMEOUT_MS);
+  };
+
+  const existing = container.querySelector("iframe");
+  if (existing instanceof HTMLIFrameElement) {
+    attach(existing);
+    return cleanup;
+  }
+
+  const observer = new MutationObserver(() => {
+    const iframe = container.querySelector("iframe");
+    if (iframe instanceof HTMLIFrameElement) {
+      attach(iframe);
+      observer.disconnect();
+    }
+  });
+  observer.observe(container, { childList: true, subtree: true });
+
+  return () => {
+    cleanup();
+    observer.disconnect();
+  };
+}
+
 export function InstagramEmbed({
   permalink,
   thumbnailUrl,
   embedReady = false,
 }: InstagramEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [iframeLoaded, setIframeLoaded] = useState(false);
+  const [embedVisible, setEmbedVisible] = useState(false);
 
   useEffect(() => {
     if (!embedReady) return;
-    window.instgrm?.Embeds.process();
+    // Instagram's embed script measures visible blockquotes; process after paint.
+    const id = requestAnimationFrame(() => {
+      window.instgrm?.Embeds.process();
+    });
+    return () => cancelAnimationFrame(id);
   }, [permalink, embedReady]);
 
   useEffect(() => {
+    if (!embedReady) return;
     const el = containerRef.current;
     if (!el) return;
 
-    if (el.querySelector("iframe")) {
-      setIframeLoaded(true);
-      return;
-    }
-
-    const observer = new MutationObserver(() => {
-      if (el.querySelector("iframe")) {
-        setIframeLoaded(true);
-        observer.disconnect();
-      }
-    });
-    observer.observe(el, { childList: true, subtree: true });
-    return () => observer.disconnect();
+    setEmbedVisible(false);
+    return watchEmbedIframe(el, () => setEmbedVisible(true));
   }, [permalink, embedReady]);
 
-  const showPlaceholder = !iframeLoaded;
+  const showPlaceholder = !embedVisible;
 
   return (
     <div
       ref={containerRef}
-      className="instagram-frame relative aspect-[9/16] min-h-[320px] w-full min-w-0 overflow-hidden rounded-xl border border-brand-navy/10 bg-muted shadow-lg shadow-brand-navy/5 sm:min-h-[380px]"
+      className="instagram-frame relative aspect-[9/16] min-h-[320px] w-full min-w-[326px] overflow-hidden rounded-xl border border-brand-navy/10 bg-muted shadow-lg shadow-brand-navy/5 sm:min-h-[380px]"
     >
       {showPlaceholder ? (
         <a
@@ -107,9 +152,7 @@ export function InstagramEmbed({
       ) : null}
 
       <blockquote
-        className={`instagram-media mx-auto min-h-full w-full max-w-full bg-transparent! transition-opacity duration-300 ${
-          iframeLoaded ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
+        className="instagram-media mx-auto min-h-full w-full max-w-full bg-transparent!"
         data-instgrm-permalink={permalink}
         data-instgrm-version="14"
         style={{
@@ -117,7 +160,7 @@ export function InstagramEmbed({
           border: 0,
           margin: "0 auto",
           maxWidth: "100%",
-          minWidth: "0",
+          minWidth: "326px",
           padding: 0,
           width: "100%",
         }}

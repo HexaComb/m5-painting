@@ -368,7 +368,6 @@
 #projects .projects-instagram-feed iframe {
   width: 100% !important;
   max-width: 100% !important;
-  min-width: 0 !important;
 }
 
 #projects .instagram-frame,
@@ -376,14 +375,13 @@
 #projects .instagram-media-rendered {
   width: 100% !important;
   max-width: 100% !important;
-  min-width: 0 !important;
+  min-width: 326px !important;
 }
 
 #projects .instagram-frame iframe {
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
-  min-width: 0 !important;
   left: 0 !important;
   right: auto !important;
 }
