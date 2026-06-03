@@ -13,6 +13,11 @@ import {
   reviewValidator,
   selectHomepageReviews,
 } from "./reviewTypes";
+import {
+  instagramPostValidator,
+  isInstagramPostEnabled,
+  selectHomepageInstagramPosts,
+} from "./instagramTypes";
 import { internal } from "./_generated/api";
 
 // ─── Auth helper ────────────────────────────────────────────────────────
@@ -51,13 +56,6 @@ function normalizeInstagramEmbedUrl(url: string): string | null {
   return `https://www.instagram.com/${type}/${shortcode}/`;
 }
 
-const instagramPostValidator = v.object({
-  _id: v.id("instagramPosts"),
-  _creationTime: v.number(),
-  order: v.number(),
-  embedUrl: v.string(),
-});
-
 // ═══════════════════════════════════════════════════════════════════════
 // SITE SETTINGS
 // ═══════════════════════════════════════════════════════════════════════
@@ -75,6 +73,7 @@ export const getSiteSettings = query({
       address: v.string(),
       metaDescription: v.string(),
       googlePlaceId: v.optional(v.string()),
+      instagramUsername: v.optional(v.string()),
     }),
     v.null(),
   ),
@@ -92,11 +91,12 @@ export const updateSiteSettings = mutation({
     address: v.string(),
     metaDescription: v.string(),
     googlePlaceId: v.optional(v.string()),
+    instagramUsername: v.optional(v.string()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
-    const { googlePlaceId, ...rest } = args;
+    const { googlePlaceId, instagramUsername, ...rest } = args;
     const placeIdPatch =
       googlePlaceId === undefined
         ? {}
@@ -104,11 +104,20 @@ export const updateSiteSettings = mutation({
             googlePlaceId:
               googlePlaceId.trim().length > 0 ? googlePlaceId.trim() : undefined,
           };
+    const instagramPatch =
+      instagramUsername === undefined
+        ? {}
+        : {
+            instagramUsername:
+              instagramUsername.trim().length > 0
+                ? instagramUsername.trim().replace(/^@/, "")
+                : undefined,
+          };
     const existing = await ctx.db.query("siteSettings").first();
     if (existing) {
-      await ctx.db.patch(existing._id, { ...rest, ...placeIdPatch });
+      await ctx.db.patch(existing._id, { ...rest, ...placeIdPatch, ...instagramPatch });
     } else {
-      await ctx.db.insert("siteSettings", { ...rest, ...placeIdPatch });
+      await ctx.db.insert("siteSettings", { ...rest, ...placeIdPatch, ...instagramPatch });
     }
     await syncContactFieldsFromSiteSettings(ctx, {
       phone: args.phone,
@@ -386,6 +395,19 @@ export const getInstagramPosts = query({
   args: {},
   returns: v.array(instagramPostValidator),
   handler: async (ctx) => {
+    const all = await ctx.db
+      .query("instagramPosts")
+      .withIndex("by_order")
+      .collect();
+    return selectHomepageInstagramPosts(all);
+  },
+});
+
+export const getInstagramPostsAdmin = query({
+  args: {},
+  returns: v.array(instagramPostValidator),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
     return await ctx.db.query("instagramPosts").withIndex("by_order").collect();
   },
 });
@@ -406,6 +428,7 @@ export const addInstagramPost = mutation({
     return await ctx.db.insert("instagramPosts", {
       embedUrl: normalized,
       order: maxOrder + 1,
+      enabled: true,
     });
   },
 });
@@ -418,6 +441,13 @@ export const updateInstagramPost = mutation({
   returns: v.null(),
   handler: async (ctx, { id, embedUrl }) => {
     await requireAuth(ctx);
+    const post = await ctx.db.get(id);
+    if (!post) throw new Error("Instagram post not found");
+    if (post.instagramMediaId) {
+      throw new Error(
+        "Imported Instagram posts cannot be edited. They update on the next sync.",
+      );
+    }
     const normalized = normalizeInstagramEmbedUrl(embedUrl);
     if (!normalized) {
       throw new Error(
@@ -429,11 +459,30 @@ export const updateInstagramPost = mutation({
   },
 });
 
+export const toggleInstagramPostEnabled = mutation({
+  args: { id: v.id("instagramPosts") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    const post = await ctx.db.get(id);
+    if (!post) throw new Error("Instagram post not found");
+    await ctx.db.patch(id, { enabled: !isInstagramPostEnabled(post.enabled) });
+    return null;
+  },
+});
+
 export const deleteInstagramPost = mutation({
   args: { id: v.id("instagramPosts") },
   returns: v.null(),
   handler: async (ctx, { id }) => {
     await requireAuth(ctx);
+    const post = await ctx.db.get(id);
+    if (!post) throw new Error("Instagram post not found");
+    if (post.instagramMediaId) {
+      throw new Error(
+        "Imported Instagram posts are removed automatically when unpublished and stale.",
+      );
+    }
     await ctx.db.delete(id);
     return null;
   },
@@ -676,6 +725,7 @@ export const seed = internalMutation({
       address: "Sanger, CA · Central Valley",
       metaDescription:
         "M5 Painting — family-owned painting contractor in the Central Valley, California. Interior, exterior, and commercial painting services.",
+      instagramUsername: "m5painting",
     });
 
     // Hero

@@ -11,4 +11,11 @@ crons.interval(
   {},
 );
 
+crons.interval(
+  "sync instagram posts",
+  { hours: 168 },
+  internal.instagramPosts.syncInstagramPosts,
+  {},
+);
+
 export default crons;

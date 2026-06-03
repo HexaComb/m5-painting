@@ -20,6 +20,7 @@ type SettingsForm = {
   address: string;
   metaDescription: string;
   googlePlaceId: string;
+  instagramUsername: string;
 };
 
 const emptyForm: SettingsForm = {
@@ -30,6 +31,7 @@ const emptyForm: SettingsForm = {
   address: "",
   metaDescription: "",
   googlePlaceId: "",
+  instagramUsername: "",
 };
 
 function formatSyncSuccessToast(result: {
@@ -38,16 +40,18 @@ function formatSyncSuccessToast(result: {
   updated: number;
   pruned: number;
 }): string {
-  return `Synced ${result.fetched} reviews: ${result.imported} new, ${result.updated} updated, ${result.pruned} removed.`;
+  return `Synced ${result.fetched} items: ${result.imported} new, ${result.updated} updated, ${result.pruned} removed.`;
 }
 
 export default function SettingsPage() {
   const settings = useQuery(api.content.getSiteSettings);
   const update = useMutation(api.content.updateSiteSettings);
   const syncGoogleReviews = useAction(api.googleReviews.syncGoogleReviewsNow);
+  const syncInstagramPosts = useAction(api.instagramPosts.syncInstagramPostsNow);
   const [form, setForm] = useState<SettingsForm>(emptyForm);
   const [saving, setSaving] = useState(false);
-  const [syncing, setSyncing] = useState(false);
+  const [syncingReviews, setSyncingReviews] = useState(false);
+  const [syncingInstagram, setSyncingInstagram] = useState(false);
 
   useEffect(() => {
     if (settings) {
@@ -59,6 +63,7 @@ export default function SettingsPage() {
         address: settings.address,
         metaDescription: settings.metaDescription,
         googlePlaceId: settings.googlePlaceId ?? "",
+        instagramUsername: settings.instagramUsername ?? "m5painting",
       });
     }
   }, [settings]);
@@ -74,6 +79,7 @@ export default function SettingsPage() {
         address: form.address,
         metaDescription: form.metaDescription,
         googlePlaceId: form.googlePlaceId,
+        instagramUsername: form.instagramUsername,
       });
       toast.success("Site settings updated!");
     } catch {
@@ -86,7 +92,17 @@ export default function SettingsPage() {
   const savedPlaceId = (settings?.googlePlaceId ?? "").trim();
   const formPlaceId = form.googlePlaceId.trim();
   const placeIdDirty = formPlaceId !== savedPlaceId;
-  const canSync = savedPlaceId.length > 0 && !placeIdDirty && !syncing && !saving;
+  const canSyncReviews =
+    savedPlaceId.length > 0 && !placeIdDirty && !syncingReviews && !saving;
+
+  const savedInstagramUsername = (settings?.instagramUsername ?? "").trim();
+  const formInstagramUsername = form.instagramUsername.trim();
+  const instagramUsernameDirty = formInstagramUsername !== savedInstagramUsername;
+  const canSyncInstagram =
+    savedInstagramUsername.length > 0 &&
+    !instagramUsernameDirty &&
+    !syncingInstagram &&
+    !saving;
 
   const handleSyncReviews = async () => {
     if (placeIdDirty) {
@@ -98,7 +114,7 @@ export default function SettingsPage() {
       return;
     }
 
-    setSyncing(true);
+    setSyncingReviews(true);
     try {
       const result = await syncGoogleReviews();
       if (result.skipped) {
@@ -107,13 +123,44 @@ export default function SettingsPage() {
         );
         return;
       }
-      toast.success(formatSyncSuccessToast(result));
+      toast.success(
+        `Synced ${result.fetched} reviews: ${result.imported} new, ${result.updated} updated, ${result.pruned} removed.`,
+      );
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to sync Google reviews";
       toast.error(message);
     } finally {
-      setSyncing(false);
+      setSyncingReviews(false);
+    }
+  };
+
+  const handleSyncInstagram = async () => {
+    if (instagramUsernameDirty) {
+      toast.error("Save settings first to sync with this Instagram username.");
+      return;
+    }
+    if (!savedInstagramUsername) {
+      toast.error("Add and save an Instagram username before syncing.");
+      return;
+    }
+
+    setSyncingInstagram(true);
+    try {
+      const result = await syncInstagramPosts();
+      if (result.skipped) {
+        toast.error(
+          result.skipReason ?? "Add and save an Instagram username before syncing.",
+        );
+        return;
+      }
+      toast.success(formatSyncSuccessToast(result));
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to sync Instagram posts";
+      toast.error(message);
+    } finally {
+      setSyncingInstagram(false);
     }
   };
 
@@ -237,9 +284,9 @@ export default function SettingsPage() {
               type="button"
               variant="secondary"
               onClick={handleSyncReviews}
-              disabled={!canSync}
+              disabled={!canSyncReviews}
             >
-              {syncing ? (
+              {syncingReviews ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
                 <RefreshCw className="mr-2 h-4 w-4" />
@@ -253,6 +300,58 @@ export default function SettingsPage() {
             ) : !savedPlaceId ? (
               <p className="text-xs text-muted-foreground">
                 Save a Place ID to enable sync.
+              </p>
+            ) : null}
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Instagram Projects</CardTitle>
+          <CardDescription>
+            Used for reel sync every week and on demand below. Set{" "}
+            <code className="text-xs">RAPIDAPI_KEY</code> in your Convex dashboard environment
+            variables.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="instagram-username">Instagram username</Label>
+            <Input
+              id="instagram-username"
+              value={form.instagramUsername}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, instagramUsername: e.target.value }))
+              }
+              placeholder="m5painting"
+            />
+            <p className="text-xs text-muted-foreground">
+              Account to pull reels from (without @). See{" "}
+              <code className="text-xs">docs/INSTAGRAM_POSTS.md</code> in the repo.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-3">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={handleSyncInstagram}
+              disabled={!canSyncInstagram}
+            >
+              {syncingInstagram ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="mr-2 h-4 w-4" />
+              )}
+              Sync Instagram posts
+            </Button>
+            {instagramUsernameDirty ? (
+              <p className="text-xs text-muted-foreground">
+                Save settings first to sync with this username.
+              </p>
+            ) : !savedInstagramUsername ? (
+              <p className="text-xs text-muted-foreground">
+                Save a username to enable sync.
               </p>
             ) : null}
           </div>

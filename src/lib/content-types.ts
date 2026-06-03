@@ -8,6 +8,7 @@ export interface SiteSettings {
   address: string;
   metaDescription: string;
   googlePlaceId?: string;
+  instagramUsername?: string;
 }
 
 export interface HeroContent {
@@ -52,6 +53,9 @@ export interface InstagramPost {
   _creationTime: number;
   order: number;
   embedUrl: string;
+  enabled?: boolean;
+  instagramMediaId?: string;
+  thumbnailUrl?: string;
 }
 
 export interface Review {

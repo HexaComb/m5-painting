@@ -86,7 +86,7 @@ const sections = [
 
 export default function DashboardPage() {
   const services = useQuery(api.content.getServices);
-  const instagramPosts = useQuery(api.content.getInstagramPosts);
+  const instagramPosts = useQuery(api.content.getInstagramPostsAdmin);
   const reviews = useQuery(api.content.getReviews);
   const siteSettings = useQuery(api.content.getSiteSettings);
 

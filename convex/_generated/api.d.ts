@@ -15,6 +15,8 @@ import type * as crons from "../crons.js";
 import type * as eventLogs from "../eventLogs.js";
 import type * as googleReviews from "../googleReviews.js";
 import type * as http from "../http.js";
+import type * as instagramPosts from "../instagramPosts.js";
+import type * as instagramTypes from "../instagramTypes.js";
 import type * as reviewTypes from "../reviewTypes.js";
 import type * as seedAdmin from "../seedAdmin.js";
 import type * as trackingEvents from "../trackingEvents.js";
@@ -34,6 +36,8 @@ declare const fullApi: ApiFromModules<{
   eventLogs: typeof eventLogs;
   googleReviews: typeof googleReviews;
   http: typeof http;
+  instagramPosts: typeof instagramPosts;
+  instagramTypes: typeof instagramTypes;
   reviewTypes: typeof reviewTypes;
   seedAdmin: typeof seedAdmin;
   trackingEvents: typeof trackingEvents;

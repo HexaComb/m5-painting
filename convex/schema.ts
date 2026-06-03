@@ -14,6 +14,7 @@ const schema = defineSchema({
     address: v.string(),
     metaDescription: v.string(),
     googlePlaceId: v.optional(v.string()),
+    instagramUsername: v.optional(v.string()),
   }),
 
   // Hero section (single document)
@@ -55,7 +56,12 @@ const schema = defineSchema({
   instagramPosts: defineTable({
     order: v.number(),
     embedUrl: v.string(),
-  }).index("by_order", ["order"]),
+    enabled: v.optional(v.boolean()),
+    instagramMediaId: v.optional(v.string()),
+    thumbnailUrl: v.optional(v.string()),
+  })
+    .index("by_order", ["order"])
+    .index("by_instagram_media_id", ["instagramMediaId"]),
 
   // Customer reviews (multiple items)
   reviews: defineTable({
