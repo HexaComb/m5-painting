@@ -432,11 +432,35 @@ export const getAboutContent = query({
       subtitle: v.string(),
       title: v.string(),
       paragraphs: v.array(v.string()),
+      imageUrl: v.optional(v.string()),
+      imageAlt: v.optional(v.string()),
     }),
     v.null(),
   ),
   handler: async (ctx) => {
-    return await ctx.db.query("aboutContent").first();
+    const about = await ctx.db.query("aboutContent").first();
+    if (!about) return null;
+    const imageUrl = about.imageStorageId
+      ? await ctx.storage.getUrl(about.imageStorageId)
+      : undefined;
+    return {
+      _id: about._id,
+      _creationTime: about._creationTime,
+      subtitle: about.subtitle,
+      title: about.title,
+      paragraphs: about.paragraphs,
+      imageUrl: imageUrl ?? undefined,
+      imageAlt: about.imageAlt,
+    };
+  },
+});
+
+export const generateAboutImageUploadUrl = mutation({
+  args: {},
+  returns: v.string(),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    return await ctx.storage.generateUploadUrl();
   },
 });
 
@@ -445,15 +469,34 @@ export const updateAboutContent = mutation({
     subtitle: v.string(),
     title: v.string(),
     paragraphs: v.array(v.string()),
+    imageStorageId: v.optional(v.id("_storage")),
+    imageAlt: v.optional(v.string()),
+    clearImage: v.optional(v.boolean()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
+    const { clearImage, imageStorageId, imageAlt, ...textFields } = args;
+    const data: {
+      subtitle: string;
+      title: string;
+      paragraphs: string[];
+      imageStorageId?: typeof imageStorageId | undefined;
+      imageAlt?: string;
+    } = textFields;
+    if (clearImage) {
+      data.imageStorageId = undefined;
+    } else if (imageStorageId !== undefined) {
+      data.imageStorageId = imageStorageId;
+    }
+    if (imageAlt !== undefined) {
+      data.imageAlt = imageAlt;
+    }
     const existing = await ctx.db.query("aboutContent").first();
     if (existing) {
-      await ctx.db.patch(existing._id, args);
+      await ctx.db.patch(existing._id, data);
     } else {
-      await ctx.db.insert("aboutContent", args);
+      await ctx.db.insert("aboutContent", data);
     }
     return null;
   },

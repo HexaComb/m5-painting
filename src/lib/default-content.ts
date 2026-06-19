@@ -10,6 +10,8 @@ import type {
   ContactContent,
 } from "./content-types";
 import {
+  DEFAULT_ABOUT_IMAGE,
+  DEFAULT_ABOUT_IMAGE_ALT,
   DEFAULT_HERO_MEDIA_ALT,
   DEFAULT_HERO_MEDIA_TYPE,
   DEFAULT_HERO_VIDEO,
@@ -119,6 +121,8 @@ export const defaultAboutContent: AboutContent = {
     "M5 Painting started the way most good things do: a family that knows how to work hard. We grew up right here in the Central Valley, and when we started this business, we made a simple promise: treat every customer like a neighbor, because around here, they usually are.",
     "Matt and the crew bring that same small-town work ethic to every project. We show up on time, do quality work, and don't leave until you love it. That's not a sales pitch; it's just how we were raised.",
   ],
+  imageUrl: DEFAULT_ABOUT_IMAGE,
+  imageAlt: DEFAULT_ABOUT_IMAGE_ALT,
 };
 
 export const defaultAboutValues: AboutValue[] = [

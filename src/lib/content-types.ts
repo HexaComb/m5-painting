@@ -51,7 +51,13 @@ export interface AboutContent {
   subtitle: string;
   title: string;
   paragraphs: string[];
+  imageUrl?: string;
+  imageAlt?: string;
 }
+
+export const DEFAULT_ABOUT_IMAGE = "/images/team-collage.webp";
+export const DEFAULT_ABOUT_IMAGE_ALT =
+  "Matt and the M5 Painting crew on a job site";
 
 export interface AboutValue {
   _id: string;

@@ -4,7 +4,12 @@ import Image from "next/image";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import type { AboutContent, AboutValue } from "@/lib/content-types";
+import {
+  DEFAULT_ABOUT_IMAGE,
+  DEFAULT_ABOUT_IMAGE_ALT,
+  type AboutContent,
+  type AboutValue,
+} from "@/lib/content-types";
 
 export function About({
   initialAbout,
@@ -18,6 +23,8 @@ export function About({
   const about = queryAbout === undefined ? initialAbout : queryAbout;
   const values = queryValues === undefined ? initialValues : queryValues;
   if (!about || !values) return null;
+  const imageUrl = about.imageUrl ?? DEFAULT_ABOUT_IMAGE;
+  const imageAlt = about.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT;
 
   return (
     <section id="about" className="brand-surface-dark relative overflow-hidden py-20 sm:py-28">
@@ -33,8 +40,8 @@ export function About({
               <div className="relative mx-auto max-w-sm lg:max-w-none">
                 <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15">
                   <Image
-                    src="/images/team-collage.webp"
-                    alt="Matt and the M5 Painting crew on a job site"
+                    src={imageUrl}
+                    alt={imageAlt}
                     fill
                     className="object-cover"
                     sizes="(max-width: 1024px) 90vw, 40vw"

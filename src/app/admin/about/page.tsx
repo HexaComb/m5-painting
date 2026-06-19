@@ -2,8 +2,9 @@
 
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../../convex/_generated/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Id } from "../../../../convex/_generated/dataModel";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,19 +13,39 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Loader2, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { ArrowLeft, Loader2, Pencil, Plus, Save, Trash2, Upload, X } from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
+import {
+  DEFAULT_ABOUT_IMAGE,
+  DEFAULT_ABOUT_IMAGE_ALT,
+} from "@/lib/content-types";
+
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 export default function AboutPage() {
   const aboutContent = useQuery(api.content.getAboutContent);
   const aboutValues = useQuery(api.content.getAboutValues);
   const updateAbout = useMutation(api.content.updateAboutContent);
+  const generateUploadUrl = useMutation(api.content.generateAboutImageUploadUrl);
   const updateValue = useMutation(api.content.updateAboutValue);
   const addValue = useMutation(api.content.addAboutValue);
   const deleteValue = useMutation(api.content.deleteAboutValue);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [contentForm, setContentForm] = useState({ subtitle: "", title: "", paragraphs: [""] });
+  const [contentForm, setContentForm] = useState({
+    subtitle: "",
+    title: "",
+    paragraphs: [""],
+    imageAlt: DEFAULT_ABOUT_IMAGE_ALT,
+  });
+  const [previewUrl, setPreviewUrl] = useState(DEFAULT_ABOUT_IMAGE);
+  const [pendingStorageId, setPendingStorageId] = useState<
+    Id<"_storage"> | undefined
+  >(undefined);
+  const [clearImage, setClearImage] = useState(false);
+  const [hasCustomImage, setHasCustomImage] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [savingContent, setSavingContent] = useState(false);
   const [editingValueId, setEditingValueId] = useState<Id<"aboutValues"> | "new" | null>(null);
   const [valueForm, setValueForm] = useState({ iconName: "", title: "", description: "" });
@@ -33,14 +54,86 @@ export default function AboutPage() {
 
   useEffect(() => {
     if (aboutContent) {
-      setContentForm({ subtitle: aboutContent.subtitle, title: aboutContent.title, paragraphs: [...aboutContent.paragraphs] });
+      setContentForm({
+        subtitle: aboutContent.subtitle,
+        title: aboutContent.title,
+        paragraphs: [...aboutContent.paragraphs],
+        imageAlt: aboutContent.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT,
+      });
+      setPreviewUrl(aboutContent.imageUrl ?? DEFAULT_ABOUT_IMAGE);
+      setHasCustomImage(Boolean(aboutContent.imageUrl));
+      setPendingStorageId(undefined);
+      setClearImage(false);
     }
   }, [aboutContent]);
+
+  const handleImageSelect = async (file: File | null) => {
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please choose an image file");
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_BYTES) {
+      toast.error("Image must be 5 MB or smaller");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      const uploadUrl = await generateUploadUrl();
+      const response = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const { storageId } = (await response.json()) as {
+        storageId: Id<"_storage">;
+      };
+
+      setPendingStorageId(storageId);
+      setClearImage(false);
+      setHasCustomImage(true);
+      setPreviewUrl(URL.createObjectURL(file));
+      toast.success("Image uploaded. Save changes to publish it.");
+    } catch {
+      toast.error("Failed to upload image");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setPendingStorageId(undefined);
+    setClearImage(true);
+    setHasCustomImage(false);
+    setPreviewUrl(DEFAULT_ABOUT_IMAGE);
+    setContentForm((f) => ({ ...f, imageAlt: DEFAULT_ABOUT_IMAGE_ALT }));
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
 
   const handleSaveContent = async () => {
     setSavingContent(true);
     try {
-      await updateAbout({ ...contentForm, paragraphs: contentForm.paragraphs.filter((p) => p.trim()) });
+      await updateAbout({
+        ...contentForm,
+        paragraphs: contentForm.paragraphs.filter((p) => p.trim()),
+        ...(pendingStorageId ? { imageStorageId: pendingStorageId } : {}),
+        ...(clearImage ? { clearImage: true } : {}),
+      });
+      setPendingStorageId(undefined);
+      setClearImage(false);
       toast.success("About section updated!");
     } catch {
       toast.error("Failed to save");
@@ -88,6 +181,78 @@ export default function AboutPage() {
         </div>
       </div>
 
+      {/* About Image */}
+      <Card>
+        <CardHeader>
+          <CardTitle>About Image</CardTitle>
+          <CardDescription>
+            Image shown beside the company story. Defaults to the team collage.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-5">
+          <div className="overflow-hidden rounded-xl border bg-muted/30">
+            <div className="relative aspect-[3/4] w-full max-w-sm">
+              <Image
+                src={previewUrl}
+                alt={contentForm.imageAlt}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 384px"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => handleImageSelect(e.target.files?.[0] ?? null)}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              disabled={uploading || savingContent}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {uploading ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Upload className="mr-2 h-4 w-4" />
+              )}
+              Upload Image
+            </Button>
+            {hasCustomImage && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={uploading || savingContent}
+                onClick={handleRemoveImage}
+              >
+                <Trash2 className="mr-2 h-4 w-4" />
+                Use Default Image
+              </Button>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="about-image-alt">Description (alt text)</Label>
+            <Input
+              id="about-image-alt"
+              value={contentForm.imageAlt}
+              onChange={(e) =>
+                setContentForm((f) => ({ ...f, imageAlt: e.target.value }))
+              }
+              placeholder={DEFAULT_ABOUT_IMAGE_ALT}
+            />
+            <p className="text-xs text-muted-foreground">
+              Describes the image for screen readers and search engines.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
       {/* Company Story */}
       <Card>
         <CardHeader><CardTitle>Company Story</CardTitle><CardDescription>The main about text shown on your website</CardDescription></CardHeader>
@@ -111,8 +276,8 @@ export default function AboutPage() {
             ))}
           </div>
           <div className="flex justify-end pt-2">
-            <Button onClick={handleSaveContent} disabled={savingContent}>
-              {savingContent ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}Save Story
+            <Button onClick={handleSaveContent} disabled={savingContent || uploading}>
+              {savingContent ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}Save About Section
             </Button>
           </div>
         </CardContent>

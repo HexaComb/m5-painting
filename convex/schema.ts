@@ -45,6 +45,8 @@ const schema = defineSchema({
     subtitle: v.string(),
     title: v.string(),
     paragraphs: v.array(v.string()),
+    imageStorageId: v.optional(v.id("_storage")),
+    imageAlt: v.optional(v.string()),
   }),
 
   // About values (multiple items)
