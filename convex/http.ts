@@ -35,6 +35,9 @@ http.route({
       ctx.runQuery(api.content.getCertifications),
     ]);
 
+    await ctx.runMutation(internal.content.migrateLegacyAboutImageInternal);
+    const aboutImages = await ctx.runQuery(api.content.getAboutImages);
+
     return new Response(
       JSON.stringify({
         siteSettings,
@@ -42,6 +45,7 @@ http.route({
         services,
         aboutContent,
         aboutValues,
+        aboutImages,
         instagramPosts,
         reviews,
         contactContent,

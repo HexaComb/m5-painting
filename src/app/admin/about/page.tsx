@@ -13,44 +13,64 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Loader2, Pencil, Plus, Save, Trash2, Upload, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  Loader2,
+  Pencil,
+  Plus,
+  Save,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
-import {
-  DEFAULT_ABOUT_IMAGE,
-  DEFAULT_ABOUT_IMAGE_ALT,
-} from "@/lib/content-types";
+import { DEFAULT_ABOUT_IMAGE_ALT } from "@/lib/content-types";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 
 export default function AboutPage() {
   const aboutContent = useQuery(api.content.getAboutContent);
+  const aboutImages = useQuery(api.content.getAboutImages);
   const aboutValues = useQuery(api.content.getAboutValues);
   const updateAbout = useMutation(api.content.updateAboutContent);
+  const migrateLegacyImage = useMutation(api.content.migrateLegacyAboutImage);
   const generateUploadUrl = useMutation(api.content.generateAboutImageUploadUrl);
+  const addAboutImage = useMutation(api.content.addAboutImage);
+  const updateAboutImage = useMutation(api.content.updateAboutImage);
+  const deleteAboutImage = useMutation(api.content.deleteAboutImage);
+  const moveAboutImage = useMutation(api.content.moveAboutImage);
   const updateValue = useMutation(api.content.updateAboutValue);
   const addValue = useMutation(api.content.addAboutValue);
   const deleteValue = useMutation(api.content.deleteAboutValue);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const migratedRef = useRef(false);
 
   const [contentForm, setContentForm] = useState({
     subtitle: "",
     title: "",
     paragraphs: [""],
-    imageAlt: DEFAULT_ABOUT_IMAGE_ALT,
   });
-  const [previewUrl, setPreviewUrl] = useState(DEFAULT_ABOUT_IMAGE);
-  const [pendingStorageId, setPendingStorageId] = useState<
-    Id<"_storage"> | undefined
-  >(undefined);
-  const [clearImage, setClearImage] = useState(false);
-  const [hasCustomImage, setHasCustomImage] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [savingContent, setSavingContent] = useState(false);
+  const [editingImageId, setEditingImageId] = useState<Id<"aboutImages"> | null>(null);
+  const [imageAltDraft, setImageAltDraft] = useState(DEFAULT_ABOUT_IMAGE_ALT);
+  const [savingImage, setSavingImage] = useState(false);
+  const [deleteImageConfirm, setDeleteImageConfirm] = useState<Id<"aboutImages"> | null>(null);
   const [editingValueId, setEditingValueId] = useState<Id<"aboutValues"> | "new" | null>(null);
   const [valueForm, setValueForm] = useState({ iconName: "", title: "", description: "" });
   const [savingValue, setSavingValue] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState<Id<"aboutValues"> | null>(null);
+
+  useEffect(() => {
+    if (migratedRef.current) return;
+    migratedRef.current = true;
+    migrateLegacyImage().catch(() => {
+      migratedRef.current = false;
+    });
+  }, [migrateLegacyImage]);
 
   useEffect(() => {
     if (aboutContent) {
@@ -58,12 +78,7 @@ export default function AboutPage() {
         subtitle: aboutContent.subtitle,
         title: aboutContent.title,
         paragraphs: [...aboutContent.paragraphs],
-        imageAlt: aboutContent.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT,
       });
-      setPreviewUrl(aboutContent.imageUrl ?? DEFAULT_ABOUT_IMAGE);
-      setHasCustomImage(Boolean(aboutContent.imageUrl));
-      setPendingStorageId(undefined);
-      setClearImage(false);
     }
   }, [aboutContent]);
 
@@ -97,11 +112,11 @@ export default function AboutPage() {
         storageId: Id<"_storage">;
       };
 
-      setPendingStorageId(storageId);
-      setClearImage(false);
-      setHasCustomImage(true);
-      setPreviewUrl(URL.createObjectURL(file));
-      toast.success("Image uploaded. Save changes to publish it.");
+      await addAboutImage({
+        storageId,
+        alt: DEFAULT_ABOUT_IMAGE_ALT,
+      });
+      toast.success("Image added to carousel");
     } catch {
       toast.error("Failed to upload image");
     } finally {
@@ -112,14 +127,43 @@ export default function AboutPage() {
     }
   };
 
-  const handleRemoveImage = () => {
-    setPendingStorageId(undefined);
-    setClearImage(true);
-    setHasCustomImage(false);
-    setPreviewUrl(DEFAULT_ABOUT_IMAGE);
-    setContentForm((f) => ({ ...f, imageAlt: DEFAULT_ABOUT_IMAGE_ALT }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  const openImageEdit = (image: NonNullable<typeof aboutImages>[number]) => {
+    setEditingImageId(image._id);
+    setImageAltDraft(image.alt);
+  };
+
+  const handleSaveImageAlt = async () => {
+    if (!editingImageId) return;
+    setSavingImage(true);
+    try {
+      await updateAboutImage({ id: editingImageId, alt: imageAltDraft });
+      toast.success("Image description updated");
+      setEditingImageId(null);
+    } catch {
+      toast.error("Failed to update image");
+    } finally {
+      setSavingImage(false);
+    }
+  };
+
+  const handleDeleteImage = async (id: Id<"aboutImages">) => {
+    try {
+      await deleteAboutImage({ id });
+      toast.success("Image removed");
+      setDeleteImageConfirm(null);
+    } catch {
+      toast.error("Failed to delete image");
+    }
+  };
+
+  const handleMoveImage = async (
+    id: Id<"aboutImages">,
+    direction: "up" | "down",
+  ) => {
+    try {
+      await moveAboutImage({ id, direction });
+    } catch {
+      toast.error("Failed to reorder image");
     }
   };
 
@@ -129,11 +173,7 @@ export default function AboutPage() {
       await updateAbout({
         ...contentForm,
         paragraphs: contentForm.paragraphs.filter((p) => p.trim()),
-        ...(pendingStorageId ? { imageStorageId: pendingStorageId } : {}),
-        ...(clearImage ? { clearImage: true } : {}),
       });
-      setPendingStorageId(undefined);
-      setClearImage(false);
       toast.success("About section updated!");
     } catch {
       toast.error("Failed to save");
@@ -167,7 +207,7 @@ export default function AboutPage() {
     catch { toast.error("Failed to delete"); }
   };
 
-  if (aboutContent === undefined || aboutValues === undefined) {
+  if (aboutContent === undefined || aboutImages === undefined || aboutValues === undefined) {
     return <div className="flex items-center justify-center p-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
@@ -177,38 +217,31 @@ export default function AboutPage() {
         <Link href="/admin/dashboard"><Button variant="ghost" size="icon"><ArrowLeft className="h-4 w-4" /></Button></Link>
         <div>
           <h1 className="text-2xl font-bold">About Section</h1>
-          <p className="text-sm text-muted-foreground">Company story and core values</p>
+          <p className="text-sm text-muted-foreground">Company story, image carousel, and core values</p>
         </div>
       </div>
 
-      {/* About Image */}
       <Card>
         <CardHeader>
-          <CardTitle>About Image</CardTitle>
+          <CardTitle>Image Carousel</CardTitle>
           <CardDescription>
-            Image shown beside the company story. Defaults to the team collage.
+            Upload multiple images for the about section carousel. Drag order with the arrows.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="overflow-hidden rounded-xl border bg-muted/30">
-            <div className="relative aspect-[3/4] w-full max-w-sm">
-              <Image
-                src={previewUrl}
-                alt={contentForm.imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 384px"
-              />
-            </div>
-          </div>
-
           <div className="flex flex-wrap gap-2">
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
+              multiple
               className="hidden"
-              onChange={(e) => handleImageSelect(e.target.files?.[0] ?? null)}
+              onChange={async (e) => {
+                const files = Array.from(e.target.files ?? []);
+                for (const file of files) {
+                  await handleImageSelect(file);
+                }
+              }}
             />
             <Button
               type="button"
@@ -221,39 +254,76 @@ export default function AboutPage() {
               ) : (
                 <Upload className="mr-2 h-4 w-4" />
               )}
-              Upload Image
+              Upload Images
             </Button>
-            {hasCustomImage && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={uploading || savingContent}
-                onClick={handleRemoveImage}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Use Default Image
-              </Button>
-            )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="about-image-alt">Description (alt text)</Label>
-            <Input
-              id="about-image-alt"
-              value={contentForm.imageAlt}
-              onChange={(e) =>
-                setContentForm((f) => ({ ...f, imageAlt: e.target.value }))
-              }
-              placeholder={DEFAULT_ABOUT_IMAGE_ALT}
-            />
-            <p className="text-xs text-muted-foreground">
-              Describes the image for screen readers and search engines.
+          {aboutImages.length === 0 ? (
+            <p className="text-sm text-muted-foreground">
+              No custom images yet. The site will show the default team collage until you upload images.
             </p>
-          </div>
+          ) : (
+            <div className="space-y-3">
+              {aboutImages.map((image, index) => (
+                <div key={image._id} className="flex items-center gap-3 rounded-lg border p-3">
+                  <div className="relative h-20 w-16 shrink-0 overflow-hidden rounded-md bg-muted">
+                    <Image
+                      src={image.imageUrl}
+                      alt={image.alt}
+                      fill
+                      className="object-cover"
+                      sizes="64px"
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">{image.alt}</p>
+                    <p className="text-xs text-muted-foreground">Slide {index + 1}</p>
+                  </div>
+                  <div className="flex gap-1">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      disabled={index === 0}
+                      onClick={() => handleMoveImage(image._id, "up")}
+                      aria-label="Move image up"
+                    >
+                      <ArrowUp className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      disabled={index === aboutImages.length - 1}
+                      onClick={() => handleMoveImage(image._id, "down")}
+                      aria-label="Move image down"
+                    >
+                      <ArrowDown className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8"
+                      onClick={() => openImageEdit(image)}
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 text-destructive hover:text-destructive"
+                      onClick={() => setDeleteImageConfirm(image._id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      {/* Company Story */}
       <Card>
         <CardHeader><CardTitle>Company Story</CardTitle><CardDescription>The main about text shown on your website</CardDescription></CardHeader>
         <CardContent className="space-y-4">
@@ -283,7 +353,6 @@ export default function AboutPage() {
         </CardContent>
       </Card>
 
-      {/* Core Values */}
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -306,6 +375,40 @@ export default function AboutPage() {
           ))}
         </CardContent>
       </Card>
+
+      <Dialog open={editingImageId !== null} onOpenChange={(open) => !open && setEditingImageId(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Image Description</DialogTitle>
+            <DialogDescription>Alt text for accessibility and SEO</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="about-image-alt">Description (alt text)</Label>
+            <Input
+              id="about-image-alt"
+              value={imageAltDraft}
+              onChange={(e) => setImageAltDraft(e.target.value)}
+              placeholder={DEFAULT_ABOUT_IMAGE_ALT}
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingImageId(null)}>Cancel</Button>
+            <Button onClick={handleSaveImageAlt} disabled={savingImage}>
+              {savingImage ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}Save
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={deleteImageConfirm !== null} onOpenChange={(open) => !open && setDeleteImageConfirm(null)}>
+        <DialogContent>
+          <DialogHeader><DialogTitle>Remove Image</DialogTitle><DialogDescription>This image will be removed from the carousel.</DialogDescription></DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteImageConfirm(null)}>Cancel</Button>
+            <Button variant="destructive" onClick={() => deleteImageConfirm && handleDeleteImage(deleteImageConfirm)}>Remove</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={editingValueId !== null} onOpenChange={(open) => !open && setEditingValueId(null)}>
         <DialogContent>

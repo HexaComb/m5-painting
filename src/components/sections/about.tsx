@@ -1,30 +1,37 @@
 "use client";
 
-import Image from "next/image";
 import { Reveal } from "@/components/ui/reveal";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import {
-  DEFAULT_ABOUT_IMAGE,
-  DEFAULT_ABOUT_IMAGE_ALT,
+  DEFAULT_ABOUT_IMAGES,
   type AboutContent,
+  type AboutImage,
   type AboutValue,
 } from "@/lib/content-types";
+import { AboutImageCarousel } from "@/components/sections/about-image-carousel";
 
 export function About({
   initialAbout,
+  initialImages,
   initialValues,
 }: {
   initialAbout?: AboutContent | null;
+  initialImages?: AboutImage[] | null;
   initialValues?: AboutValue[] | null;
 }) {
   const queryAbout = useQuery(api.content.getAboutContent);
+  const queryImages = useQuery(api.content.getAboutImages);
   const queryValues = useQuery(api.content.getAboutValues);
   const about = queryAbout === undefined ? initialAbout : queryAbout;
+  const images =
+    queryImages === undefined
+      ? (initialImages ?? DEFAULT_ABOUT_IMAGES)
+      : queryImages.length > 0
+        ? queryImages
+        : DEFAULT_ABOUT_IMAGES;
   const values = queryValues === undefined ? initialValues : queryValues;
   if (!about || !values) return null;
-  const imageUrl = about.imageUrl ?? DEFAULT_ABOUT_IMAGE;
-  const imageAlt = about.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT;
 
   return (
     <section id="about" className="brand-surface-dark relative overflow-hidden py-20 sm:py-28">
@@ -34,24 +41,12 @@ export function About({
       />
       <div className="mx-auto max-w-6xl px-5 sm:px-6">
         <div className="grid gap-14 lg:grid-cols-12 lg:items-start">
-          {/* Image column */}
           <div className="lg:col-span-5 lg:sticky lg:top-24">
             <Reveal>
-              <div className="relative mx-auto max-w-sm lg:max-w-none">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15">
-                  <Image
-                    src={imageUrl}
-                    alt={imageAlt}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 90vw, 40vw"
-                  />
-                </div>
-              </div>
+              <AboutImageCarousel images={images} />
             </Reveal>
           </div>
 
-          {/* Content column */}
           <div className="space-y-10 lg:col-span-7">
             <Reveal>
               <div>
@@ -73,7 +68,6 @@ export function About({
               </div>
             </Reveal>
 
-            {/* Values — numbered list with rule separators */}
             <div className="divide-y divide-white/10">
               {values.map((value, idx) => (
                 <Reveal

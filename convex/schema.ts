@@ -45,9 +45,18 @@ const schema = defineSchema({
     subtitle: v.string(),
     title: v.string(),
     paragraphs: v.array(v.string()),
+    /** @deprecated Use aboutImages table instead */
     imageStorageId: v.optional(v.id("_storage")),
+    /** @deprecated Use aboutImages table instead */
     imageAlt: v.optional(v.string()),
   }),
+
+  // About section carousel images (multiple items)
+  aboutImages: defineTable({
+    order: v.number(),
+    storageId: v.id("_storage"),
+    alt: v.string(),
+  }).index("by_order", ["order"]),
 
   // About values (multiple items)
   aboutValues: defineTable({

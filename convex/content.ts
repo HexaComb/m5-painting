@@ -423,6 +423,33 @@ export const reorderServices = mutation({
 // ABOUT CONTENT
 // ═══════════════════════════════════════════════════════════════════════
 
+const aboutImageValidator = v.object({
+  _id: v.id("aboutImages"),
+  _creationTime: v.number(),
+  order: v.number(),
+  imageUrl: v.string(),
+  alt: v.string(),
+});
+
+async function resolveAboutImages(ctx: QueryCtx) {
+  const images = await ctx.db
+    .query("aboutImages")
+    .withIndex("by_order")
+    .collect();
+  return Promise.all(
+    images.map(async (image) => {
+      const imageUrl = await ctx.storage.getUrl(image.storageId);
+      return {
+        _id: image._id,
+        _creationTime: image._creationTime,
+        order: image.order,
+        imageUrl: imageUrl ?? "",
+        alt: image.alt,
+      };
+    }),
+  ).then((resolved) => resolved.filter((image) => image.imageUrl !== ""));
+}
+
 export const getAboutContent = query({
   args: {},
   returns: v.union(
@@ -432,26 +459,44 @@ export const getAboutContent = query({
       subtitle: v.string(),
       title: v.string(),
       paragraphs: v.array(v.string()),
-      imageUrl: v.optional(v.string()),
-      imageAlt: v.optional(v.string()),
     }),
     v.null(),
   ),
   handler: async (ctx) => {
     const about = await ctx.db.query("aboutContent").first();
     if (!about) return null;
-    const imageUrl = about.imageStorageId
-      ? await ctx.storage.getUrl(about.imageStorageId)
-      : undefined;
     return {
       _id: about._id,
       _creationTime: about._creationTime,
       subtitle: about.subtitle,
       title: about.title,
       paragraphs: about.paragraphs,
-      imageUrl: imageUrl ?? undefined,
-      imageAlt: about.imageAlt,
     };
+  },
+});
+
+export const getAboutImages = query({
+  args: {},
+  returns: v.array(aboutImageValidator),
+  handler: async (ctx) => {
+    return await resolveAboutImages(ctx);
+  },
+});
+
+export const migrateLegacyAboutImage = mutation({
+  args: {},
+  returns: v.boolean(),
+  handler: async (ctx) => {
+    await requireAuth(ctx);
+    return await migrateLegacyAboutImageIfNeeded(ctx);
+  },
+});
+
+export const migrateLegacyAboutImageInternal = internalMutation({
+  args: {},
+  returns: v.boolean(),
+  handler: async (ctx) => {
+    return await migrateLegacyAboutImageIfNeeded(ctx);
   },
 });
 
@@ -469,35 +514,110 @@ export const updateAboutContent = mutation({
     subtitle: v.string(),
     title: v.string(),
     paragraphs: v.array(v.string()),
-    imageStorageId: v.optional(v.id("_storage")),
-    imageAlt: v.optional(v.string()),
-    clearImage: v.optional(v.boolean()),
   },
   returns: v.null(),
   handler: async (ctx, args) => {
     await requireAuth(ctx);
-    const { clearImage, imageStorageId, imageAlt, ...textFields } = args;
-    const data: {
-      subtitle: string;
-      title: string;
-      paragraphs: string[];
-      imageStorageId?: typeof imageStorageId | undefined;
-      imageAlt?: string;
-    } = textFields;
-    if (clearImage) {
-      data.imageStorageId = undefined;
-    } else if (imageStorageId !== undefined) {
-      data.imageStorageId = imageStorageId;
-    }
-    if (imageAlt !== undefined) {
-      data.imageAlt = imageAlt;
-    }
     const existing = await ctx.db.query("aboutContent").first();
     if (existing) {
-      await ctx.db.patch(existing._id, data);
+      await ctx.db.patch(existing._id, args);
     } else {
-      await ctx.db.insert("aboutContent", data);
+      await ctx.db.insert("aboutContent", args);
     }
+    return null;
+  },
+});
+
+async function migrateLegacyAboutImageIfNeeded(ctx: MutationCtx): Promise<boolean> {
+  const existingImages = await ctx.db.query("aboutImages").collect();
+  if (existingImages.length > 0) {
+    return false;
+  }
+
+  const about = await ctx.db.query("aboutContent").first();
+  if (!about?.imageStorageId) {
+    return false;
+  }
+
+  await ctx.db.insert("aboutImages", {
+    order: 1,
+    storageId: about.imageStorageId,
+    alt: about.imageAlt ?? "About M5 Painting",
+  });
+  await ctx.db.patch(about._id, {
+    imageStorageId: undefined,
+    imageAlt: undefined,
+  });
+  return true;
+}
+
+export const addAboutImage = mutation({
+  args: {
+    storageId: v.id("_storage"),
+    alt: v.string(),
+  },
+  returns: v.id("aboutImages"),
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    const existing = await ctx.db.query("aboutImages").collect();
+    const maxOrder = existing.reduce((max, image) => Math.max(max, image.order), 0);
+    return await ctx.db.insert("aboutImages", {
+      order: maxOrder + 1,
+      storageId: args.storageId,
+      alt: args.alt.trim() || "About M5 Painting",
+    });
+  },
+});
+
+export const updateAboutImage = mutation({
+  args: {
+    id: v.id("aboutImages"),
+    alt: v.string(),
+  },
+  returns: v.null(),
+  handler: async (ctx, { id, alt }) => {
+    await requireAuth(ctx);
+    await ctx.db.patch(id, { alt: alt.trim() || "About M5 Painting" });
+    return null;
+  },
+});
+
+export const deleteAboutImage = mutation({
+  args: { id: v.id("aboutImages") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    await ctx.db.delete(id);
+    return null;
+  },
+});
+
+export const moveAboutImage = mutation({
+  args: {
+    id: v.id("aboutImages"),
+    direction: v.union(v.literal("up"), v.literal("down")),
+  },
+  returns: v.null(),
+  handler: async (ctx, { id, direction }) => {
+    await requireAuth(ctx);
+    const images = await ctx.db
+      .query("aboutImages")
+      .withIndex("by_order")
+      .collect();
+    const index = images.findIndex((image) => image._id === id);
+    if (index === -1) {
+      throw new Error("Image not found");
+    }
+
+    const swapIndex = direction === "up" ? index - 1 : index + 1;
+    if (swapIndex < 0 || swapIndex >= images.length) {
+      return null;
+    }
+
+    const current = images[index];
+    const swapWith = images[swapIndex];
+    await ctx.db.patch(current._id, { order: swapWith.order });
+    await ctx.db.patch(swapWith._id, { order: current.order });
     return null;
   },
 });

@@ -51,13 +51,29 @@ export interface AboutContent {
   subtitle: string;
   title: string;
   paragraphs: string[];
-  imageUrl?: string;
-  imageAlt?: string;
+}
+
+export interface AboutImage {
+  _id: string;
+  _creationTime: number;
+  order: number;
+  imageUrl: string;
+  alt: string;
 }
 
 export const DEFAULT_ABOUT_IMAGE = "/images/team-collage.webp";
 export const DEFAULT_ABOUT_IMAGE_ALT =
   "Matt and the M5 Painting crew on a job site";
+
+export const DEFAULT_ABOUT_IMAGES: AboutImage[] = [
+  {
+    _id: "default-about-image",
+    _creationTime: Date.now(),
+    order: 1,
+    imageUrl: DEFAULT_ABOUT_IMAGE,
+    alt: DEFAULT_ABOUT_IMAGE_ALT,
+  },
+];
 
 export interface AboutValue {
   _id: string;
@@ -120,6 +136,7 @@ export interface SiteContent {
   heroContent: HeroContent | null;
   services: Service[] | null;
   aboutContent: AboutContent | null;
+  aboutImages: AboutImage[] | null;
   aboutValues: AboutValue[] | null;
   instagramPosts: InstagramPost[] | null;
   reviews: Review[] | null;
