@@ -93,7 +93,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="scroll-smooth">
+    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <link rel="dns-prefetch" href="https://www.instagram.com" />
         <link rel="preconnect" href="https://www.instagram.com" crossOrigin="" />
