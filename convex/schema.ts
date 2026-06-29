@@ -45,9 +45,17 @@ const schema = defineSchema({
     subtitle: v.string(),
     title: v.string(),
     paragraphs: v.array(v.string()),
+    /** Legacy single image fields; retained as a fallback for older content. */
     imageStorageId: v.optional(v.id("_storage")),
     imageAlt: v.optional(v.string()),
   }),
+
+  // About image gallery (multiple items)
+  aboutImages: defineTable({
+    order: v.number(),
+    imageStorageId: v.id("_storage"),
+    imageAlt: v.string(),
+  }).index("by_order", ["order"]),
 
   // About values (multiple items)
   aboutValues: defineTable({

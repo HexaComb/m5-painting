@@ -13,6 +13,7 @@ import {
   defaultHeroContent,
   defaultServices,
   defaultAboutContent,
+  defaultAboutImages,
   defaultAboutValues,
   defaultInstagramPosts,
   defaultReviews,
@@ -33,6 +34,7 @@ const content = buildContent ?? {
   heroContent: defaultHeroContent,
   services: defaultServices,
   aboutContent: defaultAboutContent,
+  aboutImages: defaultAboutImages,
   aboutValues: defaultAboutValues,
   instagramPosts: defaultInstagramPosts,
   reviews: defaultReviews,
@@ -105,6 +107,7 @@ export default function Home() {
 
         <About
           initialAbout={content.aboutContent}
+          initialImages={content.aboutImages}
           initialValues={content.aboutValues}
         />
 

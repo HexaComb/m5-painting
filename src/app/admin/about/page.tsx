@@ -13,7 +13,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle,
 } from "@/components/ui/dialog";
-import { ArrowLeft, Loader2, Pencil, Plus, Save, Trash2, Upload, X } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowLeft,
+  ArrowUp,
+  Loader2,
+  Pencil,
+  Plus,
+  Save,
+  Trash2,
+  Upload,
+  X,
+} from "lucide-react";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -21,13 +32,17 @@ import {
   DEFAULT_ABOUT_IMAGE_ALT,
 } from "@/lib/content-types";
 
-const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MAX_IMAGE_BYTES = 50 * 1024 * 1024;
 
 export default function AboutPage() {
   const aboutContent = useQuery(api.content.getAboutContent);
+  const aboutImages = useQuery(api.content.getAboutImages);
   const aboutValues = useQuery(api.content.getAboutValues);
   const updateAbout = useMutation(api.content.updateAboutContent);
   const generateUploadUrl = useMutation(api.content.generateAboutImageUploadUrl);
+  const addAboutImage = useMutation(api.content.addAboutImage);
+  const updateAboutImage = useMutation(api.content.updateAboutImage);
+  const deleteAboutImage = useMutation(api.content.deleteAboutImage);
   const updateValue = useMutation(api.content.updateAboutValue);
   const addValue = useMutation(api.content.addAboutValue);
   const deleteValue = useMutation(api.content.deleteAboutValue);
@@ -37,15 +52,14 @@ export default function AboutPage() {
     subtitle: "",
     title: "",
     paragraphs: [""],
-    imageAlt: DEFAULT_ABOUT_IMAGE_ALT,
   });
-  const [previewUrl, setPreviewUrl] = useState(DEFAULT_ABOUT_IMAGE);
-  const [pendingStorageId, setPendingStorageId] = useState<
-    Id<"_storage"> | undefined
-  >(undefined);
-  const [clearImage, setClearImage] = useState(false);
-  const [hasCustomImage, setHasCustomImage] = useState(false);
+  const [imageAltDrafts, setImageAltDrafts] = useState<Record<string, string>>(
+    {},
+  );
   const [uploading, setUploading] = useState(false);
+  const [savingImageId, setSavingImageId] = useState<Id<"aboutImages"> | null>(
+    null,
+  );
   const [savingContent, setSavingContent] = useState(false);
   const [editingValueId, setEditingValueId] = useState<Id<"aboutValues"> | "new" | null>(null);
   const [valueForm, setValueForm] = useState({ iconName: "", title: "", description: "" });
@@ -58,52 +72,70 @@ export default function AboutPage() {
         subtitle: aboutContent.subtitle,
         title: aboutContent.title,
         paragraphs: [...aboutContent.paragraphs],
-        imageAlt: aboutContent.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT,
       });
-      setPreviewUrl(aboutContent.imageUrl ?? DEFAULT_ABOUT_IMAGE);
-      setHasCustomImage(Boolean(aboutContent.imageUrl));
-      setPendingStorageId(undefined);
-      setClearImage(false);
     }
   }, [aboutContent]);
 
-  const handleImageSelect = async (file: File | null) => {
-    if (!file) return;
+  useEffect(() => {
+    if (aboutImages) {
+      setImageAltDrafts(
+        Object.fromEntries(
+          aboutImages.map((image) => [image._id, image.imageAlt]),
+        ),
+      );
+    }
+  }, [aboutImages]);
 
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please choose an image file");
+  const handleImageSelect = async (files: FileList | null) => {
+    const selectedFiles = Array.from(files ?? []);
+    if (selectedFiles.length === 0) return;
+
+    const invalidFile = selectedFiles.find(
+      (file) => !file.type.startsWith("image/"),
+    );
+    if (invalidFile) {
+      toast.error("Please choose image files only");
       return;
     }
 
-    if (file.size > MAX_IMAGE_BYTES) {
-      toast.error("Image must be 5 MB or smaller");
+    const oversizedFile = selectedFiles.find(
+      (file) => file.size > MAX_IMAGE_BYTES,
+    );
+    if (oversizedFile) {
+      toast.error("Each image must be 50 MB or smaller");
       return;
     }
 
     setUploading(true);
     try {
-      const uploadUrl = await generateUploadUrl();
-      const response = await fetch(uploadUrl, {
-        method: "POST",
-        headers: { "Content-Type": file.type },
-        body: file,
-      });
+      for (const file of selectedFiles) {
+        const uploadUrl = await generateUploadUrl();
+        const response = await fetch(uploadUrl, {
+          method: "POST",
+          headers: { "Content-Type": file.type },
+          body: file,
+        });
 
-      if (!response.ok) {
-        throw new Error("Upload failed");
+        if (!response.ok) {
+          throw new Error("Upload failed");
+        }
+
+        const { storageId } = (await response.json()) as {
+          storageId: Id<"_storage">;
+        };
+
+        await addAboutImage({
+          imageStorageId: storageId,
+          imageAlt: DEFAULT_ABOUT_IMAGE_ALT,
+        });
       }
-
-      const { storageId } = (await response.json()) as {
-        storageId: Id<"_storage">;
-      };
-
-      setPendingStorageId(storageId);
-      setClearImage(false);
-      setHasCustomImage(true);
-      setPreviewUrl(URL.createObjectURL(file));
-      toast.success("Image uploaded. Save changes to publish it.");
+      toast.success(
+        selectedFiles.length === 1
+          ? "Image added to gallery"
+          : `${selectedFiles.length} images added to gallery`,
+      );
     } catch {
-      toast.error("Failed to upload image");
+      toast.error("Failed to upload gallery image");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -112,14 +144,53 @@ export default function AboutPage() {
     }
   };
 
-  const handleRemoveImage = () => {
-    setPendingStorageId(undefined);
-    setClearImage(true);
-    setHasCustomImage(false);
-    setPreviewUrl(DEFAULT_ABOUT_IMAGE);
-    setContentForm((f) => ({ ...f, imageAlt: DEFAULT_ABOUT_IMAGE_ALT }));
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+  const handleSaveImageAlt = async (id: Id<"aboutImages">, order: number) => {
+    setSavingImageId(id);
+    try {
+      await updateAboutImage({
+        id,
+        order,
+        imageAlt: imageAltDrafts[id] ?? DEFAULT_ABOUT_IMAGE_ALT,
+      });
+      toast.success("Image description saved");
+    } catch {
+      toast.error("Failed to save image description");
+    } finally {
+      setSavingImageId(null);
+    }
+  };
+
+  const handleMoveImage = async (index: number, direction: -1 | 1) => {
+    if (!aboutImages) return;
+    const targetIndex = index + direction;
+    const image = aboutImages[index];
+    const target = aboutImages[targetIndex];
+    if (!image || !target) return;
+
+    try {
+      await Promise.all([
+        updateAboutImage({
+          id: image._id,
+          order: target.order,
+          imageAlt: imageAltDrafts[image._id] ?? image.imageAlt,
+        }),
+        updateAboutImage({
+          id: target._id,
+          order: image.order,
+          imageAlt: imageAltDrafts[target._id] ?? target.imageAlt,
+        }),
+      ]);
+    } catch {
+      toast.error("Failed to reorder image");
+    }
+  };
+
+  const handleDeleteImage = async (id: Id<"aboutImages">) => {
+    try {
+      await deleteAboutImage({ id });
+      toast.success("Image removed from gallery");
+    } catch {
+      toast.error("Failed to remove image");
     }
   };
 
@@ -129,11 +200,7 @@ export default function AboutPage() {
       await updateAbout({
         ...contentForm,
         paragraphs: contentForm.paragraphs.filter((p) => p.trim()),
-        ...(pendingStorageId ? { imageStorageId: pendingStorageId } : {}),
-        ...(clearImage ? { clearImage: true } : {}),
       });
-      setPendingStorageId(undefined);
-      setClearImage(false);
       toast.success("About section updated!");
     } catch {
       toast.error("Failed to save");
@@ -167,7 +234,11 @@ export default function AboutPage() {
     catch { toast.error("Failed to delete"); }
   };
 
-  if (aboutContent === undefined || aboutValues === undefined) {
+  if (
+    aboutContent === undefined ||
+    aboutImages === undefined ||
+    aboutValues === undefined
+  ) {
     return <div className="flex items-center justify-center p-12"><Loader2 className="h-6 w-6 animate-spin text-muted-foreground" /></div>;
   }
 
@@ -181,34 +252,24 @@ export default function AboutPage() {
         </div>
       </div>
 
-      {/* About Image */}
+      {/* About Gallery */}
       <Card>
         <CardHeader>
-          <CardTitle>About Image</CardTitle>
+          <CardTitle>About Gallery</CardTitle>
           <CardDescription>
-            Image shown beside the company story. Defaults to the team collage.
+            Images shown as a carousel beside the company story. If no images
+            are uploaded, the site uses the default team collage.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-5">
-          <div className="overflow-hidden rounded-xl border bg-muted/30">
-            <div className="relative aspect-[3/4] w-full max-w-sm">
-              <Image
-                src={previewUrl}
-                alt={contentForm.imageAlt}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 384px"
-              />
-            </div>
-          </div>
-
           <div className="flex flex-wrap gap-2">
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*"
+              multiple
               className="hidden"
-              onChange={(e) => handleImageSelect(e.target.files?.[0] ?? null)}
+              onChange={(e) => handleImageSelect(e.target.files)}
             />
             <Button
               type="button"
@@ -221,35 +282,110 @@ export default function AboutPage() {
               ) : (
                 <Upload className="mr-2 h-4 w-4" />
               )}
-              Upload Image
+              Upload Images
             </Button>
-            {hasCustomImage && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={uploading || savingContent}
-                onClick={handleRemoveImage}
-              >
-                <Trash2 className="mr-2 h-4 w-4" />
-                Use Default Image
-              </Button>
-            )}
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="about-image-alt">Description (alt text)</Label>
-            <Input
-              id="about-image-alt"
-              value={contentForm.imageAlt}
-              onChange={(e) =>
-                setContentForm((f) => ({ ...f, imageAlt: e.target.value }))
-              }
-              placeholder={DEFAULT_ABOUT_IMAGE_ALT}
-            />
-            <p className="text-xs text-muted-foreground">
-              Describes the image for screen readers and search engines.
-            </p>
-          </div>
+          {aboutImages.length > 0 ? (
+            <div className="space-y-3">
+              {aboutImages.map((image, index) => (
+                <div
+                  key={image._id}
+                  className="grid gap-4 rounded-lg border p-3 sm:grid-cols-[120px_1fr]"
+                >
+                  <div className="relative aspect-[3/4] overflow-hidden rounded-md bg-muted">
+                    <Image
+                      src={image.imageUrl}
+                      alt={image.imageAlt}
+                      fill
+                      className="object-cover"
+                      sizes="120px"
+                    />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="space-y-2">
+                      <Label htmlFor={`about-image-alt-${image._id}`}>
+                        Description (alt text)
+                      </Label>
+                      <Input
+                        id={`about-image-alt-${image._id}`}
+                        value={imageAltDrafts[image._id] ?? ""}
+                        onChange={(e) =>
+                          setImageAltDrafts((drafts) => ({
+                            ...drafts,
+                            [image._id]: e.target.value,
+                          }))
+                        }
+                        placeholder={DEFAULT_ABOUT_IMAGE_ALT}
+                      />
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={savingImageId === image._id}
+                        onClick={() => handleSaveImageAlt(image._id, image.order)}
+                      >
+                        {savingImageId === image._id ? (
+                          <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <Save className="mr-2 h-3.5 w-3.5" />
+                        )}
+                        Save Description
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={index === 0}
+                        onClick={() => handleMoveImage(index, -1)}
+                      >
+                        <ArrowUp className="mr-2 h-3.5 w-3.5" />
+                        Move Up
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={index === aboutImages.length - 1}
+                        onClick={() => handleMoveImage(index, 1)}
+                      >
+                        <ArrowDown className="mr-2 h-3.5 w-3.5" />
+                        Move Down
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="text-destructive hover:text-destructive"
+                        onClick={() => handleDeleteImage(image._id)}
+                      >
+                        <Trash2 className="mr-2 h-3.5 w-3.5" />
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="rounded-lg border bg-muted/30 p-3">
+              <p className="mb-3 text-sm text-muted-foreground">
+                No gallery images yet. The site is currently using this fallback
+                image.
+              </p>
+              <div className="relative aspect-[3/4] w-full max-w-[160px] overflow-hidden rounded-md bg-muted">
+                <Image
+                  src={aboutContent?.imageUrl ?? DEFAULT_ABOUT_IMAGE}
+                  alt={aboutContent?.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT}
+                  fill
+                  className="object-cover"
+                  sizes="160px"
+                />
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
 

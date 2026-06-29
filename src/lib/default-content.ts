@@ -3,6 +3,7 @@ import type {
   HeroContent,
   Service,
   AboutContent,
+  AboutImage,
   AboutValue,
   InstagramPost,
   Review,
@@ -124,6 +125,8 @@ export const defaultAboutContent: AboutContent = {
   imageUrl: DEFAULT_ABOUT_IMAGE,
   imageAlt: DEFAULT_ABOUT_IMAGE_ALT,
 };
+
+export const defaultAboutImages: AboutImage[] = [];
 
 export const defaultAboutValues: AboutValue[] = [
   {

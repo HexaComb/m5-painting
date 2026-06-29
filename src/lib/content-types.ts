@@ -59,6 +59,14 @@ export const DEFAULT_ABOUT_IMAGE = "/images/team-collage.webp";
 export const DEFAULT_ABOUT_IMAGE_ALT =
   "Matt and the M5 Painting crew on a job site";
 
+export interface AboutImage {
+  _id: string;
+  _creationTime: number;
+  order: number;
+  imageUrl: string;
+  imageAlt: string;
+}
+
 export interface AboutValue {
   _id: string;
   _creationTime: number;
@@ -120,6 +128,7 @@ export interface SiteContent {
   heroContent: HeroContent | null;
   services: Service[] | null;
   aboutContent: AboutContent | null;
+  aboutImages: AboutImage[] | null;
   aboutValues: AboutValue[] | null;
   instagramPosts: InstagramPost[] | null;
   reviews: Review[] | null;

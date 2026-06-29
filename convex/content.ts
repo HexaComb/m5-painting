@@ -502,6 +502,93 @@ export const updateAboutContent = mutation({
   },
 });
 
+export const getAboutImages = query({
+  args: {},
+  returns: v.array(
+    v.object({
+      _id: v.id("aboutImages"),
+      _creationTime: v.number(),
+      order: v.number(),
+      imageUrl: v.string(),
+      imageAlt: v.string(),
+    }),
+  ),
+  handler: async (ctx) => {
+    const images = await ctx.db
+      .query("aboutImages")
+      .withIndex("by_order")
+      .collect();
+
+    const resolved: Array<{
+      _id: Id<"aboutImages">;
+      _creationTime: number;
+      order: number;
+      imageUrl: string;
+      imageAlt: string;
+    }> = [];
+    for (const image of images) {
+      const imageUrl = await ctx.storage.getUrl(image.imageStorageId);
+      if (!imageUrl) continue;
+      resolved.push({
+        _id: image._id,
+        _creationTime: image._creationTime,
+        order: image.order,
+        imageUrl,
+        imageAlt: image.imageAlt,
+      });
+    }
+    return resolved;
+  },
+});
+
+export const addAboutImage = mutation({
+  args: {
+    imageStorageId: v.id("_storage"),
+    imageAlt: v.string(),
+  },
+  returns: v.id("aboutImages"),
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    const existing = await ctx.db
+      .query("aboutImages")
+      .withIndex("by_order")
+      .collect();
+    const maxOrder = existing.reduce(
+      (max, image) => Math.max(max, image.order),
+      0,
+    );
+    return await ctx.db.insert("aboutImages", {
+      order: maxOrder + 1,
+      imageStorageId: args.imageStorageId,
+      imageAlt: args.imageAlt,
+    });
+  },
+});
+
+export const updateAboutImage = mutation({
+  args: {
+    id: v.id("aboutImages"),
+    imageAlt: v.string(),
+    order: v.optional(v.number()),
+  },
+  returns: v.null(),
+  handler: async (ctx, { id, ...data }) => {
+    await requireAuth(ctx);
+    await ctx.db.patch(id, data);
+    return null;
+  },
+});
+
+export const deleteAboutImage = mutation({
+  args: { id: v.id("aboutImages") },
+  returns: v.null(),
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    await ctx.db.delete(args.id);
+    return null;
+  },
+});
+
 // ═══════════════════════════════════════════════════════════════════════
 // ABOUT VALUES
 // ═══════════════════════════════════════════════════════════════════════
