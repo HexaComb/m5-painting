@@ -10,6 +10,7 @@ import { useQuery, useMutation } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 import type { ContactContent, SiteSettings } from "@/lib/content-types";
+import { sendContactNotification } from "@/app/actions/contact";
 
 export function Contact({
   initialContact,
@@ -34,7 +35,11 @@ export function Contact({
 
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const interest = formData.get("interest") as string;
+    const name = String(formData.get("name") ?? "");
+    const phone = String(formData.get("phone") ?? "");
+    const email = String(formData.get("email") ?? "");
+    const interest = String(formData.get("interest") ?? "");
+    const message = String(formData.get("message") ?? "");
 
     if (!interest) {
       toast.error("Please select what you're looking for");
@@ -43,25 +48,23 @@ export function Contact({
 
     setSubmitting(true);
     try {
-      // Submit to Convex
-      await submitLead({
-        name: formData.get("name") as string,
-        phone: formData.get("phone") as string || undefined,
-        email: formData.get("email") as string,
+      const lead = {
+        name,
+        phone: phone || undefined,
+        email,
         interest,
-        message: formData.get("message") as string,
+        message,
+      };
+
+      const leadId = await submitLead(lead);
+      const notification = await sendContactNotification({
+        ...lead,
+        leadId,
       });
 
-      // Submit to Netlify
-      const netlifyParams: Record<string, string> = {};
-      formData.forEach((value, key) => {
-        if (typeof value === "string") netlifyParams[key] = value;
-      });
-      await fetch("/", {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(netlifyParams).toString(),
-      });
+      if (!notification.ok) {
+        throw new Error(notification.error);
+      }
 
       setSubmitted(true);
       toast.success("Message sent! We'll be in touch soon.");
@@ -167,7 +170,6 @@ export function Contact({
                 ) : (
                   <form
                     data-track="contact-submit"
-                    data-netlify="true"
                     name="contact"
                     className="space-y-5"
                     onSubmit={handleSubmit}
