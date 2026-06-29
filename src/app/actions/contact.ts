@@ -1,8 +1,9 @@
 "use server";
 
 import { Resend } from "resend";
+import { ConvexHttpClient } from "convex/browser";
+import { api } from "../../../convex/_generated/api";
 
-const OWNER_EMAIL = "l.lopez@m5painting.com";
 const DEFAULT_FROM_EMAIL = "M5 Painting <onboarding@resend.dev>";
 
 type ContactNotificationInput = {
@@ -39,6 +40,17 @@ function formatInterest(value: string): string {
     .join(" ");
 }
 
+async function getNotificationRecipient(): Promise<string | null> {
+  const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
+  if (!convexUrl) {
+    return null;
+  }
+
+  const client = new ConvexHttpClient(convexUrl);
+  const settings = await client.query(api.content.getSiteSettings, {});
+  return settings?.email?.trim() || null;
+}
+
 export async function sendContactNotification(
   input: ContactNotificationInput,
 ): Promise<ContactNotificationResult> {
@@ -57,6 +69,11 @@ export async function sendContactNotification(
     return { ok: false, error: "Missing required contact fields" };
   }
 
+  const recipient = await getNotificationRecipient();
+  if (!recipient) {
+    return { ok: false, error: "Missing site settings notification email" };
+  }
+
   const resend = new Resend(apiKey);
   const from = process.env.RESEND_FROM_EMAIL ?? DEFAULT_FROM_EMAIL;
   const subject = `New M5 Painting quote request from ${name}`;
@@ -64,7 +81,7 @@ export async function sendContactNotification(
 
   const { error } = await resend.emails.send({
     from,
-    to: OWNER_EMAIL,
+    to: recipient,
     replyTo: email,
     subject,
     text: [
