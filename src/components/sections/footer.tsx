@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Building2, Phone, Mail, MapPin } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useCookieConsent } from "@/components/CookieConsent";
@@ -36,6 +36,13 @@ export function Footer({
   const { openPreferences } = useCookieConsent();
   if (!settings) return null;
   const footerCerts = filterFooterCertifications(certifications);
+  const phoneHref = settings.phone.replace(/\D/g, "");
+  const [primaryLocation = settings.address, serviceArea] = settings.address
+    .split("·")
+    .map((part) => part.trim());
+  const [addressLocality = primaryLocation, addressRegion = "CA"] = primaryLocation
+    .split(",")
+    .map((part) => part.trim());
   return (
     <footer className="brand-surface-dark border-t border-white/10 text-white">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16">
@@ -71,27 +78,50 @@ export function Footer({
           </div>
 
           <div>
-            <h4 className="text-label mb-4 text-on-dark-muted">Get in Touch</h4>
-            <div className="space-y-3">
+            <h4 className="text-label mb-4 text-on-dark-muted">Name, Address, Phone</h4>
+            <address
+              className="space-y-3 not-italic"
+              itemScope
+              itemType="https://schema.org/LocalBusiness"
+            >
+              <div className="flex items-center gap-2.5 text-sm text-on-dark-secondary">
+                <Building2 className="h-4 w-4 shrink-0" aria-hidden />
+                <span itemProp="name" className="font-semibold text-on-dark">
+                  {settings.businessName}
+                </span>
+              </div>
               <a
-                href={`tel:${settings.phone.replace(/\D/g, "")}`}
+                href={`tel:${phoneHref}`}
                 className="flex items-center gap-2.5 text-sm text-on-dark-secondary transition-colors hover:text-brand-electric"
+                itemProp="telephone"
               >
-                <Phone className="h-4 w-4 shrink-0" />
+                <Phone className="h-4 w-4 shrink-0" aria-hidden />
                 {settings.phone}
               </a>
               <a
                 href={`mailto:${settings.email}`}
                 className="flex items-center gap-2.5 text-sm text-on-dark-secondary transition-colors hover:text-brand-electric"
+                itemProp="email"
               >
-                <Mail className="h-4 w-4 shrink-0" />
+                <Mail className="h-4 w-4 shrink-0" aria-hidden />
                 {settings.email}
               </a>
-              <div className="flex items-center gap-2.5 text-sm text-on-dark-secondary">
-                <MapPin className="h-4 w-4 shrink-0" />
-                {settings.address}
+              <div
+                className="flex items-center gap-2.5 text-sm text-on-dark-secondary"
+                itemProp="address"
+                itemScope
+                itemType="https://schema.org/PostalAddress"
+              >
+                <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                <span>
+                  <span itemProp="addressLocality">{addressLocality}</span>,{" "}
+                  <span itemProp="addressRegion">{addressRegion}</span>
+                  {serviceArea ? (
+                    <span className="text-on-dark-muted"> · {serviceArea}</span>
+                  ) : null}
+                </span>
               </div>
-            </div>
+            </address>
           </div>
 
           {footerCerts.length > 0 && (

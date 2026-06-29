@@ -45,10 +45,19 @@ const content = buildContent ?? {
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://m5painting.com";
 
 const settings = content.siteSettings ?? defaultSiteSettings;
+const googleMapsUrl = settings.googlePlaceId
+  ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.businessName)}&query_place_id=${settings.googlePlaceId}`
+  : undefined;
+const instagramUrl = settings.instagramUsername
+  ? `https://www.instagram.com/${settings.instagramUsername}/`
+  : undefined;
+const sameAsLinks = [googleMapsUrl, instagramUrl].filter(
+  (url): url is string => Boolean(url),
+);
 
 const localBusinessJsonLd = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
+  "@type": "HomeAndConstructionBusiness",
   "@id": `${siteUrl}/#business`,
   name: settings.businessName,
   description:
@@ -60,6 +69,23 @@ const localBusinessJsonLd = {
   image: `${siteUrl}/images/hero-banner.webp`,
   logo: `${siteUrl}/images/logo.webp`,
   priceRange: "$$",
+  sameAs: sameAsLinks.length > 0 ? sameAsLinks : undefined,
+  hasMap: googleMapsUrl,
+  identifier: settings.googlePlaceId
+    ? {
+        "@type": "PropertyValue",
+        propertyID: "Google Place ID",
+        value: settings.googlePlaceId,
+      }
+    : undefined,
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: settings.phone,
+    email: settings.email,
+    contactType: "customer service",
+    areaServed: "Central Valley, California",
+    availableLanguage: "English",
+  },
   address: {
     "@type": "PostalAddress",
     addressLocality: "Sanger",
