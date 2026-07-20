@@ -4,7 +4,7 @@ import { Resend } from "resend";
 import { ConvexHttpClient } from "convex/browser";
 import { api } from "../../../convex/_generated/api";
 
-const DEFAULT_FROM_EMAIL = "M5 Painting <onboarding@resend.dev>";
+const DEFAULT_FROM_EMAIL = "M5 Painting <system@m5painting.com>";
 
 type ContactNotificationInput = {
   leadId: string;
