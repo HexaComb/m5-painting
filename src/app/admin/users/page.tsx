@@ -50,6 +50,7 @@ function PasswordField({
   placeholder,
   showPassword,
   onToggleShow,
+  minLength,
 }: {
   id: string;
   label: string;
@@ -58,6 +59,8 @@ function PasswordField({
   placeholder: string;
   showPassword: boolean;
   onToggleShow: () => void;
+  /** Omit for current-password fields — length only applies to new passwords. */
+  minLength?: number;
 }) {
   return (
     <div className="space-y-2">
@@ -70,7 +73,7 @@ function PasswordField({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required
-          minLength={6}
+          minLength={minLength}
         />
         <Button
           type="button"
@@ -359,6 +362,7 @@ export default function UsersPage() {
               placeholder="At least 6 characters"
               showPassword={showNewPassword}
               onToggleShow={() => setShowNewPassword(!showNewPassword)}
+              minLength={6}
             />
             <PasswordField
               id="confirm-password"
@@ -368,6 +372,7 @@ export default function UsersPage() {
               placeholder="Re-enter new password"
               showPassword={showNewPassword}
               onToggleShow={() => setShowNewPassword(!showNewPassword)}
+              minLength={6}
             />
             <Button type="submit" disabled={changingPassword}>
               {changingPassword && (
@@ -516,6 +521,7 @@ export default function UsersPage() {
                 placeholder="At least 6 characters"
                 showPassword={showResetPassword}
                 onToggleShow={() => setShowResetPassword(!showResetPassword)}
+                minLength={6}
               />
             </div>
             <DialogFooter>
