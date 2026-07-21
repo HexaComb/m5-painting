@@ -52,14 +52,14 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
           : "border-transparent bg-transparent shadow-none backdrop-blur-none"
       }`}
     >
-      <div className="mx-auto flex h-[4.25rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[4.75rem]">
+      <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[5.25rem]">
         <a href="#" className="flex shrink-0 items-center" aria-label={settings.businessName}>
           <Image
             src="/images/logo.webp"
             alt={settings.businessName}
             width={1024}
             height={1024}
-            className="h-11 w-11 object-contain sm:h-[3.25rem] sm:w-[3.25rem]"
+            className="h-14 w-14 object-contain sm:h-16 sm:w-16"
             priority
           />
         </a>
