@@ -27,7 +27,8 @@ export function CertificationMark({
   certification: Certification;
   size?: "sm" | "md";
 }) {
-  const iconSize = size === "sm" ? "h-5.5 w-5.5" : "h-7 w-7";
+  const iconSize = size === "sm" ? "h-8 w-8" : "h-10 w-10";
+  const awardSize = size === "sm" ? "h-4 w-4" : "h-5 w-5";
   const textClass =
     size === "sm"
       ? "text-sm text-on-dark-secondary"
@@ -39,15 +40,15 @@ export function CertificationMark({
         <Image
           src={certification.imageUrl}
           alt={certification.label}
-          width={size === "sm" ? 22 : 28}
-          height={size === "sm" ? 22 : 28}
+          width={size === "sm" ? 32 : 40}
+          height={size === "sm" ? 32 : 40}
           className={`${iconSize} rounded-full object-cover ring-1 ring-brand-electric/30`}
         />
       ) : (
         <span
           className={`flex ${iconSize} shrink-0 items-center justify-center rounded-full bg-brand-navy/80 ring-1 ring-brand-electric/30`}
         >
-          <Award className="h-3.5 w-3.5 text-brand-electric" aria-hidden />
+          <Award className={`${awardSize} text-brand-electric`} aria-hidden />
         </span>
       )}
       <span className={textClass}>{certification.label}</span>
