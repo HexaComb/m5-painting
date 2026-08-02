@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Phone, Menu, X } from "lucide-react";
 import { useQuery } from "convex/react";
@@ -53,7 +54,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
       }`}
     >
       <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[5.25rem]">
-        <a href="/" className="flex shrink-0 items-center" aria-label={settings.businessName}>
+        <Link href="/" className="flex shrink-0 items-center" aria-label={settings.businessName}>
           <Image
             src="/images/logo.webp"
             alt={settings.businessName}
@@ -62,7 +63,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
             className="h-14 w-14 object-contain sm:h-16 sm:w-16"
             priority
           />
-        </a>
+        </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => (
@@ -96,14 +97,14 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               {settings.phone}
             </Button>
           </a>
-          <a href="/#contact" data-track="header-estimate">
+          <Link href="/#contact" data-track="header-estimate">
             <Button
               size="sm"
               className="brand-gradient-blue min-h-11 border-0 px-4 font-bold text-white shadow-md brand-glow hover:opacity-95 md:min-h-9"
             >
               Free Estimate
             </Button>
-          </a>
+          </Link>
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className={`ml-1 inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50 md:hidden ${
@@ -139,11 +140,11 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
                 {link.label}
               </a>
             ))}
-            <a href="/#contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
+            <Link href="/#contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
               <Button className="brand-gradient-blue min-h-12 w-full border-0 font-bold text-white shadow-md brand-glow hover:opacity-95">
                 Free Estimate
               </Button>
-            </a>
+            </Link>
             <a
               href={`tel:${settings.phone.replace(/\D/g, "")}`}
               data-track="header-phone"
