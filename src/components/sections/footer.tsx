@@ -10,11 +10,23 @@ import type { SiteSettings, Certification } from "@/lib/content-types";
 import { defaultCertifications } from "@/lib/default-content";
 
 const navLinks = [
-  { label: "Services", href: "#services" },
-  { label: "Our Work", href: "#projects" },
-  { label: "About", href: "#about" },
-  { label: "Reviews", href: "#reviews" },
-  { label: "Contact", href: "#contact" },
+  { label: "Services", href: "/#services" },
+  { label: "Our Work", href: "/#projects" },
+  { label: "About", href: "/#about" },
+  { label: "Reviews", href: "/#reviews" },
+  { label: "Contact", href: "/#contact" },
+];
+
+const serviceLinks = [
+  { label: "Residential Painting", href: "/residential-painting" },
+  { label: "Commercial Painting", href: "/commercial-painting" },
+  { label: "Interior Painting", href: "/interior-painting" },
+  { label: "Exterior Painting", href: "/exterior-painting" },
+  { label: "Sanger Painting Company", href: "/sanger-painting-company" },
+  {
+    label: "Central Valley Painting",
+    href: "/central-valley-painting-company",
+  },
 ];
 
 export function Footer({
@@ -46,7 +58,7 @@ export function Footer({
   return (
     <footer className="brand-surface-dark border-t border-white/10 text-white">
       <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <Image
               src="/images/logo.webp"
@@ -66,6 +78,21 @@ export function Footer({
             <h4 className="text-label mb-4 text-on-dark-muted">Quick Links</h4>
             <nav className="flex flex-col gap-2.5">
               {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="text-sm text-on-dark-secondary transition-colors hover:text-on-dark"
+                >
+                  {link.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+
+          <div>
+            <h4 className="text-label mb-4 text-on-dark-muted">Painting Services</h4>
+            <nav className="flex flex-col gap-2.5" aria-label="Service pages">
+              {serviceLinks.map((link) => (
                 <a
                   key={link.href}
                   href={link.href}

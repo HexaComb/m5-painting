@@ -1,0 +1,20 @@
+# M5 Painting
+
+Family-owned painting company based in Sanger, California, serving the Central Valley.
+
+## Services
+- Residential painting: /residential-painting
+- Commercial painting: /commercial-painting
+- Interior painting: /interior-painting
+- Exterior painting: /exterior-painting
+
+## Local
+- Sanger painting company: /sanger-painting-company
+- Central Valley painting company: /central-valley-painting-company
+- Painting company overview: /painting-company
+
+## Contact
+- Phone: 559-451-1022
+- Email: m5paintingco@gmail.com
+- Website: https://m5painting.com
+- Free estimates for homes and businesses

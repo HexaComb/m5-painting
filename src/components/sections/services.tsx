@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   Paintbrush,
   Home,
@@ -20,6 +21,13 @@ const iconMap = {
 
 type IconName = keyof typeof iconMap;
 
+const serviceHrefByTitle: Record<string, string> = {
+  "Interior Painting": "/interior-painting",
+  "Exterior Painting": "/exterior-painting",
+  "Commercial Painting": "/commercial-painting",
+  "Free Consultation": "/#contact",
+};
+
 export function Services({ initialServices }: { initialServices?: Service[] | null }) {
   const queryServices = useQuery(api.content.getServices);
   const services = queryServices === undefined ? initialServices : queryServices;
@@ -33,12 +41,12 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
               How We Can Help
             </p>
             <h2 className="mt-2 text-headline font-bold text-foreground">
-              What We Do
+              Residential &amp; commercial painting
             </h2>
             <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
             <p className="mt-5 text-body-lg text-muted-foreground">
-              From a fresh coat in the living room to a full exterior
-              makeover, we bring your vision to life.
+              From interior painting to full commercial projects, our Sanger
+              painting company brings Central Valley homes and businesses to life.
             </p>
           </div>
         </Reveal>
@@ -47,6 +55,7 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
         <div className="grid gap-6 sm:grid-cols-2">
           {services?.map((service, idx) => {
             const Icon = iconMap[service.iconName as IconName] ?? Home;
+            const href = serviceHrefByTitle[service.title];
             return (
               <Reveal key={service._id} delay={idx + 1} className="h-full">
                 <div className="group relative flex h-full flex-col overflow-hidden rounded-xl border border-brand-navy/20 bg-brand-black p-7 text-white shadow-xl shadow-brand-navy/20 transition-all hover:border-brand-electric/40 sm:p-8">
@@ -56,7 +65,16 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
                       <Icon className="h-5 w-5" />
                     </div>
                     <h3 className="text-title font-bold">
-                      {service.title}
+                      {href ? (
+                        <Link
+                          href={href}
+                          className="transition-colors hover:text-brand-electric"
+                        >
+                          {service.title}
+                        </Link>
+                      ) : (
+                        service.title
+                      )}
                     </h3>
                   </div>
                   <p className="relative mb-6 text-[0.95rem] leading-relaxed text-on-dark-secondary">

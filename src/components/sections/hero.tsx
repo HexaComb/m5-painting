@@ -78,7 +78,7 @@ export function Hero({
       </div>
 
       <span className="sr-only">
-        M5 Painting serves the Central Valley with residential and commercial painting
+        M5 Painting is a Sanger painting company offering residential painting, commercial painting, and interior painting across the Central Valley.
       </span>
 
       <div className="relative z-[2] mx-auto max-w-6xl px-5 pb-24 sm:px-6 sm:pb-28 md:pb-32">

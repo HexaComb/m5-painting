@@ -6,6 +6,12 @@ import { Tracker } from "@/components/Tracker";
 import { VercelAnalytics } from "@/components/VercelAnalytics";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
 import type { SiteContent } from "@/lib/content-types";
+import {
+  BUSINESS_NAME,
+  DEFAULT_META_DESCRIPTION,
+  PRIMARY_KEYWORDS,
+  SITE_URL,
+} from "@/lib/site";
 import "./globals.css";
 
 const montserrat = Montserrat({
@@ -30,60 +36,68 @@ try {
   // build-content.json not yet generated (e.g. next dev without prebuild)
 }
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "https://m5painting.com";
-
 const metaDescription =
-  _buildContent?.siteSettings?.metaDescription ??
-  "M5 Painting is a family-owned painting contractor in the Central Valley, California. Interior, exterior, and commercial painting. Contact us for a free estimate.";
+  _buildContent?.siteSettings?.metaDescription ?? DEFAULT_META_DESCRIPTION;
+
+const defaultTitle =
+  "Painting Company in Sanger & Central Valley | Residential & Commercial | M5 Painting";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
-  title: "M5 Painting | Residential & Commercial Painting in Central Valley, CA",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: defaultTitle,
+    template: `%s | ${BUSINESS_NAME}`,
+  },
   description: metaDescription,
-  applicationName: "M5 Painting",
+  applicationName: BUSINESS_NAME,
   icons: {
     icon: "/images/logo.webp",
     apple: "/images/logo.webp",
   },
-  keywords: [
-    "painting contractor",
-    "residential painting",
-    "commercial painting",
-    "interior painting",
-    "exterior painting",
-    "house painter",
-    "Central Valley",
-    "California",
-    "Sanger",
-    "Fresno",
-    "Clovis",
-    "M5 Painting",
-    "free estimate",
-  ],
+  keywords: [...PRIMARY_KEYWORDS],
+  authors: [{ name: BUSINESS_NAME, url: SITE_URL }],
+  creator: BUSINESS_NAME,
+  publisher: BUSINESS_NAME,
+  category: "Home & Construction",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   openGraph: {
-    title: "M5 Painting | Residential & Commercial Painting",
+    title: defaultTitle,
     description: metaDescription,
     type: "website",
     url: "/",
-    siteName: "M5 Painting",
+    siteName: BUSINESS_NAME,
     locale: "en_US",
     images: [
       {
         url: "/images/hero-banner.webp",
         width: 1200,
         height: 630,
-        alt: "M5 Painting crew at work — family-owned painting contractor in Central Valley, CA",
+        alt: "M5 Painting — Sanger painting company for residential and commercial painting in the Central Valley",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "M5 Painting | Residential & Commercial Painting",
+    title: defaultTitle,
     description: metaDescription,
     images: ["/images/hero-banner.webp"],
   },
   alternates: {
     canonical: "/",
+  },
+  other: {
+    "geo.region": "US-CA",
+    "geo.placename": "Sanger",
   },
 };
 

@@ -9,10 +9,10 @@ import { api } from "../../../convex/_generated/api";
 import type { SiteSettings } from "@/lib/content-types";
 
 const navLinks = [
-  { label: "Services", href: "#services", track: "nav-services" },
-  { label: "Our Work", href: "#projects", track: "nav-work" },
-  { label: "About", href: "#about", track: "nav-about" },
-  { label: "Reviews", href: "#reviews", track: "nav-reviews" },
+  { label: "Services", href: "/#services", track: "nav-services" },
+  { label: "Our Work", href: "/#projects", track: "nav-work" },
+  { label: "About", href: "/#about", track: "nav-about" },
+  { label: "Reviews", href: "/#reviews", track: "nav-reviews" },
 ];
 
 export function Header({ initialSettings }: { initialSettings?: SiteSettings | null }) {
@@ -53,7 +53,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
       }`}
     >
       <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[5.25rem]">
-        <a href="#" className="flex shrink-0 items-center" aria-label={settings.businessName}>
+        <a href="/" className="flex shrink-0 items-center" aria-label={settings.businessName}>
           <Image
             src="/images/logo.webp"
             alt={settings.businessName}
@@ -96,7 +96,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               {settings.phone}
             </Button>
           </a>
-          <a href="#contact" data-track="header-estimate">
+          <a href="/#contact" data-track="header-estimate">
             <Button
               size="sm"
               className="brand-gradient-blue min-h-11 border-0 px-4 font-bold text-white shadow-md brand-glow hover:opacity-95 md:min-h-9"
@@ -139,7 +139,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
                 {link.label}
               </a>
             ))}
-            <a href="#contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
+            <a href="/#contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
               <Button className="brand-gradient-blue min-h-12 w-full border-0 font-bold text-white shadow-md brand-glow hover:opacity-95">
                 Free Estimate
               </Button>

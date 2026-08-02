@@ -1126,7 +1126,7 @@ export const seed = internalMutation({
       email: "m5paintingco@gmail.com",
       address: "Sanger, CA · Central Valley",
       metaDescription:
-        "M5 Painting — family-owned painting contractor in the Central Valley, California. Interior, exterior, and commercial painting services.",
+        "M5 Painting is a family-owned painting company in Sanger serving the Central Valley. Residential painting, commercial painting, and interior painting — free estimates.",
       instagramUsername: "m5painting",
     });
 
