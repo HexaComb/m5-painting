@@ -14,6 +14,7 @@ const navLinks = [
   { label: "Our Work", href: "/#projects", track: "nav-work" },
   { label: "About", href: "/#about", track: "nav-about" },
   { label: "Reviews", href: "/#reviews", track: "nav-reviews" },
+  { label: "Contact", href: "/contact", track: "nav-contact" },
 ];
 
 export function Header({ initialSettings }: { initialSettings?: SiteSettings | null }) {
@@ -97,7 +98,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
               {settings.phone}
             </Button>
           </a>
-          <Link href="/#contact" data-track="header-estimate">
+          <Link href="/contact" data-track="header-estimate">
             <Button
               size="sm"
               className="brand-gradient-blue min-h-11 border-0 px-4 font-bold text-white shadow-md brand-glow hover:opacity-95 md:min-h-9"
@@ -140,7 +141,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
                 {link.label}
               </a>
             ))}
-            <Link href="/#contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
+            <Link href="/contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
               <Button className="brand-gradient-blue min-h-12 w-full border-0 font-bold text-white shadow-md brand-glow hover:opacity-95">
                 Free Estimate
               </Button>
