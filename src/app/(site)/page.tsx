@@ -64,7 +64,7 @@ const localBusinessJsonLd = {
   alternateName: ["M5 Painting Company", "M5 Painting Central Valley"],
   description:
     settings.metaDescription ||
-    "Family-owned Sanger painting company serving the Central Valley with residential painting, commercial painting, and interior painting.",
+    "Family-owned painters in Sanger, CA serving the Central Valley with residential, commercial, interior, and exterior painting.",
   url: SITE_URL,
   telephone: settings.phone,
   email: settings.email,
@@ -95,11 +95,6 @@ const localBusinessJsonLd = {
     addressLocality: "Sanger",
     addressRegion: "CA",
     addressCountry: "US",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 36.748,
-    longitude: -119.556,
   },
   areaServed: [
     { "@type": "City", name: "Sanger" },
@@ -176,7 +171,7 @@ const websiteJsonLd = {
   url: SITE_URL,
   description:
     settings.metaDescription ||
-    "Sanger painting company serving the Central Valley.",
+    "M5 Painting serves Sanger and the Central Valley with residential and commercial painting.",
   publisher: { "@id": `${SITE_URL}/#business` },
   inLanguage: "en-US",
 };
@@ -223,7 +218,7 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-5 sm:px-6">
             <p className="text-label-light">Explore our services</p>
             <h2 className="mt-2 text-headline font-bold text-foreground">
-              Painting company services across the Central Valley
+              Painting services across the Central Valley
             </h2>
             <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
             <p className="mt-4 max-w-2xl text-muted-foreground">
