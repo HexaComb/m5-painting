@@ -40,7 +40,7 @@ const metaDescription =
   _buildContent?.siteSettings?.metaDescription ?? DEFAULT_META_DESCRIPTION;
 
 const defaultTitle =
-  "Painting Company in Sanger & Central Valley | Residential & Commercial | M5 Painting";
+  "M5 Painting | Residential & Commercial Painting in Sanger, CA";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
         url: "/images/hero-banner.webp",
         width: 1200,
         height: 630,
-        alt: "M5 Painting — Sanger painting company for residential and commercial painting in the Central Valley",
+        alt: "M5 Painting crew serving homes and businesses in Sanger and the Central Valley",
       },
     ],
   },
