@@ -128,7 +128,7 @@ export const SEO_PAGES: SeoPage[] = [
     relatedSlugs: [
       "residential-painting",
       "central-valley-painting-company",
-      "painting-company",
+      "sanger-painting-company",
     ],
     serviceName: "Commercial Painting",
     ogImageAlt:
@@ -246,56 +246,60 @@ export const SEO_PAGES: SeoPage[] = [
   },
   {
     slug: "sanger-painting-company",
-    keyword: "Sanger painting company",
-    title: "Sanger Painting Company | M5 Painting",
+    keyword: "painters in Sanger CA",
+    title: "Painters in Sanger, CA | Interior & Exterior Painting | M5 Painting",
     description:
-      "M5 Painting is a family-owned Sanger painting company serving homeowners and businesses with residential, commercial, and interior painting. Call for a free estimate.",
-    headline: "Your local Sanger",
-    highlight: "painting company.",
+      "Professional painters in Sanger, CA for interior, exterior, residential, and commercial painting. M5 Painting is licensed, bonded, and insured. Get a free estimate.",
+    headline: "Professional painters",
+    highlight: "in Sanger, CA.",
     intro:
-      "M5 Painting is a family-owned Sanger painting company built on hard work and handshakes. We live and work here — so when you hire us for residential painting, commercial painting, or interior painting, you’re hiring neighbors who care how the job looks on your street.",
+      "M5 Painting is a family-owned Sanger painting crew serving local homeowners and businesses with interior, exterior, residential, and commercial painting. We focus on careful prep, clear communication, and a finished job you’ll be proud to see every day.",
     sections: [
       {
-        heading: "Why hire a Sanger painting company",
-        body: "Local crews show up, communicate clearly, and stand behind the work. We’re easy to reach, familiar with Sanger homes and businesses, and invested in a reputation that stays in town.",
+        heading: "Interior and exterior painters in Sanger",
+        body: "Whether you need a room refreshed, a full interior repainted, or an exterior that can handle Central Valley sun, M5 Painting can help. We paint walls, ceilings, trim, cabinets, stucco, siding, fences, decks, and other common residential and commercial surfaces.",
       },
       {
-        heading: "From Sanger to the wider Central Valley",
-        body: "While we’re proudly based in Sanger, we also serve Fresno, Clovis, and surrounding Central Valley communities that want the same reliable painting company experience.",
+        heading: "A local painting crew that keeps the process clear",
+        body: "Your project starts with a walkthrough so we can understand the surfaces, colors, prep work, and schedule. From there, we provide a clear estimate and keep you informed through prep, painting, cleanup, and the final walkthrough.",
+      },
+      {
+        heading: "Serving Sanger homes and businesses",
+        body: "Because we’re based in Sanger, local projects are part of the reputation we build every day. We also serve Fresno, Clovis, and nearby Central Valley communities when your project extends beyond Sanger.",
       },
     ],
     benefits: [
-      "Family-owned in Sanger, CA",
-      "Residential & commercial painting",
-      "Interior & exterior specialists",
+      "Interior & exterior painting",
+      "Residential & commercial projects",
       "Licensed, bonded & insured",
+      "Careful surface preparation",
+      "Clear written estimates",
       "Free local estimates",
-      "Trusted Central Valley reviews",
     ],
     faqs: [
       {
-        question: "Is M5 Painting based in Sanger?",
+        question: "Do you provide painting estimates in Sanger, CA?",
         answer:
-          "Yes. We’re a Sanger painting company serving the Central Valley with residential, commercial, interior, and exterior painting.",
+          "Yes. M5 Painting offers free estimates for homes and businesses in Sanger and nearby Central Valley communities.",
       },
       {
-        question: "Do you offer free estimates in Sanger?",
+        question: "What painting services do you offer in Sanger?",
         answer:
-          "Yes. Call or message us for a free on-site estimate for your home or business in Sanger and nearby cities.",
+          "We provide interior painting, exterior painting, residential painting, commercial painting, cabinet refinishing, trim work, and related surface preparation.",
       },
       {
-        question: "What services does your Sanger painting company offer?",
+        question: "Are your Sanger painters licensed and insured?",
         answer:
-          "We offer residential painting, commercial painting, interior painting, exterior painting, cabinet refinishing, and free consultations.",
+          "Yes. M5 Painting is licensed, bonded, and insured so homeowners and businesses can hire with confidence.",
       },
     ],
     relatedSlugs: [
-      "central-valley-painting-company",
       "residential-painting",
-      "painting-company",
+      "interior-painting",
+      "exterior-painting",
     ],
-    serviceName: "Painting Services",
-    ogImageAlt: "M5 Painting — Sanger painting company crew on site",
+    serviceName: "Sanger Painting Services",
+    ogImageAlt: "M5 Painting crew completing a painting project in Sanger, California",
   },
   {
     slug: "central-valley-painting-company",
@@ -314,7 +318,7 @@ export const SEO_PAGES: SeoPage[] = [
       },
       {
         heading: "Homes and businesses across the Valley",
-        body: "We’re set up for house painters’ residential work and commercial painting scopes alike — so property owners don’t need two different contractors when their portfolio spans the Central Valley.",
+        body: "We’re set up for residential work and commercial painting scopes alike, so property owners can work with one accountable painting company across the Central Valley.",
       },
     ],
     benefits: [
@@ -347,63 +351,9 @@ export const SEO_PAGES: SeoPage[] = [
       "commercial-painting",
       "residential-painting",
     ],
-    serviceName: "Painting Services",
+    serviceName: "Central Valley Painting Services",
     ogImageAlt:
       "Central Valley painting company — M5 Painting at work",
-  },
-  {
-    slug: "painting-company",
-    keyword: "painting company",
-    title:
-      "Painting Company in Sanger & Central Valley | M5 Painting",
-    description:
-      "M5 Painting is a trusted painting company in Sanger serving the Central Valley. Residential painting, commercial painting, interior painting — free estimates.",
-    headline: "A painting company",
-    highlight: "built on craft and trust.",
-    intro:
-      "When people search for a painting company in the Central Valley, they want proof of care — not empty slogans. M5 Painting is a family-owned Sanger painting company delivering residential painting, commercial painting, and interior painting with prep, polish, and a handshake you can count on.",
-    sections: [
-      {
-        heading: "Full-service painting company",
-        body: "Interior painting, exterior painting, residential painting, and commercial painting under one roof. One point of contact, one accountable crew, and finishes that look sharp up close.",
-      },
-      {
-        heading: "How to get started",
-        body: "Call or send a message for a free estimate. We’ll walk the job, talk through scope and colors, and give you a clear written quote — the straightforward way a good painting company should work.",
-      },
-    ],
-    benefits: [
-      "Residential & commercial painting",
-      "Interior & exterior specialists",
-      "Sanger & Central Valley coverage",
-      "Licensed, bonded & insured",
-      "Color consultation available",
-      "Free estimates — no pressure",
-    ],
-    faqs: [
-      {
-        question: "What should I look for in a painting company?",
-        answer:
-          "Look for clear communication, proper prep, licensing and insurance, and real local reviews. M5 Painting is a Sanger-based painting company built around those standards.",
-      },
-      {
-        question: "Does your painting company offer free estimates?",
-        answer:
-          "Yes. We provide free on-site estimates for residential painting, commercial painting, and interior painting projects throughout the Central Valley.",
-      },
-      {
-        question: "Are you licensed and insured?",
-        answer:
-          "Yes. M5 Painting is licensed, bonded, and insured so homeowners and businesses can hire with confidence.",
-      },
-    ],
-    relatedSlugs: [
-      "residential-painting",
-      "commercial-painting",
-      "sanger-painting-company",
-    ],
-    serviceName: "Painting Services",
-    ogImageAlt: "M5 Painting — painting company serving the Central Valley",
   },
 ];
 

@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Phone, Check } from "lucide-react";
+import { Phone, Check, Star } from "lucide-react";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
+import { HeroCertifications } from "@/components/sections/certifications";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -10,22 +11,31 @@ import {
   type SeoPage,
 } from "@/lib/seo-pages";
 import { SITE_URL } from "@/lib/site";
-import type { SiteSettings, Certification } from "@/lib/content-types";
-import { defaultSiteSettings, defaultCertifications } from "@/lib/default-content";
+import type { SiteSettings, Certification, Review } from "@/lib/content-types";
+import {
+  defaultSiteSettings,
+  defaultCertifications,
+  defaultReviews,
+} from "@/lib/default-content";
 
 type SeoLandingProps = {
   page: SeoPage;
   settings?: SiteSettings | null;
   certifications?: Certification[] | null;
+  reviews?: Review[] | null;
 };
 
 export function SeoLanding({
   page,
   settings: settingsProp,
   certifications: certificationsProp,
+  reviews: reviewsProp,
 }: SeoLandingProps) {
   const settings = settingsProp ?? defaultSiteSettings;
   const certifications = certificationsProp ?? defaultCertifications;
+  const reviews = (reviewsProp ?? defaultReviews)
+    .filter((review) => review.enabled !== false)
+    .slice(0, 3);
   const related = getRelatedSeoPages(page.relatedSlugs);
   const phoneHref = settings.phone.replace(/\D/g, "");
   const pageUrl = `${SITE_URL}/${page.slug}`;
@@ -127,14 +137,14 @@ export function SeoLanding({
               {page.intro}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a href="#contact-cta" data-track={`seo-${page.slug}-estimate`}>
+              <Link href="/#contact" data-track={`seo-${page.slug}-estimate`}>
                 <Button
                   size="lg"
                   className="h-auto bg-brand-blue px-7 py-3.5 text-label tracking-widest text-on-dark hover:bg-brand-electric"
                 >
                   Get a Free Estimate
                 </Button>
-              </a>
+              </Link>
               <a href={`tel:${phoneHref}`} data-track={`seo-${page.slug}-phone`}>
                 <Button
                   size="lg"
@@ -145,6 +155,9 @@ export function SeoLanding({
                   {settings.phone}
                 </Button>
               </a>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 border-t border-white/10 pt-6">
+              <HeroCertifications certifications={certifications} />
             </div>
           </div>
         </section>
@@ -196,7 +209,46 @@ export function SeoLanding({
           </div>
         </section>
 
-        <section className="border-y border-brand-blue/20 bg-background py-16 sm:py-20">
+        {reviews.length > 0 ? (
+          <section className="border-y border-brand-blue/20 bg-background py-16 sm:py-20">
+            <div className="mx-auto max-w-6xl px-5 sm:px-6">
+              <p className="text-label-light">Real customer feedback</p>
+              <h2 className="mt-2 text-headline font-bold text-foreground">
+                What customers say about M5 Painting
+              </h2>
+              <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
+              <div className="mt-10 grid gap-5 md:grid-cols-3">
+                {reviews.map((review) => (
+                  <article
+                    key={review._id}
+                    className="rounded-xl border border-border bg-card p-6 shadow-sm"
+                  >
+                    <div className="flex gap-1" aria-label={`${review.rating ?? 5} out of 5 stars`}>
+                      {Array.from({ length: review.rating ?? 5 }).map((_, index) => (
+                        <Star
+                          key={index}
+                          className="h-4 w-4 fill-current text-brand-blue"
+                          aria-hidden
+                        />
+                      ))}
+                    </div>
+                    <blockquote className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                      “{review.text}”
+                    </blockquote>
+                    <p className="mt-5 text-sm font-bold text-foreground">
+                      {review.author}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {review.source} · {review.date}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        <section className="bg-background py-16 sm:py-20">
           <div className="mx-auto max-w-6xl px-5 sm:px-6">
             <h2 className="text-headline font-bold text-foreground">
               Frequently asked questions
@@ -216,7 +268,7 @@ export function SeoLanding({
         </section>
 
         {related.length > 0 ? (
-          <section className="py-16 sm:py-20">
+          <section className="border-t border-brand-blue/15 py-16 sm:py-20">
             <div className="mx-auto max-w-6xl px-5 sm:px-6">
               <h2 className="text-headline font-bold text-foreground">
                 Related painting services
@@ -262,7 +314,7 @@ export function SeoLanding({
                   size="lg"
                   className="h-auto bg-brand-blue px-7 py-3.5 text-label tracking-widest text-on-dark hover:bg-brand-electric"
                 >
-                  Request Estimate
+                  Get a Free Estimate
                 </Button>
               </Link>
               <a href={`tel:${phoneHref}`} data-track={`seo-${page.slug}-call`}>

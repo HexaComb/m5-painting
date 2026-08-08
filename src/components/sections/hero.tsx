@@ -77,15 +77,14 @@ export function Hero({
         />
       </div>
 
-      <span className="sr-only">
-        M5 Painting is a Sanger painting company offering residential painting, commercial painting, and interior painting across the Central Valley.
-      </span>
-
       <div className="relative z-[2] mx-auto max-w-6xl px-5 pb-24 sm:px-6 sm:pb-28 md:pb-32">
         <div className="py-14 sm:py-20 md:py-24 lg:py-28">
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-7">
               <Reveal>
+                <p className="mb-3 text-label text-brand-electric">
+                  Sanger, CA · Residential & Commercial Painting
+                </p>
                 <h1 className="text-display font-extrabold text-white">
                   {hero.headline}
                   <br />

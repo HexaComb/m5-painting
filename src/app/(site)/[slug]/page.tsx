@@ -6,6 +6,7 @@ import type { SiteContent } from "@/lib/content-types";
 import {
   defaultSiteSettings,
   defaultCertifications,
+  defaultReviews,
 } from "@/lib/default-content";
 
 let buildContent: SiteContent | null = null;
@@ -40,7 +41,8 @@ export async function generateMetadata({
     description: page.description,
     keywords: [
       page.keyword,
-      "painting company",
+      "painters in Sanger CA",
+      "Sanger painters",
       "Sanger painting company",
       "Central Valley painting company",
       "residential painting",
@@ -93,6 +95,7 @@ export default async function SeoPageRoute({ params }: PageProps) {
       page={page}
       settings={buildContent?.siteSettings ?? defaultSiteSettings}
       certifications={buildContent?.certifications ?? defaultCertifications}
+      reviews={buildContent?.reviews ?? defaultReviews}
     />
   );
 }

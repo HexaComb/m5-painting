@@ -27,7 +27,7 @@ export const defaultSiteSettings: SiteSettings = {
   email: "m5paintingco@gmail.com",
   address: "Sanger, CA · Central Valley",
   metaDescription:
-    "M5 Painting is a family-owned painting company in Sanger serving the Central Valley. Residential painting, commercial painting, and interior painting — free estimates.",
+    "M5 Painting is a family-owned team of painters in Sanger, CA serving the Central Valley with residential, commercial, interior, and exterior painting. Free estimates.",
 };
 
 export const defaultHeroContent: HeroContent = {
