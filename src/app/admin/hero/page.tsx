@@ -321,7 +321,7 @@ export default function HeroPage() {
                 setForm((f) => ({ ...f, bodyText: e.target.value }))
               }
               rows={3}
-              placeholder="We're a family-run crew..."
+              placeholder="Local Sanger painters for homes and businesses..."
             />
           </div>
 
