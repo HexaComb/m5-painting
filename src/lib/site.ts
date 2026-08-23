@@ -11,7 +11,7 @@ export const SITE_URL = configuredSiteUrl
 export const BUSINESS_NAME = "M5 Painting";
 
 export const DEFAULT_META_DESCRIPTION =
-  "M5 Painting is a family-owned team of painters in Sanger, CA serving the Central Valley with residential, commercial, interior, and exterior painting. Free estimates.";
+  "Sanger painters for homes and businesses across the Central Valley. Family-owned M5 Painting — residential, commercial, interior, and exterior painting. Free estimates.";
 
 export const PRIMARY_KEYWORDS = [
   "painters in Sanger CA",

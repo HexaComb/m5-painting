@@ -25,7 +25,7 @@ const serviceHrefByTitle: Record<string, string> = {
   "Interior Painting": "/interior-painting",
   "Exterior Painting": "/exterior-painting",
   "Commercial Painting": "/commercial-painting",
-  "Free Consultation": "/#contact",
+  "Free Consultation": "/contact",
 };
 
 export function Services({ initialServices }: { initialServices?: Service[] | null }) {

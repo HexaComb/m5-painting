@@ -238,8 +238,13 @@ export default function SettingsPage() {
             <Input
               value={form.address}
               onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))}
-              placeholder="Sanger, CA · Central Valley"
+              placeholder="123 Main St, Sanger, CA 93657 · Central Valley"
             />
+            <p className="text-xs text-muted-foreground">
+              Use a full street address and ZIP when you have one — it feeds
+              LocalBusiness schema for Google. City-only still works
+              (e.g. Sanger, CA · Central Valley).
+            </p>
           </div>
           <div className="space-y-2">
             <Label>Meta Description</Label>
@@ -247,7 +252,7 @@ export default function SettingsPage() {
               value={form.metaDescription}
               onChange={(e) => setForm((f) => ({ ...f, metaDescription: e.target.value }))}
               rows={3}
-              placeholder="SEO description for search engines..."
+              placeholder="Sanger painters for homes and businesses across the Central Valley..."
             />
             <p className="text-xs text-muted-foreground">
               Shown in Google search results. Keep it under 160 characters.

@@ -10,19 +10,19 @@ import type { SiteSettings, Certification } from "@/lib/content-types";
 import { defaultCertifications } from "@/lib/default-content";
 
 const navLinks = [
-  { label: "Services", href: "/#services" },
+  { label: "Services", href: "/services" },
   { label: "Our Work", href: "/#projects" },
   { label: "About", href: "/#about" },
   { label: "Reviews", href: "/#reviews" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const serviceLinks = [
-  { label: "Residential Painting", href: "/residential-painting" },
+  { label: "House Painters / Residential", href: "/residential-painting" },
   { label: "Commercial Painting", href: "/commercial-painting" },
   { label: "Interior Painting", href: "/interior-painting" },
   { label: "Exterior Painting", href: "/exterior-painting" },
-  { label: "Sanger Painting Company", href: "/sanger-painting-company" },
+  { label: "Sanger Painters", href: "/sanger-painting-company" },
   {
     label: "Central Valley Painting",
     href: "/central-valley-painting-company",

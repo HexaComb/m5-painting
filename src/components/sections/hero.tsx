@@ -83,7 +83,7 @@ export function Hero({
             <div className="lg:col-span-7">
               <Reveal>
                 <p className="mb-3 text-label text-brand-electric">
-                  Sanger, CA · Residential & Commercial Painting
+                  Sanger, CA · Family-Owned
                 </p>
                 <h1 className="text-display font-extrabold text-white">
                   {hero.headline}

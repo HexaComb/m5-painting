@@ -10,7 +10,7 @@ import { api } from "../../../convex/_generated/api";
 import type { SiteSettings } from "@/lib/content-types";
 
 const navLinks = [
-  { label: "Services", href: "/#services", track: "nav-services" },
+  { label: "Services", href: "/services", track: "nav-services" },
   { label: "Our Work", href: "/#projects", track: "nav-work" },
   { label: "About", href: "/#about", track: "nav-about" },
   { label: "Reviews", href: "/#reviews", track: "nav-reviews" },
