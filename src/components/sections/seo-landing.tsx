@@ -17,6 +17,11 @@ import {
   defaultCertifications,
   defaultReviews,
 } from "@/lib/default-content";
+import {
+  buildAggregateRatingJsonLd,
+  buildReviewJsonLdNodes,
+  parseBusinessAddress,
+} from "@/lib/local-business-jsonld";
 
 type SeoLandingProps = {
   page: SeoPage;
@@ -39,6 +44,8 @@ export function SeoLanding({
   const related = getRelatedSeoPages(page.relatedSlugs);
   const phoneHref = settings.phone.replace(/\D/g, "");
   const pageUrl = `${SITE_URL}/${page.slug}`;
+  const aggregateRating = buildAggregateRatingJsonLd(reviews);
+  const reviewNodes = buildReviewJsonLdNodes(reviews);
 
   const serviceJsonLd = {
     "@context": "https://schema.org",
@@ -54,18 +61,15 @@ export function SeoLanding({
       telephone: settings.phone,
       email: settings.email,
       url: SITE_URL,
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: "Sanger",
-        addressRegion: "CA",
-        addressCountry: "US",
-      },
+      address: parseBusinessAddress(settings.address),
       areaServed: [
         { "@type": "City", name: "Sanger" },
         { "@type": "City", name: "Fresno" },
         { "@type": "City", name: "Clovis" },
         { "@type": "AdministrativeArea", name: "Central Valley, California" },
       ],
+      ...(aggregateRating ? { aggregateRating } : {}),
+      ...(reviewNodes.length > 0 ? { review: reviewNodes } : {}),
     },
     areaServed: [
       { "@type": "City", name: "Sanger" },
@@ -137,7 +141,7 @@ export function SeoLanding({
               {page.intro}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link href="/#contact" data-track={`seo-${page.slug}-estimate`}>
+              <Link href="/contact" data-track={`seo-${page.slug}-estimate`}>
                 <Button
                   size="lg"
                   className="h-auto bg-brand-blue px-7 py-3.5 text-label tracking-widest text-on-dark hover:bg-brand-electric"
@@ -198,7 +202,7 @@ export function SeoLanding({
               </div>
               <div className="relative mt-6 overflow-hidden rounded-xl">
                 <Image
-                  src="/images/hero-banner.webp"
+                  src={page.imageSrc ?? "/images/hero-banner.webp"}
                   alt={page.ogImageAlt}
                   width={1200}
                   height={630}
@@ -309,7 +313,7 @@ export function SeoLanding({
               Valley. We’ll walk the job and send a clear written quote.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-              <Link href="/#contact" data-track={`seo-${page.slug}-contact`}>
+              <Link href="/contact" data-track={`seo-${page.slug}-contact`}>
                 <Button
                   size="lg"
                   className="h-auto bg-brand-blue px-7 py-3.5 text-label tracking-widest text-on-dark hover:bg-brand-electric"
