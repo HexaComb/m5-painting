@@ -367,11 +367,11 @@ export const SEO_PAGES: SeoPage[] = [
   },
   {
     slug: "central-valley-painting-company",
-    keyword: "Central Valley painting company",
-    title: "Central Valley Painting Company | Fresno, Clovis & Sanger | M5",
+    keyword: "Central Valley California painting company",
+    title: "Central Valley California Painting Company | Fresno, Clovis & Sanger | M5",
     description:
-      "Central Valley painting company based in Sanger — residential and commercial painting in Fresno, Clovis, Selma, Reedley, and nearby cities. Free estimates from M5 Painting.",
-    headline: "Central Valley painters",
+      "Central Valley, California painting company based in Sanger — residential and commercial painting in Fresno, Clovis, Selma, Reedley, and nearby cities. Free estimates from M5 Painting.",
+    headline: "Central Valley, California painters",
     highlight: "from a Sanger crew.",
     intro:
       "M5 Painting is a Central Valley painting company homeowners and businesses call when they want careful craftsmanship without the runaround. Based in Sanger, we bring residential and commercial painting to Fresno, Clovis, Selma, Reedley, Fowler, and nearby communities.",

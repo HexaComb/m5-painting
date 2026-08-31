@@ -60,7 +60,7 @@ const websiteJsonLd = {
   url: SITE_URL,
   description:
     settings.metaDescription ||
-    "Sanger painters from M5 Painting — residential and commercial painting across the Central Valley.",
+    "Sanger painters from M5 Painting — residential and commercial painting across the Central Valley, California.",
   publisher: { "@id": `${SITE_URL}/#business` },
   inLanguage: "en-US",
 };

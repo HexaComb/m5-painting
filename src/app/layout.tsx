@@ -82,7 +82,7 @@ export const metadata: Metadata = {
         url: "/images/hero-banner.webp",
         width: 1200,
         height: 630,
-        alt: "Sanger painters from M5 Painting — residential and commercial painting in the Central Valley",
+        alt: "Sanger painters from M5 Painting — residential and commercial painting in the Central Valley, California",
       },
     ],
   },
