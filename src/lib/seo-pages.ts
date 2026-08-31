@@ -368,7 +368,7 @@ export const SEO_PAGES: SeoPage[] = [
   {
     slug: "central-valley-painting-company",
     keyword: "Central Valley California painting company",
-    title: "Central Valley California Painting Company | Fresno, Clovis & Sanger | M5",
+    title: "Central Valley, California Painting Company | Fresno, Clovis & Sanger | M5",
     description:
       "Central Valley, California painting company based in Sanger — residential and commercial painting in Fresno, Clovis, Selma, Reedley, and nearby cities. Free estimates from M5 Painting.",
     headline: "Central Valley, California painters",
