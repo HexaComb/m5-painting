@@ -156,10 +156,10 @@ export function buildLocalBusinessJsonLd(
     "@type": ["HomeAndConstructionBusiness", "LocalBusiness"],
     "@id": `${SITE_URL}/#business`,
     name: settings.businessName,
-    alternateName: ["M5 Painting Company", "M5 Painting Central Valley"],
+    alternateName: ["M5 Painting Company", "M5 Painting Central Valley, California"],
     description:
       settings.metaDescription ||
-      "Sanger painters for homes and businesses across the Central Valley. Family-owned M5 Painting — residential, commercial, interior, and exterior painting.",
+      "Sanger painters for homes and businesses across the Central Valley, California. Family-owned M5 Painting — residential, commercial, interior, and exterior painting.",
     url: SITE_URL,
     telephone: settings.phone,
     email: settings.email,
