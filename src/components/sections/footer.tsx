@@ -18,15 +18,12 @@ const navLinks = [
 ];
 
 const serviceLinks = [
-  { label: "House Painters / Residential", href: "/residential-painting" },
-  { label: "Commercial Painting", href: "/commercial-painting" },
-  { label: "Interior Painting", href: "/interior-painting" },
-  { label: "Exterior Painting", href: "/exterior-painting" },
-  { label: "Sanger Painters", href: "/sanger-painting-company" },
-  {
-    label: "Central Valley Painting",
-    href: "/central-valley-painting-company",
-  },
+  { label: "Residential Painting", href: "/residential-painting", track: "footer-residential-painting" },
+  { label: "Commercial Painting", href: "/commercial-painting", track: "footer-commercial-painting" },
+  { label: "Interior Painting", href: "/interior-painting", track: "footer-interior-painting" },
+  { label: "Exterior Painting", href: "/exterior-painting", track: "footer-exterior-painting" },
+  { label: "Sanger Painting Services", href: "/sanger-painting-company", track: "footer-sanger-painting" },
+  { label: "Central Valley Painting Services", href: "/central-valley-painting-company", track: "footer-central-valley-painting" },
 ];
 
 export function Footer({
@@ -96,6 +93,7 @@ export function Footer({
                 <a
                   key={link.href}
                   href={link.href}
+                  data-track={link.track}
                   className="text-sm text-on-dark-secondary transition-colors hover:text-on-dark"
                 >
                   {link.label}
