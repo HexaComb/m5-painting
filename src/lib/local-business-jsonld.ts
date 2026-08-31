@@ -143,7 +143,12 @@ export function buildLocalBusinessJsonLd(
   const instagramUrl = settings.instagramUsername
     ? `https://www.instagram.com/${settings.instagramUsername}/`
     : undefined;
-  const sameAsLinks = [googleMapsUrl, instagramUrl].filter(
+
+  // Verified external business profiles
+  const bbbUrl = "https://www.bbb.org/us/ca/sanger/profile/painting-contractors/m5-painting-1126-1000160005";
+  const angiUrl = "https://www.angi.com/companylist/us/ca/sanger/m5-painting-reviews-1.htm";
+
+  const sameAsLinks = [googleMapsUrl, instagramUrl, bbbUrl, angiUrl].filter(
     (url): url is string => Boolean(url),
   );
   const schemaReviews = selectReviewsForJsonLd(reviews);
