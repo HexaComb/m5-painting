@@ -92,19 +92,7 @@ export default function OurProcessPage() {
       <Header initialSettings={settings} />
       <main>
         <section className="bg-background pt-[4.25rem] lg:pt-[4.75rem]">
-          <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6 sm:py-16">
-            <div className="mb-8">
-              <p className="text-label-light">Sanger, CA · Family-Owned</p>
-              <h1 className="mt-2 text-headline font-bold text-foreground">
-                Our Process
-              </h1>
-              <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
-              <p className="mt-4 text-body-lg text-muted-foreground">
-                See how easy it is to work with M5 Painting from estimate to
-                final walkthrough.
-              </p>
-            </div>
-
+          <div className="mx-auto max-w-4xl px-5 py-8 sm:px-6 sm:py-12">
             <div className="aspect-video overflow-hidden rounded-xl shadow-xl ring-1 ring-border">
               <video
                 controls
@@ -117,79 +105,76 @@ export default function OurProcessPage() {
               </video>
             </div>
 
-            <div className="mt-12 space-y-6">
-              <div>
-                <h2 className="text-headline font-bold text-foreground">
-                  Why M5 Painting makes it easy
-                </h2>
-                <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
-              </div>
-
-              <p className="text-body text-muted-foreground">
+            <div className="mt-8 sm:mt-12">
+              <h1 className="text-headline font-bold text-foreground">
+                Our Process — Easy From Start to Finish
+              </h1>
+              <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
+              <p className="mt-4 text-body-lg text-muted-foreground">
                 At M5 Painting, we know that hiring painters shouldn&apos;t feel
                 complicated. From the first estimate to the final walkthrough,
                 our family-owned Sanger crew makes the process straightforward,
                 respectful, and reliable.
               </p>
+            </div>
 
-              <div className="grid gap-8 sm:grid-cols-2">
-                <div>
-                  <h3 className="text-body-lg font-semibold text-foreground">
-                    Clear estimates
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    You&apos;ll get a written scope covering surfaces, prep, coats,
-                    and timeline before work starts. No hidden fees, no
-                    pressure sales.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-body-lg font-semibold text-foreground">
-                    Careful prep
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    We patch, sand, caulk, and prime where it matters so color
-                    goes on even and stays put through Valley heat and dust.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-body-lg font-semibold text-foreground">
-                    Respectful crews
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    We protect your floors and belongings, keep work areas
-                    clean, and communicate throughout the project.
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-body-lg font-semibold text-foreground">
-                    Built for the Central Valley
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    Our finishes are chosen to handle Sanger, Fresno, and
-                    Clovis weather — sun, dust, and temperature swings included.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-12 rounded-lg border border-brand-blue/20 bg-brand-blue/5 p-6 sm:p-8">
+            <div className="mt-10 grid gap-8 sm:grid-cols-2">
+              <div>
                 <h3 className="text-body-lg font-semibold text-foreground">
-                  Ready to get started?
+                  Clear estimates
                 </h3>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  Get a free estimate for your residential or commercial
-                  painting project in the Central Valley.
+                  You&apos;ll get a written scope covering surfaces, prep, coats,
+                  and timeline before work starts. No hidden fees, no
+                  pressure sales.
                 </p>
-                <Link
-                  href="/contact"
-                  className="mt-4 inline-block rounded-lg bg-brand-blue px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-blue/90"
-                >
-                  Request Free Estimate
-                </Link>
               </div>
+
+              <div>
+                <h3 className="text-body-lg font-semibold text-foreground">
+                  Careful prep
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  We patch, sand, caulk, and prime where it matters so color
+                  goes on even and stays put through Valley heat and dust.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-body-lg font-semibold text-foreground">
+                  Respectful crews
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  We protect your floors and belongings, keep work areas
+                  clean, and communicate throughout the project.
+                </p>
+              </div>
+
+              <div>
+                <h3 className="text-body-lg font-semibold text-foreground">
+                  Built for the Central Valley
+                </h3>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Our finishes are chosen to handle Sanger, Fresno, and
+                  Clovis weather — sun, dust, and temperature swings included.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-12 rounded-lg border border-brand-blue/20 bg-brand-blue/5 p-6 sm:p-8">
+              <h3 className="text-body-lg font-semibold text-foreground">
+                Ready to get started?
+              </h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Get a free estimate for your residential or commercial
+                painting project in the Central Valley.
+              </p>
+              <Link
+                href="/contact"
+                className="mt-4 inline-block rounded-lg bg-brand-blue px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-blue/90"
+              >
+                Request Free Estimate
+              </Link>
             </div>
           </div>
         </section>

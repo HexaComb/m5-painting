@@ -112,7 +112,14 @@ export default function ServicesPage() {
               <p className="mt-6 max-w-2xl text-lg leading-relaxed text-on-dark-secondary sm:text-xl">
                 From house painters in Sanger to commercial crews across the
                 Central Valley — pick a service to learn more, or request a free
-                estimate.
+                estimate.{" "}
+                <Link
+                  href="/our-process"
+                  className="font-semibold text-brand-electric underline-offset-2 transition-colors hover:text-white hover:underline"
+                >
+                  See how easy our process is
+                </Link>
+                .
               </p>
               <div className="mt-8">
                 <Link href="/contact" data-track="services-page-estimate">

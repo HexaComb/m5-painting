@@ -46,14 +46,7 @@ export function Services({ initialServices }: { initialServices?: Service[] | nu
             <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
             <p className="mt-5 text-body-lg text-muted-foreground">
               From interior painting to full commercial projects, our Sanger
-              painting company brings Central Valley homes and businesses to life.{" "}
-              <Link
-                href="/our-process"
-                className="font-semibold text-brand-blue underline-offset-2 transition-colors hover:text-brand-blue/80 hover:underline"
-              >
-                See how easy our process is
-              </Link>
-              .
+              painting company brings Central Valley homes and businesses to life.
             </p>
           </div>
         </Reveal>
