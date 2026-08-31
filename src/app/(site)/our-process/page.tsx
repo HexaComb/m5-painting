@@ -34,7 +34,9 @@ const videoJsonLd = {
 };
 
 export const metadata: Metadata = {
-  title: "Our Process — Easy Painting From Start to Finish | M5 Painting",
+  title: {
+    absolute: "Our Process — Easy Painting From Start to Finish | M5 Painting",
+  },
   description:
     "Watch how M5 Painting makes residential and commercial painting easy for homeowners and businesses in Sanger and the Central Valley. Clear estimates, careful prep, and professional results.",
   keywords: [
