@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
@@ -173,7 +173,7 @@ export default function OurProcessPage() {
               </div>
 
               <p className="text-body text-muted-foreground">
-                At M5 Painting, we know that hiring painters shouldn't feel
+                At M5 Painting, we know that hiring painters shouldn&apos;t feel
                 complicated. From the first estimate to the final walkthrough,
                 our family-owned Sanger crew makes the process straightforward,
                 respectful, and reliable.
@@ -185,7 +185,7 @@ export default function OurProcessPage() {
                     Clear estimates
                   </h3>
                   <p className="mt-2 text-sm text-muted-foreground">
-                    You'll get a written scope covering surfaces, prep, coats,
+                    You&apos;ll get a written scope covering surfaces, prep, coats,
                     and timeline before work starts. No hidden fees, no
                     pressure sales.
                   </p>
@@ -230,12 +230,12 @@ export default function OurProcessPage() {
                   Get a free estimate for your residential or commercial
                   painting project in the Central Valley.
                 </p>
-                <a
+                <Link
                   href="/contact"
                   className="mt-4 inline-block rounded-lg bg-brand-blue px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-blue/90"
                 >
                   Request Free Estimate
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -255,7 +255,7 @@ export default function OurProcessPage() {
             </p>
             <ul className="mt-8 grid gap-3 sm:grid-cols-2">
               <li>
-                <a
+                <Link
                   href="/residential-painting"
                   className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
                 >
@@ -263,10 +263,10 @@ export default function OurProcessPage() {
                   <span className="mt-1 block text-xs font-normal text-muted-foreground">
                     House painters for homes
                   </span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/commercial-painting"
                   className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
                 >
@@ -274,10 +274,10 @@ export default function OurProcessPage() {
                   <span className="mt-1 block text-xs font-normal text-muted-foreground">
                     Businesses & multi-family
                   </span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/interior-painting"
                   className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
                 >
@@ -285,10 +285,10 @@ export default function OurProcessPage() {
                   <span className="mt-1 block text-xs font-normal text-muted-foreground">
                     Walls, trim, ceilings & cabinets
                   </span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a
+                <Link
                   href="/exterior-painting"
                   className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
                 >
@@ -296,7 +296,7 @@ export default function OurProcessPage() {
                   <span className="mt-1 block text-xs font-normal text-muted-foreground">
                     Stucco, siding & fences
                   </span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
