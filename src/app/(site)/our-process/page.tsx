@@ -21,18 +21,17 @@ try {
 
 const pageUrl = `${SITE_URL}/our-process`;
 const videoUrl = `${SITE_URL}/videos/m5easyprocess-720p.mp4`;
-const thumbnailUrl = `${SITE_URL}/images/hero-banner.webp`;
+const thumbnailUrl = `${SITE_URL}/images/process-video-thumbnail.webp`;
 
 const videoJsonLd = {
   "@context": "https://schema.org",
   "@type": "VideoObject",
   name: "The M5 Painting Process — Easy, Reliable, Professional",
   description:
-    "See how M5 Painting makes your project easy from estimate to final walkthrough. Our family-owned Sanger crew delivers residential and commercial painting with careful prep, clear communication, and finishes built for the Central Valley.",
+    "See how M5 Painting makes your project easy from estimate to final walkthrough. Our family-owned Sanger crew delivers residential and commercial painting with careful prep, clear communication, and finishes built for the Central Valley, California.",
   thumbnailUrl,
   contentUrl: videoUrl,
-  uploadDate: "2024-01-01T00:00:00Z",
-  duration: "PT1M30S",
+  uploadDate: "2026-06-03T07:56:07Z",
 };
 
 export const metadata: Metadata = {
@@ -62,8 +61,8 @@ export const metadata: Metadata = {
     images: [
       {
         url: thumbnailUrl,
-        width: 1200,
-        height: 630,
+        width: 720,
+        height: 1280,
         alt: "M5 Painting process — easy, reliable, professional",
       },
     ],
@@ -92,66 +91,20 @@ export default function OurProcessPage() {
       <JsonLd data={videoJsonLd} />
       <Header initialSettings={settings} />
       <main>
-        <section className="brand-surface-dark relative overflow-hidden pt-[4.25rem] lg:pt-[4.75rem]">
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -right-20 top-1/4 h-72 w-[min(90vw,520px)] brand-swoosh"
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute -left-32 bottom-0 h-48 w-80 rounded-full bg-brand-electric/20 blur-3xl"
-          />
+        <section className="bg-background pt-[4.25rem] lg:pt-[4.75rem]">
+          <div className="mx-auto max-w-4xl px-5 py-12 sm:px-6 sm:py-16">
+            <div className="mb-8">
+              <p className="text-label-light">Sanger, CA · Family-Owned</p>
+              <h1 className="mt-2 text-headline font-bold text-foreground">
+                Our Process
+              </h1>
+              <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
+              <p className="mt-4 text-body-lg text-muted-foreground">
+                See how easy it is to work with M5 Painting from estimate to
+                final walkthrough.
+              </p>
+            </div>
 
-          <div
-            className="absolute inset-0 z-0 opacity-[0.04]"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='18' r='1.2' fill='white'/%3E%3Ccircle cx='48' cy='8' r='0.8' fill='white'/%3E%3Ccircle cx='78' cy='42' r='1' fill='white'/%3E%3C/svg%3E")`,
-            }}
-          />
-
-          <div className="relative z-[2] mx-auto max-w-4xl px-5 py-14 sm:px-6 sm:py-20 md:py-24">
-            <p className="mb-3 text-label text-brand-electric">
-              Sanger, CA · Family-Owned
-            </p>
-            <h1 className="text-display font-extrabold text-white">
-              Our Process
-              <br />
-              <span className="relative inline-block text-brand-electric">
-                Easy from start to finish.
-                <svg
-                  viewBox="0 0 300 12"
-                  preserveAspectRatio="none"
-                  className="absolute -bottom-1 left-0 h-2 w-full"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M3,8 C30,3 60,7 90,5 C120,3 150,8 180,5 C210,3 240,8 270,5 C285,4 294,7 297,6"
-                    stroke="url(#process-underline)"
-                    strokeWidth="3.5"
-                    strokeLinecap="round"
-                    fill="none"
-                    opacity="0.85"
-                  />
-                  <defs>
-                    <linearGradient
-                      id="process-underline"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="0%"
-                    >
-                      <stop offset="0%" stopColor="oklch(0.64 0.16 248)" />
-                      <stop offset="100%" stopColor="oklch(0.92 0.01 262)" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </span>
-            </h1>
-          </div>
-        </section>
-
-        <section className="bg-background py-16 sm:py-20 md:py-24">
-          <div className="mx-auto max-w-4xl px-5 sm:px-6">
             <div className="aspect-video overflow-hidden rounded-xl shadow-xl ring-1 ring-border">
               <video
                 controls

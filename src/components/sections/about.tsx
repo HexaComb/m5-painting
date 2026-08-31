@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
@@ -159,16 +158,6 @@ export function About({
                     {p}
                   </p>
                 ))}
-                <p className="text-body-lg text-on-dark-secondary">
-                  Working with us is straightforward and stress-free.{" "}
-                  <Link
-                    href="/our-process"
-                    className="font-semibold text-brand-electric underline-offset-2 transition-colors hover:text-white hover:underline"
-                  >
-                    Watch how our process works
-                  </Link>
-                  .
-                </p>
               </div>
             </Reveal>
 
