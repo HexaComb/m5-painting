@@ -3,7 +3,6 @@ import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
-import { Separator } from "@/components/ui/separator";
 import { SITE_URL } from "@/lib/site";
 import type { SiteContent } from "@/lib/content-types";
 import {
@@ -176,67 +175,6 @@ export default function OurProcessPage() {
                 Request Free Estimate
               </Link>
             </div>
-          </div>
-        </section>
-
-        <Separator className="h-px bg-brand-blue/25" />
-
-        <section className="bg-surface py-14 sm:py-16">
-          <div className="mx-auto max-w-4xl px-5 sm:px-6">
-            <h2 className="text-headline font-bold text-foreground">
-              Our painting services
-            </h2>
-            <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
-            <p className="mt-4 text-muted-foreground">
-              M5 Painting serves homes and businesses across Sanger, Fresno,
-              Clovis, and the Central Valley.
-            </p>
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              <li>
-                <Link
-                  href="/residential-painting"
-                  className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
-                >
-                  Residential Painting
-                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                    House painters for homes
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/commercial-painting"
-                  className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
-                >
-                  Commercial Painting
-                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                    Businesses & multi-family
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/interior-painting"
-                  className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
-                >
-                  Interior Painting
-                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                    Walls, trim, ceilings & cabinets
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/exterior-painting"
-                  className="block rounded-lg border border-border px-4 py-3 text-sm font-semibold text-foreground transition-colors hover:border-brand-blue/40 hover:text-brand-blue"
-                >
-                  Exterior Painting
-                  <span className="mt-1 block text-xs font-normal text-muted-foreground">
-                    Stucco, siding & fences
-                  </span>
-                </Link>
-              </li>
-            </ul>
           </div>
         </section>
       </main>
