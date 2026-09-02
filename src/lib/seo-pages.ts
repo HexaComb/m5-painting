@@ -161,7 +161,7 @@ export const SEO_PAGES: SeoPage[] = [
     ],
     serviceName: "Commercial Painting",
     ogImageAlt:
-      "Commercial painting project completed by M5 Painting",
+      "Painted garage exterior by M5 Painting",
     imageSrc: "/images/project-shop.webp",
   },
   {
@@ -230,7 +230,7 @@ export const SEO_PAGES: SeoPage[] = [
     ],
     serviceName: "Interior Painting",
     ogImageAlt:
-      "Fresh interior painting with crisp trim by M5 Painting",
+      "Painted front door and trim by M5 Painting",
     imageSrc: "/images/project-door.webp",
   },
   {
@@ -362,7 +362,7 @@ export const SEO_PAGES: SeoPage[] = [
       "exterior-painting",
     ],
     serviceName: "Sanger Painters",
-    ogImageAlt: "Sanger painters from M5 Painting finishing a local home painting project",
+    ogImageAlt: "M5 Painting crew at work",
     imageSrc: "/images/team-collage.webp",
   },
   {
