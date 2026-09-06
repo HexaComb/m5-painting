@@ -307,38 +307,38 @@ export const SEO_PAGES: SeoPage[] = [
     keyword: "Sanger painters",
     title: "Sanger Painters | Painters in Sanger, CA | M5 Painting",
     description:
-      "Looking for painters in Sanger? M5 Painting is a family-owned crew of Sanger painters for homes and businesses — interior, exterior, residential, and commercial. Free estimate.",
+      "Need painters in Sanger, CA? Hire the local crew based in town. Interior and exterior painting for homes and businesses. Licensed. Free on-site estimate.",
     headline: "Sanger painters",
     highlight: "for homes & businesses.",
     intro:
-      "Searching for painters in Sanger? M5 Painting is a family-owned team serving local homeowners and businesses with careful prep, clean finishes, and clear communication from estimate to final walkthrough.",
+      "Need painters in Sanger? M5 Painting is the family-owned crew based in town. We handle interior and exterior work for homes and businesses, walk the job, and send a free written estimate.",
     sections: [
       {
-        heading: "Painters in Sanger who show up and finish the job",
+        heading: "A Sanger crew, not a call-center painter",
         body: "M5 Painting is based in Sanger, so your project is handled by a local crew — not a call center. We paint interiors and exteriors for houses, offices, retail, and multi-family properties, with the same standards we use on our neighbors’ jobs across town.",
       },
       {
         heading: "Interior and exterior painting across Sanger",
-        body: "Need a single room refreshed, a full-home interior, or an exterior that holds up in Central Valley sun? Our Sanger painters handle walls, ceilings, trim, cabinets, stucco, siding, fences, and decks. Prep, priming, and cleanup are part of every job — not add-ons.",
+        body: "Need a single room, a full-home interior, or an exterior that holds up in Central Valley sun? We handle walls, ceilings, trim, cabinets, stucco, siding, fences, and decks. Prep, priming, and cleanup are part of every job — not add-ons.",
       },
       {
-        heading: "Local neighborhoods and nearby cities",
-        body: "We regularly work with homeowners and businesses in Sanger and nearby communities including Fresno, Clovis, Reedley, Selma, and Fowler. If you’re comparing painters in Sanger, ask for a free on-site estimate — we’ll walk the job and send a clear written quote.",
+        heading: "Sanger and nearby cities",
+        body: "We regularly work with homeowners and businesses in Sanger and nearby communities including Fresno, Clovis, Reedley, Selma, and Fowler. Comparing painters in Sanger? Ask for a free on-site estimate — we’ll walk the job and send a clear written quote.",
       },
     ],
     benefits: [
-      "Local Sanger painters — family-owned",
+      "Based in Sanger — family-owned crew",
       "Interior & exterior painting",
       "Residential & commercial projects",
       "Licensed, bonded & insured",
       "Careful surface preparation",
-      "Free estimates in Sanger & nearby",
+      "Free on-site estimates in Sanger",
     ],
     faqs: [
       {
         question: "Are you painters in Sanger, CA?",
         answer:
-          "Yes. M5 Painting is a family-owned crew of Sanger painters serving homes and businesses in Sanger and nearby Central Valley communities.",
+          "Yes. M5 Painting is a family-owned crew based in Sanger. We paint homes and businesses here and in nearby Central Valley communities.",
       },
       {
         question: "How do I get a quote from Sanger painters?",
@@ -370,52 +370,52 @@ export const SEO_PAGES: SeoPage[] = [
     keyword: "Central Valley California painting company",
     title: "Central Valley, California Painting Company | Fresno, Clovis & Sanger | M5",
     description:
-      "Central Valley, California painting company based in Sanger — residential and commercial painting in Fresno, Clovis, Selma, Reedley, and nearby cities. Free estimates from M5 Painting.",
+      "Need a Central Valley, California painting company? Local Sanger crew for interior and exterior work in Fresno, Clovis, and nearby. Free on-site estimate.",
     headline: "Central Valley, California painters",
     highlight: "from a Sanger crew.",
     intro:
-      "M5 Painting is a Central Valley painting company homeowners and businesses call when they want careful craftsmanship without the runaround. Based in Sanger, we bring residential and commercial painting to Fresno, Clovis, Selma, Reedley, Fowler, and nearby communities.",
+      "Need painters across California’s Central Valley? M5 Painting is a family-owned crew based in Sanger. We handle interior and exterior work for homes and businesses in Fresno, Clovis, Selma, Reedley, Fowler, and nearby — one local crew, not a different contractor in every city.",
     sections: [
       {
         heading: "One local crew across Fresno, Clovis, and Sanger",
-        body: "You don’t need a different contractor for every city. Whether the job is in Sanger, Fresno, Clovis, or a nearby Central Valley town, you get the same family-owned crew, the same prep standards, and the same clear communication from estimate to final coat.",
+        body: "You don’t need a different contractor for every city. Sanger, Fresno, Clovis, or a nearby Central Valley town — same family-owned crew, same prep, same clear communication from estimate to final coat.",
       },
       {
-        heading: "Residential and commercial under one roof",
-        body: "House painters’ residential scopes and commercial painting for storefronts or multi-family properties can live in the same portfolio. Property owners who work across the Valley get one accountable painting company instead of juggling two vendors.",
+        heading: "Homes and businesses, one crew",
+        body: "We paint houses and we paint businesses — storefronts, offices, multi-family. If you have property in more than one Central Valley city, you get one crew instead of two vendors.",
       },
       {
         heading: "Cities we regularly serve",
-        body: "We’re based in Sanger and regularly paint in Fresno, Clovis, Reedley, Selma, and Fowler. If your project is elsewhere in the Central Valley, ask — we’re happy to confirm whether your city is in range before you schedule a walkthrough.",
+        body: "We’re based in Sanger and regularly paint in Fresno, Clovis, Reedley, Selma, and Fowler. If your project is elsewhere in California’s Central Valley, ask — we’ll confirm whether your city is in range before you schedule a walkthrough.",
       },
       {
         heading: "Why Central Valley weather changes the paint job",
-        body: "Sun, dust, and hot summers are hard on coatings. A Central Valley painting company should plan prep and product choice around that — not copy a coastal checklist. We estimate with local conditions in mind so interiors look even in bright light and exteriors hold color longer.",
+        body: "Sun, dust, and hot summers in California’s Central Valley are hard on coatings. Prep and product choice should match that — not a coastal checklist. We estimate with local conditions in mind so interiors look even in bright light and exteriors hold color longer.",
       },
     ],
     benefits: [
-      "Sanger · Fresno · Clovis · Selma & nearby",
+      "CA Central Valley — Sanger, Fresno, Clovis",
       "Residential painting specialists",
       "Commercial painting crews",
       "Interior & exterior expertise",
       "Licensed, bonded & insured",
-      "Free Central Valley estimates",
+      "Free on-site estimates",
     ],
     faqs: [
       {
         question: "Which Central Valley cities do you serve?",
         answer:
-          "We’re based in Sanger and regularly serve Fresno, Clovis, Reedley, Selma, Fowler, and surrounding Central Valley communities. Ask us if your city is in range — we’re happy to confirm.",
+          "We’re based in Sanger and regularly serve Fresno, Clovis, Reedley, Selma, Fowler, and nearby communities in California’s Central Valley. Ask if your city is in range — we’ll confirm.",
       },
       {
         question: "What makes M5 different from other painting companies?",
         answer:
-          "We’re family-owned, locally rooted, and focused on craftsmanship and communication. No call-center runaround — just a painting company that treats your property like a neighbor’s.",
+          "We’re family-owned and based in Sanger. No call-center runaround — a painting company that treats your property like a neighbor’s.",
       },
       {
         question: "Can one company handle both residential and commercial painting?",
         answer:
-          "Yes. M5 Painting handles residential painting and commercial painting across the Central Valley with the same attention to detail.",
+          "Yes. We handle residential painting and commercial painting across California’s Central Valley with the same attention to detail.",
       },
       {
         question: "Do you provide free estimates outside Sanger?",
