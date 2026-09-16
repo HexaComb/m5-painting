@@ -101,23 +101,23 @@ export const SEO_PAGES: SeoPage[] = [
     title:
       "Commercial Painting in the Central Valley | M5 Painting",
     description:
-      "Commercial painting for offices, retail, restaurants, multi-family, and more in Sanger and the Central Valley. Flexible scheduling, durable coatings, free estimates.",
+      "Need commercial painting in Sanger, CA? Central Valley crew for offices, retail, restaurants & multi-family. We work around your hours. Free on-site estimate.",
     headline: "Commercial painting",
     highlight: "around your business hours.",
     intro:
-      "M5 Painting delivers commercial painting for Central Valley businesses that need clean results with minimal disruption. Offices, retail, restaurants, multi-family housing, and light industrial spaces — planned around your customers and tenants.",
+      "Need commercial painting in Sanger or the Central Valley? M5 Painting is a local crew for offices, retail, restaurants, and multi-family. We plan around your hours, walk the job, and send a free written estimate.",
     sections: [
       {
         heading: "Scheduled so your doors stay open",
-        body: "Daytime crews don’t work for every business. We plan commercial painting around your hours, deliveries, and tenants. Evening and weekend windows are available when a daytime crew would interrupt operations or hurt walk-in traffic.",
+        body: "Daytime crews don’t work for every business. We plan commercial painting around your hours, deliveries, and tenants. Evening and weekend windows when a daytime crew would interrupt operations or walk-in traffic.",
       },
       {
         heading: "Offices, retail, restaurants, and multi-family",
-        body: "Storefronts need crisp curb appeal. Offices need quiet, low-odor work. Restaurants and multi-family properties need durable coatings and tight coordination with managers. We write scopes that match the building type — not a one-size residential template renamed “commercial.”",
+        body: "Storefronts need curb appeal. Offices need quiet, low-odor work. Restaurants and multi-family need durable coatings and tight coordination with managers. We write scopes for the building type — not a residential template labeled “commercial.”",
       },
       {
         heading: "Property managers get one accountable crew",
-        body: "Clear communication, written scopes, and reliable timelines matter as much as the finish. As a local Central Valley painting company, we’re easy to reach from walkthrough to punch list — helpful when you manage more than one site.",
+        body: "Written scopes, clear communication, and timelines you can plan around. As a local painting company in Sanger and the Central Valley, we’re easy to reach from walkthrough to punch list — helpful when you manage more than one site.",
       },
       {
         heading: "Coatings built for traffic and turnover",
@@ -130,23 +130,23 @@ export const SEO_PAGES: SeoPage[] = [
       "Warehouses & light industrial",
       "Flexible after-hours scheduling",
       "Durable commercial-grade coatings",
-      "Central Valley commercial painting crews",
+      "Free on-site estimates in Sanger",
     ],
     faqs: [
       {
         question: "Can you paint commercial spaces after hours?",
         answer:
-          "Yes. Many commercial painting projects are scheduled evenings or weekends so your staff and customers aren’t disrupted.",
+          "Yes. Many commercial jobs in Sanger and the Central Valley run evenings or weekends so staff and customers aren’t disrupted.",
       },
       {
         question: "What types of commercial painting do you handle?",
         answer:
-          "We paint offices, retail storefronts, restaurants, hotels, healthcare spaces, warehouses, gyms, and multi-family properties across the Central Valley.",
+          "We paint offices, retail storefronts, restaurants, hotels, healthcare spaces, warehouses, gyms, and multi-family properties in Sanger and across the Central Valley.",
       },
       {
         question: "Do you work with property managers?",
         answer:
-          "Absolutely. We provide detailed quotes, consistent communication, and dependable scheduling for property managers and business owners.",
+          "Yes. Written quotes, clear communication, and dependable scheduling for property managers and business owners.",
       },
       {
         question: "Can you handle multi-unit or phased commercial painting?",
