@@ -385,3 +385,10 @@
   left: 0 !important;
   right: auto !important;
 }
+
+/* Hide the SSR cookie banner before paint when a stored choice already exists.
+   Attribute is set by the blocking boot script in layout.tsx (same key/values as localStorage). */
+html[data-cookie-consent="accepted"] [data-cookie-banner],
+html[data-cookie-consent="rejected"] [data-cookie-banner] {
+  display: none;
+}

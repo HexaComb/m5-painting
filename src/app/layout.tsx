@@ -5,6 +5,7 @@ import { CookieConsentProvider } from "@/components/CookieConsent";
 import { Tracker } from "@/components/Tracker";
 import { VercelAnalytics } from "@/components/VercelAnalytics";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
+import { cookieConsentBootScript } from "@/lib/cookie-consent";
 import type { SiteContent } from "@/lib/content-types";
 import {
   BUSINESS_NAME,
@@ -108,6 +109,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+      <head>
+        <script
+          id="cookie-consent-boot"
+          dangerouslySetInnerHTML={{ __html: cookieConsentBootScript }}
+        />
+      </head>
       <body className={`${montserrat.variable} ${lato.variable} font-sans antialiased`}>
         <ConvexClientProvider>
           <CookieConsentProvider>
