@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Montserrat, Lato } from "next/font/google";
 import { Analytics } from "@/components/Analytics";
 import { CookieConsentProvider } from "@/components/CookieConsent";
 import { Tracker } from "@/components/Tracker";
@@ -15,19 +14,7 @@ import {
 } from "@/lib/site";
 import "./globals.css";
 
-const montserrat = Montserrat({
-  variable: "--font-montserrat",
-  subsets: ["latin"],
-  weight: ["600", "700", "800"],
-  display: "swap",
-});
-
-const lato = Lato({
-  variable: "--font-lato",
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  display: "swap",
-});
+const bootScripts = `${cookieConsentBootScript}(function(){var l=document.createElement("link");l.rel="stylesheet";l.href="/fonts.css";l.media="print";l.onload=function(){this.media="all"};document.head.appendChild(l)})();`;
 
 let _buildContent: SiteContent | null = null;
 try {
@@ -112,10 +99,13 @@ export default function RootLayout({
       <head>
         <script
           id="cookie-consent-boot"
-          dangerouslySetInnerHTML={{ __html: cookieConsentBootScript }}
+          dangerouslySetInnerHTML={{ __html: bootScripts }}
         />
+        <noscript>
+          <link rel="stylesheet" href="/fonts.css" />
+        </noscript>
       </head>
-      <body className={`${montserrat.variable} ${lato.variable} font-sans antialiased`}>
+      <body className="font-sans antialiased">
         <ConvexClientProvider>
           <CookieConsentProvider>
             {children}
