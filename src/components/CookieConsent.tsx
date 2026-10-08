@@ -13,6 +13,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   type CookieConsentChoice,
+  applyCookieConsentHtmlAttr,
   getStoredCookieConsent,
   setStoredCookieConsent,
 } from "@/lib/cookie-consent";
@@ -50,30 +51,37 @@ function CookieBanner({
     <div
       role="dialog"
       aria-labelledby="cookie-banner-title"
-      aria-describedby="cookie-banner-description"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-brand-navy p-4 shadow-[0_-8px_32px_rgba(0,0,0,0.35)] sm:p-5"
+      aria-describedby="cookie-banner-description cookie-banner-choice"
+      data-cookie-banner=""
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-brand-navy px-4 py-3 shadow-[0_-8px_32px_rgba(0,0,0,0.35)] sm:p-5"
     >
-      <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-        <div className="space-y-2 text-on-dark sm:max-w-2xl">
-          <p id="cookie-banner-title" className="text-sm font-semibold text-white">
+      <div className="mx-auto flex max-w-6xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="text-on-dark sm:max-w-2xl">
+          <p id="cookie-banner-title" className="text-xs font-semibold text-white sm:text-sm">
             Cookies &amp; analytics
           </p>
+          {/* Two short paragraphs (not one wide block) so neither out-areas the hero H1. */}
           <p
             id="cookie-banner-description"
-            className="text-sm leading-relaxed text-on-dark-secondary"
+            className="mt-1 text-xs leading-snug text-on-dark-secondary sm:text-sm sm:leading-relaxed"
           >
             We use cookies and similar technologies to understand how visitors use
             our site (including Vercel Web Analytics and Google Analytics) and to
-            measure marketing performance. You can accept analytics cookies or
-            continue with only essential cookies.
+            measure marketing performance.
+          </p>
+          <p
+            id="cookie-banner-choice"
+            className="mt-1 text-xs leading-snug text-on-dark-secondary sm:text-sm sm:leading-relaxed"
+          >
+            You can accept analytics cookies or continue with only essential cookies.
           </p>
         </div>
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row sm:items-center">
+        <div className="flex shrink-0 flex-row gap-2">
           <Button
             type="button"
             variant="outline"
             size="sm"
-            className="border-white/20 bg-transparent text-on-dark hover:bg-white/10 hover:text-white"
+            className="min-h-10 flex-1 border-white/20 bg-transparent text-on-dark hover:bg-white/10 hover:text-white sm:flex-none"
             onClick={onReject}
           >
             Essential only
@@ -81,7 +89,7 @@ function CookieBanner({
           <Button
             type="button"
             size="sm"
-            className="bg-brand-electric text-brand-navy hover:bg-brand-electric/90"
+            className="min-h-10 flex-1 bg-brand-electric text-brand-navy hover:bg-brand-electric/90 sm:flex-none"
             onClick={onAccept}
           >
             Accept analytics
@@ -97,16 +105,20 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   const isPublicSite = !pathname.startsWith("/admin");
 
   const [consent, setConsent] = useState<ConsentState>(null);
-  const [showBanner, setShowBanner] = useState(false);
+  // true on first render so the banner is in the SSR HTML (lab LCP). Returning
+  // visitors are hidden before paint via the boot script + data-cookie-consent CSS.
+  const [showBanner, setShowBanner] = useState(true);
 
   useEffect(() => {
     const stored = getStoredCookieConsent();
     setConsent(stored ?? "pending");
     setShowBanner(stored === null);
+    applyCookieConsentHtmlAttr(stored);
   }, []);
 
   const persist = useCallback((choice: CookieConsentChoice) => {
     setStoredCookieConsent(choice);
+    applyCookieConsentHtmlAttr(choice);
     setConsent(choice);
     setShowBanner(false);
     window.dispatchEvent(
@@ -116,7 +128,10 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
 
   const accept = useCallback(() => persist("accepted"), [persist]);
   const reject = useCallback(() => persist("rejected"), [persist]);
-  const openPreferences = useCallback(() => setShowBanner(true), []);
+  const openPreferences = useCallback(() => {
+    applyCookieConsentHtmlAttr(null);
+    setShowBanner(true);
+  }, []);
 
   const value = useMemo(
     () => ({

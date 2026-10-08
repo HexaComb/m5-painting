@@ -12,8 +12,8 @@
  */
 
 @theme inline {
-    --font-heading: var(--font-montserrat), system-ui, sans-serif;
-    --font-sans: var(--font-lato), "Lato", sans-serif;
+    --font-heading: Montserrat, "Montserrat Fallback", system-ui, sans-serif;
+    --font-sans: Lato, "Lato Fallback", system-ui, sans-serif;
     --color-sidebar-ring: var(--sidebar-ring);
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -173,6 +173,26 @@
     font-weight: 700;
     letter-spacing: -0.02em;
   }
+}
+
+/* Metric-matched local fallbacks (same overrides next/font generated for Arial).
+   Liberation Sans / Arimo are Arial-metric-compatible on Linux lab machines.
+   local() only — no network — so first paint is not webfont-bound. */
+@font-face {
+  font-family: "Montserrat Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Arimo");
+  ascent-override: 85.79%;
+  descent-override: 22.25%;
+  line-gap-override: 0%;
+  size-adjust: 112.83%;
+}
+@font-face {
+  font-family: "Lato Fallback";
+  src: local("Arial"), local("Liberation Sans"), local("Arimo");
+  ascent-override: 101.03%;
+  descent-override: 21.8%;
+  line-gap-override: 0%;
+  size-adjust: 97.69%;
 }
 
 /* ── Brand surfaces (logo dark + electric blue) ── */
@@ -384,4 +404,11 @@
   max-width: 100% !important;
   left: 0 !important;
   right: auto !important;
+}
+
+/* Hide the SSR cookie banner before paint when a stored choice already exists.
+   Attribute is set by the blocking boot script in layout.tsx (same key/values as localStorage). */
+html[data-cookie-consent="accepted"] [data-cookie-banner],
+html[data-cookie-consent="rejected"] [data-cookie-banner] {
+  display: none;
 }
