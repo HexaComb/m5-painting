@@ -35,6 +35,9 @@ type InstagramEmbedProps = {
   thumbnailUrl?: string;
   /** When true, parent has loaded embed.js and we should process this blockquote. */
   embedReady?: boolean;
+  /** When true, mount the Instagram blockquote (script may still be loading). */
+  loadRequested?: boolean;
+  onRequestLoad?: () => void;
 };
 
 function watchEmbedIframe(
@@ -52,6 +55,9 @@ function watchEmbedIframe(
   const attach = (iframe: HTMLIFrameElement) => {
     if (disposed || iframe.dataset.m5EmbedWatched === "true") return;
     iframe.dataset.m5EmbedWatched = "true";
+    if (!iframe.title) {
+      iframe.title = "Instagram reel";
+    }
 
     const markReady = () => {
       if (fallbackTimer !== undefined) {
@@ -90,27 +96,29 @@ export function InstagramEmbed({
   permalink,
   thumbnailUrl,
   embedReady = false,
+  loadRequested = false,
+  onRequestLoad,
 }: InstagramEmbedProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [embedVisible, setEmbedVisible] = useState(false);
 
   useEffect(() => {
-    if (!embedReady) return;
+    if (!embedReady || !loadRequested) return;
     // Instagram's embed script measures visible blockquotes; process after paint.
     const id = requestAnimationFrame(() => {
       window.instgrm?.Embeds.process();
     });
     return () => cancelAnimationFrame(id);
-  }, [permalink, embedReady]);
+  }, [permalink, embedReady, loadRequested]);
 
   useEffect(() => {
-    if (!embedReady) return;
+    if (!embedReady || !loadRequested) return;
     const el = containerRef.current;
     if (!el) return;
 
     setEmbedVisible(false);
     return watchEmbedIframe(el, () => setEmbedVisible(true));
-  }, [permalink, embedReady]);
+  }, [permalink, embedReady, loadRequested]);
 
   const showPlaceholder = !embedVisible;
 
@@ -120,10 +128,9 @@ export function InstagramEmbed({
       className="instagram-frame relative aspect-[9/16] min-h-[320px] w-full min-w-[326px] overflow-hidden rounded-xl border border-brand-navy/10 bg-muted shadow-lg shadow-brand-navy/5 sm:min-h-[380px]"
     >
       {showPlaceholder ? (
-        <a
-          href={permalink}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          onClick={onRequestLoad}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-muted transition-opacity duration-300"
           aria-label="View on Instagram (loading embed)"
         >
@@ -148,23 +155,25 @@ export function InstagramEmbed({
               {thumbnailUrl ? "Loading reel…" : "Loading from Instagram…"}
             </span>
           </div>
-        </a>
+        </button>
       ) : null}
 
-      <blockquote
-        className="instagram-media mx-auto min-h-full w-full max-w-full bg-transparent!"
-        data-instgrm-permalink={permalink}
-        data-instgrm-version="14"
-        style={{
-          background: "transparent",
-          border: 0,
-          margin: "0 auto",
-          maxWidth: "100%",
-          minWidth: "326px",
-          padding: 0,
-          width: "100%",
-        }}
-      />
+      {loadRequested ? (
+        <blockquote
+          className="instagram-media mx-auto min-h-full w-full max-w-full bg-transparent!"
+          data-instgrm-permalink={permalink}
+          data-instgrm-version="14"
+          style={{
+            background: "transparent",
+            border: 0,
+            margin: "0 auto",
+            maxWidth: "100%",
+            minWidth: "326px",
+            padding: 0,
+            width: "100%",
+          }}
+        />
+      ) : null}
     </div>
   );
 }

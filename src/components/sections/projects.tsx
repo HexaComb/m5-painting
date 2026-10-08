@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import { useQuery } from "convex/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "../../../convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
@@ -25,6 +25,31 @@ export function Projects({
 
   const hasPosts = Boolean(posts && posts.length > 0);
   const [embedScriptReady, setEmbedScriptReady] = useState(false);
+  const [shouldLoadEmbeds, setShouldLoadEmbeds] = useState(false);
+  const sectionRef = useRef<HTMLElement>(null);
+
+  const requestEmbeds = useCallback(() => {
+    setShouldLoadEmbeds(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hasPosts || shouldLoadEmbeds) return;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setShouldLoadEmbeds(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px", threshold: 0 },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasPosts, shouldLoadEmbeds]);
 
   useEffect(() => {
     if (embedScriptReady && posts && posts.length > 0) {
@@ -33,11 +58,15 @@ export function Projects({
   }, [embedScriptReady, posts]);
 
   return (
-    <section id="projects" className="surface-chrome-yard relative py-20 sm:py-28">
-      {hasPosts ? (
+    <section
+      id="projects"
+      ref={sectionRef}
+      className="surface-chrome-yard relative py-20 sm:py-28"
+    >
+      {hasPosts && shouldLoadEmbeds ? (
         <Script
           src="https://www.instagram.com/embed.js"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           onLoad={() => {
             setEmbedScriptReady(true);
             window.instgrm?.Embeds.process();
@@ -73,6 +102,8 @@ export function Projects({
                     permalink={post.embedUrl}
                     thumbnailUrl={post.thumbnailUrl}
                     embedReady={embedScriptReady}
+                    loadRequested={shouldLoadEmbeds}
+                    onRequestLoad={requestEmbeds}
                   />
                 ))}
               </div>

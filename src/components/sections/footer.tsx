@@ -66,6 +66,7 @@ export function Footer({
               width={1024}
               height={1024}
               className="h-20 w-20 object-contain"
+              sizes="80px"
             />
             <p className="text-label text-brand-electric">{settings.tagline}</p>
             <p className="max-w-xs text-sm leading-relaxed text-on-dark-secondary">

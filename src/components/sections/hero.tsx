@@ -81,7 +81,7 @@ export function Hero({
         <div className="py-14 sm:py-20 md:py-24 lg:py-28">
           <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-12">
             <div className="lg:col-span-7">
-              <Reveal>
+              <Reveal immediate>
                 <p className="mb-3 text-label text-brand-electric">
                   Sanger, CA · Family-Owned
                 </p>
@@ -115,13 +115,13 @@ export function Hero({
                 </h1>
               </Reveal>
 
-              <Reveal delay={1}>
+              <Reveal delay={1} immediate>
                 <p className="mt-6 text-body-lg text-on-dark-secondary">
                   {hero.bodyText}
                 </p>
               </Reveal>
 
-              <Reveal delay={2}>
+              <Reveal delay={2} immediate>
                 <div className="mt-8 flex flex-wrap items-center gap-3">
                   <a href="#contact" data-track="hero-estimate">
                     <Button
@@ -145,7 +145,7 @@ export function Hero({
               </Reveal>
             </div>
 
-            <Reveal delay={1} className="lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:col-start-8">
+            <Reveal delay={1} immediate className="lg:col-span-5 lg:row-span-2 lg:row-start-1 lg:col-start-8">
               <div className="relative mx-auto max-w-md lg:max-w-none lg:ml-auto">
                 <div
                   aria-hidden

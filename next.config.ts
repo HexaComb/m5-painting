@@ -2,7 +2,22 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "fleet-cuttlefish-912.convex.cloud",
+        pathname: "/api/storage/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.convex.cloud",
+        pathname: "/api/storage/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.convex.site",
+      },
+    ],
   },
   async redirects() {
     return [
