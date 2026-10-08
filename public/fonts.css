@@ -1,9 +1,20 @@
-/* Loaded asynchronously from layout so @font-face is not in render-blocking CSS. */
+/* Official Google Fonts (OFL) Latin subsets. Loaded asynchronously from
+   layout.tsx so these @font-face rules are not in render-blocking CSS.
+   Sources (fonts.gstatic.com, unicode-range U+0000-00FF / latin):
+     Lato 400  https://fonts.gstatic.com/s/lato/v25/S6uyw4BMUTPHjx4wXiWtFCc.woff2
+     Lato 700  https://fonts.gstatic.com/s/lato/v25/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2
+     Montserrat 600/700/800 (variable latin)
+       https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2
+   Licenses: public/fonts/OFL-Lato.txt, public/fonts/OFL-Montserrat.txt
+   font-display is swap (compared with optional in the PR; swap keeps brand
+   fonts on a Slow 4G first view). Metric-matched Arial fallbacks live in
+   globals.css so first paint does not wait on these files. */
+
 @font-face {
   font-family: Lato;
   font-style: normal;
   font-weight: 400;
-  font-display: optional;
+  font-display: swap;
   src: url("/fonts/lato-400-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -14,7 +25,7 @@
   font-family: Lato;
   font-style: normal;
   font-weight: 700;
-  font-display: optional;
+  font-display: swap;
   src: url("/fonts/lato-700-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
@@ -24,8 +35,30 @@
 @font-face {
   font-family: Montserrat;
   font-style: normal;
-  font-weight: 600 800;
-  font-display: optional;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/montserrat-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
   src: url("/fonts/montserrat-latin.woff2") format("woff2");
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
     U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,

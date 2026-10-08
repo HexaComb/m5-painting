@@ -102,6 +102,13 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: bootScripts }}
         />
         <noscript>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: "[data-cookie-banner]{display:none!important}",
+            }}
+          />
+          {/* Brand fonts for no-JS. JS path injects this stylesheet asynchronously. */}
+          {/* eslint-disable-next-line @next/next/no-css-tags */}
           <link rel="stylesheet" href="/fonts.css" />
         </noscript>
       </head>
