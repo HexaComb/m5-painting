@@ -8,15 +8,6 @@ const nextConfig: NextConfig = {
         hostname: "fleet-cuttlefish-912.convex.cloud",
         pathname: "/api/storage/**",
       },
-      {
-        protocol: "https",
-        hostname: "*.convex.cloud",
-        pathname: "/api/storage/**",
-      },
-      {
-        protocol: "https",
-        hostname: "*.convex.site",
-      },
     ],
   },
   async redirects() {

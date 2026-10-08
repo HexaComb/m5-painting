@@ -68,7 +68,9 @@ function watchEmbedIframe(
     };
 
     iframe.addEventListener("load", markReady, { once: true });
-    fallbackTimer = setTimeout(markReady, EMBED_LOAD_TIMEOUT_MS);
+    fallbackTimer = setTimeout(() => {
+      if (container.querySelector("iframe")) markReady();
+    }, EMBED_LOAD_TIMEOUT_MS);
   };
 
   const existing = container.querySelector("iframe");
@@ -128,9 +130,11 @@ export function InstagramEmbed({
       className="instagram-frame relative aspect-[9/16] min-h-[320px] w-full min-w-[326px] overflow-hidden rounded-xl border border-brand-navy/10 bg-muted shadow-lg shadow-brand-navy/5 sm:min-h-[380px]"
     >
       {showPlaceholder ? (
-        <button
-          type="button"
-          onClick={onRequestLoad}
+        <a
+          href={permalink}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => onRequestLoad?.()}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-muted transition-opacity duration-300"
           aria-label="View on Instagram (loading embed)"
         >
@@ -155,7 +159,7 @@ export function InstagramEmbed({
               {thumbnailUrl ? "Loading reel…" : "Loading from Instagram…"}
             </span>
           </div>
-        </button>
+        </a>
       ) : null}
 
       {loadRequested ? (
