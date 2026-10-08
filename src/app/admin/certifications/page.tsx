@@ -314,6 +314,7 @@ export default function CertificationsPage() {
                       width={56}
                       height={56}
                       className="h-full w-full object-cover"
+                      unoptimized={previewUrl.startsWith("blob:")}
                     />
                   ) : (
                     <Award className="h-6 w-6 text-muted-foreground" />

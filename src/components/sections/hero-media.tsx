@@ -51,7 +51,6 @@ export function HeroMedia({
       className={className}
       priority={priority}
       sizes={sizes}
-      unoptimized={src.startsWith("http")}
     />
   );
 }
@@ -83,7 +82,7 @@ export function HeroMediaPreview({
       alt={alt}
       fill
       className="object-cover"
-      unoptimized={src.startsWith("blob:") || src.startsWith("http")}
+      unoptimized={src.startsWith("blob:") || src.startsWith("data:")}
     />
   );
 }

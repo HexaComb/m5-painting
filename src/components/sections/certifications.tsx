@@ -42,6 +42,7 @@ export function CertificationMark({
           alt={certification.label}
           width={size === "sm" ? 32 : 40}
           height={size === "sm" ? 32 : 40}
+          sizes={size === "sm" ? "32px" : "40px"}
           className={`${iconSize} rounded-full object-cover ring-1 ring-brand-electric/30`}
         />
       ) : (

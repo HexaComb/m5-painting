@@ -62,6 +62,7 @@ export function Header({ initialSettings }: { initialSettings?: SiteSettings | n
             width={1024}
             height={1024}
             className="h-14 w-14 object-contain sm:h-16 sm:w-16"
+            sizes="(min-width: 640px) 64px, 56px"
             priority
           />
         </Link>

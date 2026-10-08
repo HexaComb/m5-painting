@@ -91,8 +91,9 @@ export function About({
                       className={`object-cover transition-opacity duration-700 ${
                         index === activeImageIndex ? "opacity-100" : "opacity-0"
                       }`}
-                      sizes="(max-width: 1024px) 90vw, 40vw"
-                      priority={index === 0}
+                      sizes="(max-width: 1024px) 384px, 480px"
+                      quality={70}
+                      loading="lazy"
                     />
                   ))}
                   {hasMultipleImages && (

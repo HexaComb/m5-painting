@@ -12,16 +12,20 @@ export function Reveal({
   className = "",
   delay = 0,
   threshold = 0.15,
+  immediate = false,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   threshold?: number;
+  /** Paint visible on first render. Use for above-the-fold content that must not wait for JS. */
+  immediate?: boolean;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(immediate);
 
   useEffect(() => {
+    if (immediate) return;
     const el = ref.current;
     if (!el) return;
 
@@ -46,7 +50,7 @@ export function Reveal({
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold]);
+  }, [immediate, threshold]);
 
   const delayClass =
     delay === 1
@@ -62,7 +66,9 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`${visible ? `reveal ${delayClass}` : "opacity-0"} ${className}`}
+      className={`${
+        immediate ? "" : visible ? `reveal ${delayClass}` : "opacity-0"
+      } ${className}`.trim()}
     >
       {children}
     </div>
