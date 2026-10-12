@@ -40,6 +40,25 @@ export function getSessionId(): string {
   return id;
 }
 
+export type GenerateLeadParams = {
+  form: string;
+  interest: string;
+};
+
+/**
+ * GA4 recommended lead event. Fires only with analytics consent and a loaded gtag.
+ * Callers must not pass PII (name, email, phone, or message).
+ */
+export function trackGenerateLead(params: GenerateLeadParams): void {
+  if (!hasAnalyticsConsent()) return;
+  if (typeof window.gtag !== "function") return;
+
+  window.gtag("event", "generate_lead", {
+    form: params.form,
+    interest: params.interest,
+  });
+}
+
 export function dispatchAnalyticsEvent(event: AnalyticsEvent): void {
   if (!hasAnalyticsConsent()) return;
 
