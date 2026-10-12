@@ -1,0 +1,21 @@
+Official Google Fonts (SIL Open Font License) Latin subsets.
+
+Weights match the previous next/font setup:
+  Montserrat 600, 700, 800
+  Lato 400, 700
+
+Downloaded from fonts.gstatic.com via the Google Fonts CSS API
+(family=Lato:wght@400;700&family=Montserrat:wght@600;700;800&subset=latin).
+SHA-256 of each local file matches the gstatic URL byte-for-byte:
+
+  lato-400-latin.woff2
+    https://fonts.gstatic.com/s/lato/v25/S6uyw4BMUTPHjx4wXiWtFCc.woff2
+    sha256:d4ae5188a65370ecfe28f42293bbee8297cfd5712c6aadfdb270d48f2bcd88b0
+  lato-700-latin.woff2
+    https://fonts.gstatic.com/s/lato/v25/S6u9w4BMUTPHh6UVSwiPGQ3q5d0.woff2
+    sha256:7a7ce1a34f3e9944fe88fc61abbc93b6db383afa2b90815fd7ccea456fbce4e5
+  montserrat-latin.woff2  (variable latin; used for 600, 700, and 800)
+    https://fonts.gstatic.com/s/montserrat/v31/JTUSjIg1_i6t8kCHKm459WlhyyTh89Y.woff2
+    sha256:6438d7b8ea9c7c3992d5e2fd2afdb1ff948570a3ef0bedae76247b51632960ba
+
+Licenses: OFL-Lato.txt, OFL-Montserrat.txt
