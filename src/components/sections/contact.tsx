@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +11,7 @@ import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 import type { ContactContent, SiteSettings } from "@/lib/content-types";
 import { sendContactNotification } from "@/app/actions/contact";
+import { trackGenerateLead } from "@/lib/analytics";
 
 export function Contact({
   initialContact,
@@ -26,12 +27,14 @@ export function Contact({
   const submitLead = useMutation(api.content.submitLead);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const submitLockRef = useRef(false);
 
   if (!contact || !settings) return null;
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (submitting || submitted) return;
+    if (submitting || submitted || submitLockRef.current) return;
+    submitLockRef.current = true;
 
     const form = e.currentTarget;
     const formData = new FormData(form);
@@ -42,6 +45,7 @@ export function Contact({
     const message = String(formData.get("message") ?? "");
 
     if (!interest) {
+      submitLockRef.current = false;
       toast.error("Please select what you're looking for");
       return;
     }
@@ -66,10 +70,12 @@ export function Contact({
         throw new Error(notification.error);
       }
 
+      trackGenerateLead({ form: "contact", interest });
       setSubmitted(true);
       toast.success("Message sent! We'll be in touch soon.");
       form.reset();
     } catch {
+      submitLockRef.current = false;
       toast.error("Something went wrong. Please try again.");
     } finally {
       setSubmitting(false);
@@ -162,7 +168,10 @@ export function Contact({
                     <Button
                       variant="outline"
                       className="mt-6"
-                      onClick={() => setSubmitted(false)}
+                      onClick={() => {
+                        submitLockRef.current = false;
+                        setSubmitted(false);
+                      }}
                     >
                       Send Another Message
                     </Button>
