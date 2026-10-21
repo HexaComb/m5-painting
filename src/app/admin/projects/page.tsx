@@ -200,7 +200,7 @@ export default function ProjectsPage() {
               <CardContent className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex min-w-0 flex-1 items-start gap-3">
-                    {post.thumbnailUrl ? (
+                    {post.thumbnailUrl && !isImported ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={post.thumbnailUrl}
@@ -233,7 +233,7 @@ export default function ProjectsPage() {
                       </a>
                       {isImported ? (
                         <p className="mt-2 text-xs text-muted-foreground">
-                          URL and thumbnail update on the next scheduled sync.
+                          Public post details update on the next scheduled sync.
                         </p>
                       ) : null}
                     </div>
