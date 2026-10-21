@@ -1,5 +1,6 @@
 import { Header } from "@/components/sections/header";
 import { Hero } from "@/components/sections/hero";
+import { ServicePaths } from "@/components/sections/service-paths";
 import { Services } from "@/components/sections/services";
 import { Projects } from "@/components/sections/projects";
 import { About } from "@/components/sections/about";
@@ -91,10 +92,15 @@ export default function Home() {
           initialCertifications={content.certifications}
         />
 
+        <ServicePaths />
+
+        <Projects initialPosts={content.instagramPosts} />
+
         <Separator className="h-px bg-brand-blue/25" />
 
         <Services initialServices={content.services} />
-        <Projects initialPosts={content.instagramPosts} />
+
+        <Reviews initialReviews={content.reviews} />
 
         <About
           initialAbout={content.aboutContent}
@@ -103,8 +109,6 @@ export default function Home() {
         />
 
         <Separator className="h-px bg-brand-blue/35" />
-
-        <Reviews initialReviews={content.reviews} />
 
         <Faqs faqs={content.faqs?.length ? content.faqs : defaultFaqs} />
 

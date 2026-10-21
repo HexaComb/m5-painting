@@ -10,6 +10,7 @@ export function HeroMedia({
   alt,
   priority = false,
   sizes,
+  poster,
   className = "object-cover",
 }: {
   src: string;
@@ -17,6 +18,7 @@ export function HeroMedia({
   alt: string;
   priority?: boolean;
   sizes?: string;
+  poster?: string;
   className?: string;
 }) {
   const [reduceMotion, setReduceMotion] = useState(true);
@@ -38,6 +40,7 @@ export function HeroMedia({
         loop
         playsInline
         autoPlay={!reduceMotion}
+        poster={poster}
         aria-label={alt}
       />
     );

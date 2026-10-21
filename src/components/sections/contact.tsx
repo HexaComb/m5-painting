@@ -262,14 +262,13 @@ export function Contact({
                       htmlFor="message"
                       className="text-sm font-semibold text-foreground"
                     >
-                      Tell Us About Your Project
+                      Tell Us About Your Project <span className="font-normal text-muted-foreground">(optional)</span>
                     </label>
                     <Textarea
                       id="message"
                       name="message"
                       placeholder="What are you looking to have done? Any details help us give a better quote..."
                       rows={4}
-                      required
                       className="bg-background"
                     />
                   </div>

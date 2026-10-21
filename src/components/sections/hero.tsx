@@ -158,6 +158,7 @@ export function Hero({
                     alt={heroMediaAlt}
                     priority
                     sizes="(max-width: 1024px) 90vw, 45vw"
+                    poster="/images/exterior-finish-instagram.webp"
                   />
                 </div>
               </div>
