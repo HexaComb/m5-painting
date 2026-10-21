@@ -40,6 +40,13 @@ const schema = defineSchema({
     items: v.array(v.string()),
   }).index("by_order", ["order"]),
 
+  // Homepage frequently asked questions (multiple ordered items)
+  faqs: defineTable({
+    order: v.number(),
+    question: v.string(),
+    answer: v.string(),
+  }).index("by_order", ["order"]),
+
   // About section (single document)
   aboutContent: defineTable({
     subtitle: v.string(),

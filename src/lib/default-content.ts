@@ -9,6 +9,7 @@ import type {
   Review,
   Certification,
   ContactContent,
+  Faq,
 } from "./content-types";
 import {
   DEFAULT_ABOUT_IMAGE,
@@ -262,3 +263,41 @@ export const defaultContactContent: ContactContent = {
   email: "m5paintingco@gmail.com",
   location: "Sanger, CA · Central Valley",
 };
+
+export const defaultFaqs: Faq[] = [
+  {
+    _id: "faq1",
+    _creationTime: 0,
+    order: 1,
+    question: "What areas does M5 Painting serve in the Central Valley?",
+    answer: "M5 Painting provides professional residential and commercial painting services across Sanger, California, and the surrounding Central Valley communities, including Fresno, Clovis, Reedley, Fowler, and Selma. We handle everything from single-room residential updates to large-scale commercial property transformations.",
+  },
+  {
+    _id: "faq2",
+    _creationTime: 0,
+    order: 2,
+    question: "What interior painting services do you provide?",
+    answer: "Our interior painting services include full room repaints, wall texturing, faux painting, wallpaper removal, crown molding and trim painting, and specialized garage floor coatings. We also specialize in high-end cabinet refinishing, transforming older kitchen or bathroom cabinets to look like brand-new showroom models.",
+  },
+  {
+    _id: "faq3",
+    _creationTime: 0,
+    order: 3,
+    question: "How do you prepare and protect a home for exterior painting?",
+    answer: "For exterior painting, we conduct a thorough property prep phase that includes professional pressure washing, surface masking, and necessary repairs to stucco, plaster, wood siding, or vinyl siding. We utilize top-quality, weather-resistant paints specifically chosen to withstand the intense, high-heat climate of the Central Valley.",
+  },
+  {
+    _id: "faq4",
+    _creationTime: 0,
+    order: 4,
+    question: "Do you offer painting services for local businesses and commercial spaces?",
+    answer: "Yes, M5 Painting is fully licensed, bonded, and insured to handle commercial painting projects for offices, retail stores, restaurants, hotels, healthcare facilities, warehouses, and multi-family housing units. We work closely with business owners and property managers to deliver clean, professional finishes with minimal disruption to daily operations.",
+  },
+  {
+    _id: "faq5",
+    _creationTime: 0,
+    order: 5,
+    question: "How can I get a quote for my painting project, and is there a fee?",
+    answer: "You can get a free, no-obligation estimate by calling us directly at 559-451-1022 or emailing l.lopez@m5painting.com. We will schedule an on-site walkthrough of your property, provide helpful color advice, and deliver a detailed written quote with clear, honest pricing and no hidden fees.",
+  },
+];

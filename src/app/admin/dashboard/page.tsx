@@ -21,6 +21,7 @@ import {
   Image,
   Info,
   Award,
+  CircleHelp,
 } from "lucide-react";
 
 const sections = [
@@ -45,6 +46,13 @@ const sections = [
     href: "/admin/services",
     color: "bg-emerald-500/10 text-emerald-600",
     countKey: "services" as const,
+  },
+  {
+    title: "FAQs",
+    description: "Homepage questions and answers",
+    icon: CircleHelp,
+    href: "/admin/faqs",
+    color: "bg-orange-500/10 text-orange-600",
   },
   {
     title: "About",
