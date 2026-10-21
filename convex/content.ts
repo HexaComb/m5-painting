@@ -8,12 +8,14 @@ import {
   type QueryCtx,
 } from "./_generated/server";
 import {
+  compareReviews,
   isReviewEnabled,
   reviewRating,
   reviewValidator,
   selectHomepageReviews,
 } from "./reviewTypes";
 import {
+  compareInstagramPosts,
   instagramPostValidator,
   isInstagramPostEnabled,
   selectHomepageInstagramPosts,
@@ -674,7 +676,8 @@ export const getInstagramPostsAdmin = query({
   returns: v.array(instagramPostValidator),
   handler: async (ctx) => {
     await requireAuth(ctx);
-    return await ctx.db.query("instagramPosts").withIndex("by_order").collect();
+    const posts = await ctx.db.query("instagramPosts").withIndex("by_order").collect();
+    return posts.sort(compareInstagramPosts);
   },
 });
 
@@ -779,7 +782,8 @@ export const getReviewsAdmin = query({
   returns: v.array(reviewValidator),
   handler: async (ctx) => {
     await requireAuth(ctx);
-    return await ctx.db.query("reviews").withIndex("by_order").collect();
+    const reviews = await ctx.db.query("reviews").withIndex("by_order").collect();
+    return reviews.sort(compareReviews);
   },
 });
 
