@@ -123,6 +123,14 @@ export interface ContactContent {
   location: string;
 }
 
+export interface Faq {
+  _id: string;
+  _creationTime: number;
+  order: number;
+  question: string;
+  answer: string;
+}
+
 export interface SiteContent {
   siteSettings: SiteSettings | null;
   heroContent: HeroContent | null;
@@ -134,4 +142,5 @@ export interface SiteContent {
   reviews: Review[] | null;
   certifications: Certification[] | null;
   contactContent: ContactContent | null;
+  faqs?: Faq[] | null;
 }

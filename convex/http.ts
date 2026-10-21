@@ -24,6 +24,7 @@ http.route({
       reviews,
       contactContent,
       certifications,
+      faqs,
     ] = await Promise.all([
       ctx.runQuery(api.content.getSiteSettings),
       ctx.runQuery(api.content.getHeroContent),
@@ -35,6 +36,7 @@ http.route({
       ctx.runQuery(api.content.getReviews),
       ctx.runQuery(api.content.getContactContent),
       ctx.runQuery(api.content.getCertifications),
+      ctx.runQuery(api.content.getFaqs),
     ]);
 
     return new Response(
@@ -49,6 +51,7 @@ http.route({
         reviews,
         contactContent,
         certifications,
+        faqs,
       }),
       {
         status: 200,

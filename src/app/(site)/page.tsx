@@ -4,6 +4,7 @@ import { Services } from "@/components/sections/services";
 import { Projects } from "@/components/sections/projects";
 import { About } from "@/components/sections/about";
 import { Reviews } from "@/components/sections/reviews";
+import { Faqs } from "@/components/sections/faqs";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
 import { Separator } from "@/components/ui/separator";
@@ -20,6 +21,7 @@ import {
   defaultReviews,
   defaultCertifications,
   defaultContactContent,
+  defaultFaqs,
 } from "@/lib/default-content";
 import { buildLocalBusinessJsonLd } from "@/lib/local-business-jsonld";
 import { SITE_URL } from "@/lib/site";
@@ -44,6 +46,7 @@ const content = buildContent ?? {
   reviews: defaultReviews,
   certifications: defaultCertifications,
   contactContent: defaultContactContent,
+  faqs: defaultFaqs,
 };
 
 const settings = content.siteSettings ?? defaultSiteSettings;
@@ -102,6 +105,8 @@ export default function Home() {
         <Separator className="h-px bg-brand-blue/35" />
 
         <Reviews initialReviews={content.reviews} />
+
+        <Faqs faqs={content.faqs?.length ? content.faqs : defaultFaqs} />
 
         <section className="border-y border-brand-blue/15 bg-background py-14 sm:py-16">
           <div className="mx-auto max-w-6xl px-5 sm:px-6">

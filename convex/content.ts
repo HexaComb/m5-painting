@@ -420,6 +420,81 @@ export const reorderServices = mutation({
 });
 
 // ═══════════════════════════════════════════════════════════════════════
+// FAQS
+// ═══════════════════════════════════════════════════════════════════════
+
+export const getFaqs = query({
+  args: {},
+  returns: v.array(v.object({
+    _id: v.id("faqs"),
+    _creationTime: v.number(),
+    order: v.number(),
+    question: v.string(),
+    answer: v.string(),
+  })),
+  handler: async (ctx) => ctx.db.query("faqs").withIndex("by_order").collect(),
+});
+
+export const addFaq = mutation({
+  args: { question: v.string(), answer: v.string() },
+  returns: v.id("faqs"),
+  handler: async (ctx, args) => {
+    await requireAuth(ctx);
+    const existing = await ctx.db.query("faqs").withIndex("by_order").collect();
+    const maxOrder = existing.reduce((max, faq) => Math.max(max, faq.order), 0);
+    return ctx.db.insert("faqs", { ...args, order: maxOrder + 1 });
+  },
+});
+
+export const updateFaq = mutation({
+  args: { id: v.id("faqs"), question: v.string(), answer: v.string() },
+  returns: v.null(),
+  handler: async (ctx, { id, ...data }) => {
+    await requireAuth(ctx);
+    await ctx.db.patch(id, data);
+    return null;
+  },
+});
+
+export const deleteFaq = mutation({
+  args: { id: v.id("faqs") },
+  returns: v.null(),
+  handler: async (ctx, { id }) => {
+    await requireAuth(ctx);
+    await ctx.db.delete(id);
+    return null;
+  },
+});
+
+export const reorderFaqs = mutation({
+  args: { orderedIds: v.array(v.id("faqs")) },
+  returns: v.null(),
+  handler: async (ctx, { orderedIds }) => {
+    await requireAuth(ctx);
+    for (let i = 0; i < orderedIds.length; i++) {
+      await ctx.db.patch(orderedIds[i], { order: i + 1 });
+    }
+    return null;
+  },
+});
+
+export const ensureDefaultFaqs = mutation({
+  args: {
+    defaults: v.array(v.object({ question: v.string(), answer: v.string() })),
+  },
+  returns: v.null(),
+  handler: async (ctx, { defaults }) => {
+    await requireAuth(ctx);
+    const existing = await ctx.db.query("faqs").withIndex("by_order").first();
+    if (existing) return null;
+    for (const [index, faq] of defaults.entries()) {
+      await ctx.db.insert("faqs", { ...faq, order: index + 1 });
+    }
+    return null;
+  },
+});
+
+// ═══════════════════════════════════════════════════════════════════════
 // ABOUT CONTENT
 // ═══════════════════════════════════════════════════════════════════════
 
