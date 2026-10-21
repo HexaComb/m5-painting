@@ -189,12 +189,12 @@ export default function ReviewsPage() {
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Google reviews sync every 10 days, or on demand from{" "}
+        Google reviews sync daily, or on demand from{" "}
         <Link href="/admin/settings" className="font-medium text-foreground underline">
           Settings
         </Link>
-        . Add your Place ID there first. Up to {HOMEPAGE_REVIEW_CAP} published reviews (by
-        order) appear on the homepage.
+        . Add your Place ID there first. The {HOMEPAGE_REVIEW_CAP} newest
+        published Google reviews appear on the homepage. You can hide any review here.
       </p>
 
       <div className="space-y-3">

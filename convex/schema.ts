@@ -72,6 +72,8 @@ const schema = defineSchema({
     enabled: v.optional(v.boolean()),
     instagramMediaId: v.optional(v.string()),
     thumbnailUrl: v.optional(v.string()),
+    postedAt: v.optional(v.number()),
+    hiddenByAdmin: v.optional(v.boolean()),
   })
     .index("by_order", ["order"])
     .index("by_instagram_media_id", ["instagramMediaId"]),
@@ -88,6 +90,7 @@ const schema = defineSchema({
     googleReviewId: v.optional(v.string()),
     profilePhotoUrl: v.optional(v.string()),
     authorUri: v.optional(v.string()),
+    hiddenByAdmin: v.optional(v.boolean()),
   })
     .index("by_order", ["order"])
     .index("by_google_review_id", ["googleReviewId"]),

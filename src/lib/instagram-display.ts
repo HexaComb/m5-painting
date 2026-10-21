@@ -1,4 +1,5 @@
 import type { InstagramPost } from "@/lib/content-types";
+import { compareInstagramPosts } from "../../convex/instagramTypes";
 
 /** Keep in sync with convex/instagramTypes.ts HOMEPAGE_INSTAGRAM_CAP */
 export const HOMEPAGE_INSTAGRAM_CAP = 3;
@@ -19,7 +20,7 @@ export function getInstagramPostAdminStatus(
   }
   const published = posts
     .filter((p) => isInstagramPostPublished(p.enabled))
-    .sort((a, b) => a.order - b.order);
+    .sort(compareInstagramPosts);
   const index = published.findIndex((p) => p._id === postId);
   if (index < 0) return "hidden";
   if (index < HOMEPAGE_INSTAGRAM_CAP) return "homepage";

@@ -732,7 +732,11 @@ export const toggleInstagramPostEnabled = mutation({
     await requireAuth(ctx);
     const post = await ctx.db.get(id);
     if (!post) throw new Error("Instagram post not found");
-    await ctx.db.patch(id, { enabled: !isInstagramPostEnabled(post.enabled) });
+    const enabled = !isInstagramPostEnabled(post.enabled);
+    await ctx.db.patch(id, {
+      enabled,
+      ...(post.instagramMediaId ? { hiddenByAdmin: !enabled } : {}),
+    });
     return null;
   },
 });
@@ -833,7 +837,11 @@ export const toggleReviewEnabled = mutation({
     await requireAuth(ctx);
     const review = await ctx.db.get(id);
     if (!review) throw new Error("Review not found");
-    await ctx.db.patch(id, { enabled: !isReviewEnabled(review.enabled) });
+    const enabled = !isReviewEnabled(review.enabled);
+    await ctx.db.patch(id, {
+      enabled,
+      ...(review.googleReviewId ? { hiddenByAdmin: !enabled } : {}),
+    });
     return null;
   },
 });

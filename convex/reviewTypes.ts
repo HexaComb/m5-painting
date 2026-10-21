@@ -17,6 +17,7 @@ export const reviewValidator = v.object({
   googleReviewId: v.optional(v.string()),
   profilePhotoUrl: v.optional(v.string()),
   authorUri: v.optional(v.string()),
+  hiddenByAdmin: v.optional(v.boolean()),
 });
 
 export function isReviewEnabled(enabled: boolean | undefined): boolean {
@@ -31,12 +32,25 @@ export function reviewRating(rating: number | undefined): number {
 type ReviewRow = {
   order: number;
   enabled?: boolean;
+  date: string;
+  googleReviewId?: string;
 };
 
-/** Published reviews that appear on the homepage (enabled, lowest order first, capped). */
+export function compareReviews(a: ReviewRow, b: ReviewRow): number {
+  if (a.googleReviewId && b.googleReviewId) {
+    const aDate = Date.parse(a.date) || 0;
+    const bDate = Date.parse(b.date) || 0;
+    return bDate - aDate || a.order - b.order;
+  }
+  if (a.googleReviewId) return -1;
+  if (b.googleReviewId) return 1;
+  return a.order - b.order;
+}
+
+/** Recent Google reviews first, then manually added reviews. */
 export function selectHomepageReviews<T extends ReviewRow>(reviews: T[]): T[] {
   return reviews
     .filter((r) => isReviewEnabled(r.enabled))
-    .sort((a, b) => a.order - b.order)
+    .sort(compareReviews)
     .slice(0, HOMEPAGE_REVIEW_CAP);
 }
