@@ -1,4 +1,5 @@
 import type { Review } from "@/lib/content-types";
+import { compareReviews } from "../../convex/reviewTypes";
 
 /** Keep in sync with convex/reviewTypes.ts HOMEPAGE_REVIEW_CAP */
 export const HOMEPAGE_REVIEW_CAP = 6;
@@ -19,7 +20,7 @@ export function getReviewAdminStatus(
   }
   const published = reviews
     .filter((r) => isReviewPublished(r.enabled))
-    .sort((a, b) => a.order - b.order);
+    .sort(compareReviews);
   const index = published.findIndex((r) => r._id === reviewId);
   if (index < 0) return "hidden";
   if (index < HOMEPAGE_REVIEW_CAP) return "homepage";

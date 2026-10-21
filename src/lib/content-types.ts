@@ -84,6 +84,8 @@ export interface InstagramPost {
   enabled?: boolean;
   instagramMediaId?: string;
   thumbnailUrl?: string;
+  postedAt?: number;
+  hiddenByAdmin?: boolean;
 }
 
 export interface Review {
@@ -99,6 +101,7 @@ export interface Review {
   googleReviewId?: string;
   profilePhotoUrl?: string;
   authorUri?: string;
+  hiddenByAdmin?: boolean;
 }
 
 export interface Certification {

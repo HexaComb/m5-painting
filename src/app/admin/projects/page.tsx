@@ -161,12 +161,12 @@ export default function ProjectsPage() {
       </div>
 
       <p className="text-sm text-muted-foreground">
-        Instagram reels sync weekly, or on demand from{" "}
+        Instagram posts and reels sync daily, or on demand from{" "}
         <Link href="/admin/settings" className="font-medium text-foreground underline">
           Settings
         </Link>
-        . Set your Instagram username there first. Up to {HOMEPAGE_INSTAGRAM_CAP} published
-        reels (by order) appear on the homepage.
+        . Set your Instagram username there first. The {HOMEPAGE_INSTAGRAM_CAP} newest
+        published posts appear on the homepage. You can hide any imported post here.
       </p>
 
       <Card className="border-dashed">

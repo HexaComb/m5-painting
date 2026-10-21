@@ -265,7 +265,7 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Google Reviews</CardTitle>
           <CardDescription>
-            Used for review sync every 10 days and on demand below. Set{" "}
+            Used for daily review sync and on demand below. Set{" "}
             <code className="text-xs">SERP_API_KEY</code> in your Convex dashboard environment
             variables.
           </CardDescription>
@@ -315,8 +315,8 @@ export default function SettingsPage() {
         <CardHeader>
           <CardTitle>Instagram Projects</CardTitle>
           <CardDescription>
-            Used for reel sync every week and on demand below. Set{" "}
-            <code className="text-xs">RAPIDAPI_KEY</code> in your Convex dashboard environment
+            Used for daily public post and reel sync and on demand below. Set{" "}
+            <code className="text-xs">APIFY_API_TOKEN</code> in your Convex dashboard environment
             variables.
           </CardDescription>
         </CardHeader>
@@ -332,7 +332,7 @@ export default function SettingsPage() {
               placeholder="m5painting"
             />
             <p className="text-xs text-muted-foreground">
-              Account to pull reels from (without @). See{" "}
+              Public account to pull posts and reels from (without @). See{" "}
               <code className="text-xs">docs/INSTAGRAM_POSTS.md</code> in the repo.
             </p>
           </div>

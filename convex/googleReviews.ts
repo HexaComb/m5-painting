@@ -45,7 +45,7 @@ const upsertedReviewValidator = v.object({
 });
 
 /** How many recent Google reviews to import per sync. */
-const SYNC_REVIEW_LIMIT = 10;
+const SYNC_REVIEW_LIMIT = 20;
 
 function getSerpApiKey(): string {
   const key = process.env.SERP_API_KEY ?? process.env.SERPAPI_API_KEY;
@@ -108,6 +108,7 @@ export const upsertGoogleReviews = internalMutation({
           source: "Google",
           profilePhotoUrl: review.profilePhotoUrl,
           authorUri: review.authorUri,
+          enabled: match.hiddenByAdmin === true ? false : true,
         });
         updated += 1;
       } else {
@@ -122,7 +123,7 @@ export const upsertGoogleReviews = internalMutation({
           googleReviewId: review.googleReviewId,
           profilePhotoUrl: review.profilePhotoUrl,
           authorUri: review.authorUri,
-          enabled: false,
+          enabled: true,
         });
         imported += 1;
       }
@@ -131,7 +132,7 @@ export const upsertGoogleReviews = internalMutation({
     let pruned = 0;
     for (const row of existing) {
       if (!row.googleReviewId) continue;
-      if (isReviewEnabled(row.enabled)) continue;
+      if (isReviewEnabled(row.enabled) || row.hiddenByAdmin) continue;
       if (keepIds.has(row.googleReviewId)) continue;
       await ctx.db.delete(row._id);
       pruned += 1;
@@ -304,7 +305,7 @@ async function syncGoogleReviewsHandler(
   };
 }
 
-/** Scheduled SerpApi pull (every 10 days via crons.ts). */
+/** Scheduled SerpApi pull (daily via crons.ts). */
 export const syncGoogleReviews = internalAction({
   args: {},
   returns: syncGoogleReviewsReturns,

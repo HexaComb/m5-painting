@@ -7,7 +7,7 @@ Marketing site and admin CMS for a family-owned painting business. Content (hero
 ### Reviews
 
 **Review**:
-A customer testimonial shown on the public site or held in the CMS. Manual entries (Yelp, word of mouth) and Google imports share the same store. New manual reviews are **published** by default; new **Google review (imported)**s are not until an admin toggles them on.
+A customer testimonial shown on the public site or held in the CMS. Manual entries (Yelp, word of mouth) and Google imports share the same store. New manual reviews are **published** by default; new **Google review (imported)**s are published automatically, unless an admin hides them.
 _Avoid_: Testimonial (fine in copy, not as the data model name)
 
 **Manual review**:
@@ -19,7 +19,7 @@ The star count (1–5) shown with a **published review** on the homepage. Comes 
 _Avoid_: Score, stars field
 
 **Google review (imported)**:
-A **Review** whose text came from Google via SerpApi, identified by a stable `googleReviewId`. Sync updates its text, author, date, and rating; admins cannot edit those fields. Sync does not change whether the review is **published** by itself.
+A **Review** whose text came from Google via SerpApi, identified by a stable `googleReviewId`. Sync updates its text, author, date, and rating; admins cannot edit those fields. Sync publishes new and previously unreviewed imports, while preserving an explicit admin hide.
 _Avoid_: Cached review, SerpApi row
 
 **Published review**:
@@ -27,11 +27,11 @@ A **Review** the admin has chosen to show on the homepage (`enabled` is true). I
 _Avoid_: Active review, visible review, featured review
 
 **Homepage review cap**:
-The maximum number of **published review**s shown on the public site at once: **6**. Among published reviews, the six lowest `order` values appear on the homepage; additional published reviews remain in the CMS but are hidden on the homepage until others are unpublished or reordered.
+The maximum number of **published review**s shown on the public site at once: **6**. Among published reviews, the six newest Google reviews appear on the homepage; additional published reviews remain in the CMS but are hidden on the homepage until others are unpublished or reordered.
 _Avoid_: Limit, max reviews
 
 **Review sync**:
-A pull of the newest Google reviews from SerpApi into the CMS—either on a fixed schedule (every 10 days) or when an admin runs sync from **Admin → Settings**. Same rules either way: imports land unpublished until the admin selects them; after sync, unpublished Google imports that were not in this fetch are removed; **published review**s are kept even if they are no longer in the newest batch.
+A pull of the newest Google reviews from SerpApi into the CMS—either on a fixed schedule (daily) or when an admin runs sync from **Admin → Settings**. Same rules either way: imports publish automatically unless an admin hides them; after sync, unpublished Google imports that were not in this fetch are removed; **published review**s are kept even if they are no longer in the newest batch.
 _Avoid_: Fetch, scrape, crawl
 
 **Google Place ID**:
@@ -45,15 +45,15 @@ How a **projects post** appears on the public homepage: Instagram’s official e
 _Avoid_: Native video player, hosted reel
 
 **Projects post**:
-An Instagram post or reel in the CMS for “Projects We’re Proud Of”. Identified by embed permalink. **Manual projects post**s are pasted by an admin; **Instagram post (imported)**s come from the weekly API sync. New imports are hidden until published; manual adds are published by default.
+An Instagram post or reel in the CMS for “Projects We’re Proud Of”. Identified by embed permalink. **Manual projects post**s are pasted by an admin; **Instagram post (imported)**s come from the daily API sync. New imports are published automatically unless hidden; manual adds are published by default.
 _Avoid_: Instagram video, social post
 
 **Manual projects post**:
-A **projects post** added by pasting an Instagram URL in admin (not from RapidAPI). Fully removable; published by default like a **manual review**. Rows that existed before **projects post sync** shipped are treated as published manual posts (grandfathered).
+A **projects post** added by pasting an Instagram URL in admin (not from Apify). Fully removable; published by default like a **manual review**. Rows that existed before **projects post sync** shipped are treated as published manual posts (grandfathered).
 _Avoid_: Custom post, hand-entered reel
 
 **Instagram post (imported)**:
-A **projects post** created or updated by **projects post sync** from RapidAPI, keyed by a stable Instagram media id. Permalink comes from the API; admins toggle publish only—they do not edit the URL.
+A **projects post** created or updated by **projects post sync** from Apify, keyed by a stable Instagram media id. Permalink comes from the API; admins toggle publish only—they do not edit the URL.
 _Avoid_: Synced reel, API row
 
 **Published projects post**:
@@ -61,11 +61,11 @@ A **projects post** the admin has chosen to show on the site (`enabled` is true)
 _Avoid_: Active post, visible reel, featured post
 
 **Homepage projects post cap**:
-The maximum number of **published projects post**s shown in “Projects We’re Proud Of” at once: **3**. Among published posts, the three lowest `order` values appear on the homepage; additional published posts remain in the CMS but are hidden on the homepage until others are unpublished or reordered.
+The maximum number of **published projects post**s shown in “Projects We’re Proud Of” at once: **3**. Among published posts, the three newest imported posts appear on the homepage; additional published posts remain in the CMS but are hidden on the homepage until others are unpublished or reordered.
 _Avoid_: Limit, max posts
 
 **Projects post sync**:
-A pull of recent posts from the business Instagram account via RapidAPI—weekly on a schedule or when an admin runs sync from **Admin → Settings**. New imports land unpublished; unpublished imports missing from the latest fetch are removed; **published projects post**s are kept even if they drop out of the fetch batch.
+A pull of recent posts from the business Instagram account via Apify—daily on a schedule or when an admin runs sync from **Admin → Settings**. New imports publish automatically; unpublished imports missing from the latest fetch are removed; **published projects post**s are kept even if they drop out of the fetch batch.
 _Avoid_: Fetch, scrape, crawl
 
 **Instagram username**:
@@ -73,5 +73,5 @@ The handle (without `@`) for M5 Painting’s business Instagram account ([m5pain
 _Avoid_: IG handle, account name
 
 **Projects post sync batch**:
-How many recent items **projects post sync** pulls from Instagram per run: **12**. Only **reels** are imported; photos and carousels are skipped. Admins publish up to **3** on the homepage from this pool.
+How many recent items **projects post sync** pulls from Instagram per run: **12**. Public posts and reels are imported. Up to **3** published posts appear on the homepage.
 _Avoid_: Fetch limit, page size

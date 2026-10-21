@@ -56,7 +56,7 @@ function watchEmbedIframe(
     if (disposed || iframe.dataset.m5EmbedWatched === "true") return;
     iframe.dataset.m5EmbedWatched = "true";
     if (!iframe.title) {
-      iframe.title = "Instagram reel";
+      iframe.title = "Instagram post";
     }
 
     const markReady = () => {
@@ -156,7 +156,7 @@ export function InstagramEmbed({
               <InstagramIcon className="h-6 w-6 text-pink-600" />
             </span>
             <span className="text-xs font-medium text-white drop-shadow-sm">
-              {thumbnailUrl ? "Loading reel…" : "Loading from Instagram…"}
+              {thumbnailUrl ? "Loading post…" : "Loading from Instagram…"}
             </span>
           </div>
         </a>

@@ -12,6 +12,8 @@ export const instagramPostValidator = v.object({
   enabled: v.optional(v.boolean()),
   instagramMediaId: v.optional(v.string()),
   thumbnailUrl: v.optional(v.string()),
+  postedAt: v.optional(v.number()),
+  hiddenByAdmin: v.optional(v.boolean()),
 });
 
 export function isInstagramPostEnabled(enabled: boolean | undefined): boolean {
@@ -21,14 +23,25 @@ export function isInstagramPostEnabled(enabled: boolean | undefined): boolean {
 type InstagramPostRow = {
   order: number;
   enabled?: boolean;
+  postedAt?: number;
+  instagramMediaId?: string;
 };
 
-/** Published posts that appear on the homepage (enabled, lowest order first, capped). */
+export function compareInstagramPosts(a: InstagramPostRow, b: InstagramPostRow): number {
+  if (a.instagramMediaId && b.instagramMediaId) {
+    return (b.postedAt ?? 0) - (a.postedAt ?? 0) || a.order - b.order;
+  }
+  if (a.instagramMediaId) return -1;
+  if (b.instagramMediaId) return 1;
+  return a.order - b.order;
+}
+
+/** Recent imported posts first, then manually added posts. */
 export function selectHomepageInstagramPosts<T extends InstagramPostRow>(
   posts: T[],
 ): T[] {
   return posts
     .filter((p) => isInstagramPostEnabled(p.enabled))
-    .sort((a, b) => a.order - b.order)
+    .sort(compareInstagramPosts)
     .slice(0, HOMEPAGE_INSTAGRAM_CAP);
 }
