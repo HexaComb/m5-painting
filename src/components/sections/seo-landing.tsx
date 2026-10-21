@@ -17,6 +17,7 @@ import {
   defaultCertifications,
   defaultReviews,
 } from "@/lib/default-content";
+import { buildFaqPageJsonLd } from "@/lib/faq-jsonld";
 import {
   buildAggregateRatingJsonLd,
   buildReviewJsonLdNodes,
@@ -79,18 +80,7 @@ export function SeoLanding({
     ],
   };
 
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: page.faqs.map((faq) => ({
-      "@type": "Question",
-      name: faq.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: faq.answer,
-      },
-    })),
-  };
+  const faqJsonLd = buildFaqPageJsonLd(page.faqs);
 
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",

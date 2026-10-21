@@ -23,6 +23,7 @@ import {
   defaultContactContent,
   defaultFaqs,
 } from "@/lib/default-content";
+import { buildFaqPageJsonLd, resolveFaqs } from "@/lib/faq-jsonld";
 import { buildLocalBusinessJsonLd } from "@/lib/local-business-jsonld";
 import { SITE_URL } from "@/lib/site";
 import { SEO_PAGES } from "@/lib/seo-pages";
@@ -50,10 +51,12 @@ const content = buildContent ?? {
 };
 
 const settings = content.siteSettings ?? defaultSiteSettings;
+const faqs = resolveFaqs(content.faqs, defaultFaqs);
 const localBusinessJsonLd = buildLocalBusinessJsonLd(
   settings,
   content.reviews ?? defaultReviews,
 );
+const faqPageJsonLd = buildFaqPageJsonLd(faqs);
 
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -82,7 +85,7 @@ const serviceLinks = SEO_PAGES.filter((page) =>
 export default function Home() {
   return (
     <>
-      <JsonLd data={[localBusinessJsonLd, websiteJsonLd]} />
+      <JsonLd data={[localBusinessJsonLd, websiteJsonLd, faqPageJsonLd]} />
       <Header initialSettings={content.siteSettings} />
       <main>
         <Hero
@@ -106,7 +109,7 @@ export default function Home() {
 
         <Reviews initialReviews={content.reviews} />
 
-        <Faqs faqs={content.faqs?.length ? content.faqs : defaultFaqs} />
+        <Faqs faqs={faqs} />
 
         <section className="border-y border-brand-blue/15 bg-background py-14 sm:py-16">
           <div className="mx-auto max-w-6xl px-5 sm:px-6">
