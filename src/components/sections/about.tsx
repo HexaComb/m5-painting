@@ -77,6 +77,7 @@ export function About({
                       key={image._id}
                       src={image.imageUrl}
                       alt={image.imageAlt}
+                      aria-hidden={index !== activeImageIndex}
                       fill
                       className={`object-cover transition-opacity duration-700 ${
                         index === activeImageIndex ? "opacity-100" : "opacity-0"
@@ -119,6 +120,7 @@ export function About({
                                 : "w-2 bg-white/60"
                             }`}
                             aria-label={`Show about image ${index + 1}`}
+                            aria-pressed={index === activeImageIndex}
                             onClick={() => setActiveImageIndex(index)}
                           />
                         ))}

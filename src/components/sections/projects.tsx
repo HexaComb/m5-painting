@@ -2,7 +2,7 @@
 
 import Script from "next/script";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Play } from "lucide-react";
 import { useQuery } from "convex/react";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../../../convex/_generated/api";
@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { InstagramEmbed } from "@/components/instagram-embed";
 import type { InstagramPost } from "@/lib/content-types";
+import { instagramHighlights } from "@/lib/project-media";
 
 declare global {
   interface Window {
@@ -96,6 +97,54 @@ export function Projects({
               <small>On the job with M5</small>
             </figcaption>
           </figure>
+        </div>
+        <div className="m5-instagram-highlights">
+          <div className="m5-instagram-intro">
+            <p className="m5-eyebrow">Through our lens</p>
+            <h3>
+              Straight from
+              <br />
+              the jobsite.
+            </h3>
+            <p>
+              Real projects, real progress. A look behind the scenes with our
+              crew.
+            </p>
+            <a
+              href="https://www.instagram.com/m5painting/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              @m5painting <ArrowUpRight size={16} aria-hidden="true" />
+            </a>
+          </div>
+          {instagramHighlights.map((item) => (
+            <a
+              className="m5-reel-card"
+              href={item.source}
+              key={item.id}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <div className="m5-reel-media">
+                <Image
+                  src={item.image}
+                  alt={item.alt}
+                  fill
+                  sizes="(max-width: 760px) 230px, 25vw"
+                />
+                <span className="m5-reel-play">
+                  <Play size={18} fill="currentColor" aria-hidden="true" />
+                  <span className="sr-only">Watch reel on Instagram: </span>
+                </span>
+              </div>
+              <h4>{item.title}</h4>
+              <p>
+                {item.detail}
+                <ArrowUpRight size={14} aria-hidden="true" />
+              </p>
+            </a>
+          ))}
         </div>
         {posts && posts.length > 0 ? (
           <details

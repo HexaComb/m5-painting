@@ -979,3 +979,113 @@
     scroll-behavior: auto !important;
   }
 }
+
+.m5-instagram-highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1.3rem;
+  margin-top: 5rem;
+  padding-top: 3rem;
+  border-top: 1px solid #ffffff28;
+  align-items: start;
+}
+.m5-instagram-intro h3 {
+  font-size: 2.2rem;
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+}
+.m5-instagram-intro > p:not(.m5-eyebrow) {
+  font-size: 0.75rem;
+  line-height: 1.9;
+  color: #aebfcd;
+  margin-top: 1rem;
+  max-width: 200px;
+}
+.m5-instagram-intro > a {
+  display: inline-flex;
+  gap: 0.7rem;
+  align-items: center;
+  font-size: 0.72rem;
+  color: #a8d2ff;
+  margin-top: 1.5rem;
+}
+.m5-reel-media {
+  position: relative;
+  aspect-ratio: 9/16;
+  overflow: hidden;
+  max-height: 390px;
+  background: #243242;
+}
+.m5-reel-media img {
+  object-fit: cover;
+  transition: transform 0.5s;
+}
+.m5-reel-card:hover img {
+  transform: scale(1.035);
+}
+.m5-reel-play {
+  position: absolute;
+  inset: auto 0 1rem;
+  margin: auto;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #fff;
+  color: #142638;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 2px 15px #0004;
+}
+.m5-reel-card h4 {
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  margin-top: 1rem;
+}
+.m5-reel-card > p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  color: #aebfcd;
+  font-size: 0.6rem;
+  margin-top: 0.35rem;
+}
+#projects .instagram-frame,
+#projects .instagram-media,
+#projects .instagram-media-rendered,
+#projects .instagram-frame iframe {
+  min-width: 0 !important;
+}
+@media (max-width: 760px) {
+  .m5-instagram-highlights {
+    grid-template-columns: repeat(3, 230px);
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    padding-bottom: 1rem;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+  .m5-instagram-intro {
+    grid-column: 1 / -1;
+  }
+  .m5-instagram-intro h3 br {
+    display: none;
+  }
+  .m5-instagram-intro > p:not(.m5-eyebrow) {
+    max-width: 310px;
+  }
+  .m5-instagram-intro > a {
+    margin-block: 1rem;
+  }
+  .m5-reel-card {
+    scroll-snap-align: start;
+  }
+  .m5-reel-media {
+    max-height: none;
+  }
+  .m5-instagram-highlights {
+    overscroll-behavior-x: contain;
+  }
+}
