@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { ArrowDown, ArrowUpRight, Check, Phone } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -11,6 +10,10 @@ import type {
 } from "@/lib/content-types";
 import { defaultCertifications } from "@/lib/default-content";
 import { HeroMedia } from "./hero-media";
+import {
+  DEFAULT_HERO_VIDEO,
+  DEFAULT_HERO_VIDEO_ALT,
+} from "@/lib/content-types";
 
 export function Hero({
   initialHero,
@@ -31,6 +34,8 @@ export function Hero({
       ? (initialCertifications ?? defaultCertifications)
       : liveCertifications;
   if (!hero || !settings) return null;
+  const mediaSrc = hero.mediaUrl ?? DEFAULT_HERO_VIDEO;
+  const mediaType = hero.mediaUrl ? (hero.mediaType ?? "image") : "video";
   return (
     <>
       <section className="m5-hero" aria-labelledby="hero-title">
@@ -66,39 +71,40 @@ export function Hero({
             A closer look at our work
           </a>
         </div>
-        <div className="m5-hero-visual">
-          {hero.mediaUrl ? (
-            <HeroMedia
-              src={hero.mediaUrl}
-              type={hero.mediaType ?? "image"}
-              alt={hero.mediaAlt ?? "M5 Painting project"}
-              priority
-              sizes="(max-width: 760px) 100vw, 50vw"
-            />
-          ) : (
-            <Image
-              src="/images/project-door.webp"
-              alt="Freshly painted entry, siding, and white trim from an M5 Painting project"
-              fill
-              priority
-              sizes="(max-width: 760px) 100vw, 50vw"
-              className="m5-hero-image"
-            />
+        <div
+          className={`m5-hero-visual ${mediaType === "video" ? "m5-hero-video" : ""}`}
+        >
+          <HeroMedia
+            src={mediaSrc}
+            type={mediaType}
+            alt={hero.mediaAlt ?? DEFAULT_HERO_VIDEO_ALT}
+            poster={
+              mediaSrc === DEFAULT_HERO_VIDEO
+                ? "/images/hero-video-poster.webp"
+                : undefined
+            }
+            priority
+            sizes="(max-width: 760px) 100vw, 50vw"
+          />
+          {mediaType !== "video" && (
+            <>
+              <div className="m5-photo-note">
+                <span>A CLOSER LOOK AT M5</span>
+                <p>
+                  From the first call.
+                  <br />
+                  To the final coat.
+                </p>
+              </div>
+              <a
+                href="#projects"
+                className="m5-photo-link"
+                aria-label="Explore M5 Painting projects"
+              >
+                <ArrowUpRight size={25} aria-hidden="true" />
+              </a>
+            </>
           )}
-          <div className="m5-photo-note">
-            <span>THE DETAILS MAKE THE DIFFERENCE</span>
-            <p>
-              A fresh welcome.
-              <br />A lasting impression.
-            </p>
-          </div>
-          <a
-            href="#projects"
-            className="m5-photo-link"
-            aria-label="Explore M5 Painting projects"
-          >
-            <ArrowUpRight size={25} aria-hidden="true" />
-          </a>
         </div>
       </section>
       <div className="m5-trust-band">
@@ -109,7 +115,6 @@ export function Hero({
           </span>
           {certifications
             .filter((c) => c.showInHero && c.enabled !== false)
-
             .map((c) => (
               <span key={c._id}>
                 <Check size={16} aria-hidden="true" />

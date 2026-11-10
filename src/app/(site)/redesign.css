@@ -1108,3 +1108,52 @@
   color: var(--m5-blue);
   flex: none;
 }
+
+.m5-video-toggle {
+  position: absolute;
+  z-index: 3;
+  top: 1.25rem;
+  right: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  min-width: 88px;
+  padding: 0.65rem 0.9rem;
+  color: white;
+  background: #0d1824d9;
+  border: 1px solid #ffffff80;
+  border-radius: 2px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.m5-video-toggle:hover {
+  background: #0d1824;
+}
+
+/* Keep the original portrait process video's captions in-frame. */
+.m5-hero-video {
+  background: #0d1824;
+}
+.m5-hero-video::before {
+  content: "";
+  position: absolute;
+  inset: -25px;
+  background: url("/images/hero-video-poster.webp") center / cover;
+  filter: blur(20px);
+  opacity: 0.3;
+}
+.m5-hero-video::after {
+  display: none;
+}
+.m5-hero-video video {
+  object-fit: contain;
+  z-index: 1;
+}
+@media (max-width: 760px) {
+  .m5-hero-video {
+    aspect-ratio: 3 / 4;
+  }
+}

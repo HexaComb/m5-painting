@@ -12,7 +12,7 @@ M5 retains its own blue identity, live CMS copy, family imagery, current phone/e
 
 ## Media
 
-Existing `/images/project-*` assets are the site's original M5 project photography. The family images remain managed by the live CMS. Hero image/video overrides remain editable in the existing CMS; when no override is set, the preview uses the real entry-door photograph rather than stretching a captioned portrait process reel across a large hero.
+Existing `/images/project-*` assets are the site's original M5 project photography. The family images remain managed by the live CMS. Hero image/video overrides remain editable in the existing CMS. Following the requested video update, the default is the existing `/videos/m5easyprocess-720p.mp4` already used by M5’s website (introduced in commit `0beb15f`). This is the existing branded process video, not newly sourced or generated footage. A WebP poster is a direct frame from that video at 14.5 seconds. The video is muted, inline, and looping, with a visible pause/play control. It does not autoplay for reduced-motion or data-saver visitors, and `preload="none"` avoids downloading it before playback is requested.
 
 Instagram embeds are progressively loaded only when visitors open “More from our jobsites.” The regular homepage doesn't eagerly load third-party embeds. A proper image gallery remains visible even if Instagram is unavailable.
 
@@ -26,7 +26,7 @@ Instagram embeds are progressively loaded only when visitors open “More from o
 
 Form UI is preserved, including the in-flight duplicate-submission lock, required fields, success/reset states and success-only analytics. No test leads are sent to the live business.
 
-Fonts are local WOFF2 Latin subsets with SIL licenses, 64 KB combined. Large photos use Next image responsive sizing. Hero image is prioritized; below-fold images are lazy. Reduced-motion disables the entry animation/reveals, and the family gallery rotates only on deliberate control input.
+Fonts are local WOFF2 Latin subsets with SIL licenses, 64 KB combined. Large photos use Next image responsive sizing. Below-fold images are lazy. Reduced-motion disables the entry animation/reveals, and the family gallery rotates only on deliberate control input.
 
 ### Instagram source cards
 
@@ -35,4 +35,4 @@ Three real M5 Instagram reel covers have been saved locally and linked directly 
 - Tulare masking/prep, explicitly labeled before: https://www.instagram.com/m5painting/reel/Dcr__0mhvxS/
 - Crew at a home: https://www.instagram.com/m5painting/reel/DWhiXKQEljE/
 
-Original-source captions and the before-stage are not presented as finished transformations. Complete post/reel access requires Instagram login; these public covers remain a safe fallback.
+Original-source captions and the before-stage are not presented as finished transformations. Further Instagram sourcing was stopped at the user’s request. These existing public source cards remain unchanged.
