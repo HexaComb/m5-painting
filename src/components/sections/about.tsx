@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Check } from "lucide-react";
 import { Reveal } from "@/components/ui/reveal";
 import { Button } from "@/components/ui/button";
 import { useQuery } from "convex/react";
@@ -38,8 +38,7 @@ export function About({
     imageUrl: about?.imageUrl ?? DEFAULT_ABOUT_IMAGE,
     imageAlt: about?.imageAlt ?? DEFAULT_ABOUT_IMAGE_ALT,
   };
-  const galleryImages =
-    images && images.length > 0 ? images : [fallbackImage];
+  const galleryImages = images && images.length > 0 ? images : [fallbackImage];
   const hasMultipleImages = galleryImages.length > 1;
 
   useEffect(() => {
@@ -48,20 +47,11 @@ export function About({
     );
   }, [galleryImages.length]);
 
-  useEffect(() => {
-    if (!hasMultipleImages) return;
-    const intervalId = window.setInterval(() => {
-      setActiveImageIndex((current) => (current + 1) % galleryImages.length);
-    }, 6000);
-    return () => window.clearInterval(intervalId);
-  }, [galleryImages.length, hasMultipleImages]);
-
   if (!about || !values) return null;
 
   const showPreviousImage = () => {
     setActiveImageIndex(
-      (current) =>
-        (current - 1 + galleryImages.length) % galleryImages.length,
+      (current) => (current - 1 + galleryImages.length) % galleryImages.length,
     );
   };
 
@@ -70,18 +60,18 @@ export function About({
   };
 
   return (
-    <section id="about" className="brand-surface-dark relative overflow-hidden py-20 sm:py-28">
+    <section id="about" className="m5-section m5-about">
       <div
         aria-hidden
         className="pointer-events-none absolute -right-20 top-24 h-56 w-[min(70vw,420px)] brand-swoosh"
       />
-      <div className="mx-auto max-w-6xl px-5 sm:px-6">
+      <div className="m5-container">
         <div className="grid gap-14 lg:grid-cols-12 lg:items-start">
           {/* Image column */}
           <div className="lg:col-span-5 lg:sticky lg:top-24">
             <Reveal>
               <div className="relative mx-auto max-w-sm lg:max-w-none">
-                <div className="relative aspect-[3/4] overflow-hidden rounded-2xl shadow-xl shadow-brand-navy/15">
+                <div className="m5-about-photo">
                   {galleryImages.map((image, index) => (
                     <Image
                       key={image._id}
@@ -144,11 +134,10 @@ export function About({
           <div className="space-y-10 lg:col-span-7">
             <Reveal>
               <div>
-                <p className="text-label text-brand-electric">{about.subtitle}</p>
-                <h2 className="mt-2 text-headline font-bold text-on-dark">
-                  {about.title}
-                </h2>
-                <div className="mt-3 h-0.5 w-14 brand-gradient-blue" />
+                <p className="text-label text-brand-electric">
+                  {about.subtitle}
+                </p>
+                <h2 className="m5-about-title">{about.title}</h2>
               </div>
             </Reveal>
 
@@ -162,7 +151,7 @@ export function About({
               </div>
             </Reveal>
 
-            {/* Values — numbered list with rule separators */}
+            {/* Values use a quiet craft mark, never decorative numbering. */}
             <div className="divide-y divide-white/10">
               {values.map((value, idx) => (
                 <Reveal
@@ -171,12 +160,11 @@ export function About({
                   className="py-5"
                 >
                   <div className="flex gap-5">
-                    <span
+                    <Check
+                      className="mt-1 shrink-0 text-brand-electric"
+                      size={16}
                       aria-hidden="true"
-                      className="shrink-0 pt-px text-[0.65rem] font-bold leading-none tracking-[0.15em] text-brand-electric/80"
-                    >
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
+                    />
                     <div>
                       <h3 className="text-sm font-bold text-on-dark">
                         {value.title}

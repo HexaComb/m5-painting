@@ -23,7 +23,8 @@ export function Contact({
   const queryContact = useQuery(api.content.getContactContent);
   const querySettings = useQuery(api.content.getSiteSettings);
   const contact = queryContact === undefined ? initialContact : queryContact;
-  const settings = querySettings === undefined ? initialSettings : querySettings;
+  const settings =
+    querySettings === undefined ? initialSettings : querySettings;
   const submitLead = useMutation(api.content.submitLead);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -83,17 +84,15 @@ export function Contact({
   };
 
   return (
-    <section id="contact" className="surface-estimate-blue relative py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-5 sm:px-6">
+    <section id="contact" className="m5-section m5-contact">
+      <div className="m5-container">
         <div className="grid gap-14 lg:grid-cols-12">
           {/* Left: info — 5 cols */}
           <div className="lg:col-span-5">
             <Reveal>
               <div className="space-y-6">
                 <div>
-                  <p className="text-label-light">
-                    {contact.subtitle}
-                  </p>
+                  <p className="text-label-light">{contact.subtitle}</p>
                   <h2 className="mt-2 text-headline font-bold text-foreground">
                     {contact.title}
                   </h2>
@@ -126,9 +125,7 @@ export function Contact({
                       <p className="text-xs font-medium text-muted-foreground">
                         Based in
                       </p>
-                      <p className="text-sm font-bold">
-                        {settings.address}
-                      </p>
+                      <p className="text-sm font-bold">{settings.address}</p>
                     </div>
                   </div>
                   <a
@@ -142,9 +139,7 @@ export function Contact({
                       <p className="text-xs font-medium text-muted-foreground">
                         Email us
                       </p>
-                      <p className="text-sm font-bold">
-                        {settings.email}
-                      </p>
+                      <p className="text-sm font-bold">{settings.email}</p>
                     </div>
                   </a>
                 </div>
@@ -155,13 +150,15 @@ export function Contact({
           {/* Right: form — 7 cols */}
           <div className="lg:col-span-7">
             <Reveal delay={1}>
-              <div className="rounded-xl border border-brand-navy/15 bg-card/95 p-6 shadow-xl shadow-brand-navy/20 sm:p-8">
+              <div className="m5-contact-form">
                 {submitted ? (
                   <div className="py-12 text-center">
                     <div className="mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-primary">
                       <Mail className="h-6 w-6" />
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground">Message Sent!</h3>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      Message Sent!
+                    </h3>
                     <p className="mt-2 text-sm text-muted-foreground">
                       Thanks for reaching out. We&apos;ll get back to you soon.
                     </p>
@@ -183,108 +180,108 @@ export function Contact({
                     className="space-y-5"
                     onSubmit={handleSubmit}
                   >
-                  <div className="grid gap-5 sm:grid-cols-2">
+                    <div className="grid gap-5 sm:grid-cols-2">
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="name"
+                          className="text-sm font-semibold text-foreground"
+                        >
+                          Name
+                        </label>
+                        <Input
+                          id="name"
+                          name="name"
+                          placeholder="Your name"
+                          required
+                          className="h-11 bg-background"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label
+                          htmlFor="phone"
+                          className="text-sm font-semibold text-foreground"
+                        >
+                          Phone
+                        </label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          type="tel"
+                          placeholder="(559) 000-0000"
+                          className="h-11 bg-background"
+                        />
+                      </div>
+                    </div>
                     <div className="space-y-2">
                       <label
-                        htmlFor="name"
+                        htmlFor="email"
                         className="text-sm font-semibold text-foreground"
                       >
-                        Name
+                        Email
                       </label>
                       <Input
-                        id="name"
-                        name="name"
-                        placeholder="Your name"
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="you@email.com"
                         required
                         className="h-11 bg-background"
                       />
                     </div>
                     <div className="space-y-2">
                       <label
-                        htmlFor="phone"
+                        htmlFor="interest"
                         className="text-sm font-semibold text-foreground"
                       >
-                        Phone
+                        What Are You Looking For?
                       </label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        placeholder="(559) 000-0000"
-                        className="h-11 bg-background"
+                      <select
+                        id="interest"
+                        name="interest"
+                        required
+                        className="flex h-11 w-full rounded-lg border border-input bg-background px-3 py-2 text-base shadow-sm transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
+                        defaultValue=""
+                      >
+                        <option value="" disabled>
+                          Pick one
+                        </option>
+                        <option value="interior">Interior Painting</option>
+                        <option value="exterior">Exterior Painting</option>
+                        <option value="commercial">Commercial Painting</option>
+                        <option value="consultation">
+                          Just Want to Talk It Through
+                        </option>
+                        <option value="other">Something Else</option>
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label
+                        htmlFor="message"
+                        className="text-sm font-semibold text-foreground"
+                      >
+                        Tell Us About Your Project
+                      </label>
+                      <Textarea
+                        id="message"
+                        name="message"
+                        placeholder="What are you looking to have done? Any details help us give a better quote..."
+                        rows={4}
+                        required
+                        className="bg-background"
                       />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="email"
-                      className="text-sm font-semibold text-foreground"
+                    <Button
+                      type="submit"
+                      size="lg"
+                      disabled={submitting}
+                      className="h-auto w-full px-6 py-3.5 text-base font-semibold shadow-lg shadow-primary/20"
                     >
-                      Email
-                    </label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      placeholder="you@email.com"
-                      required
-                      className="h-11 bg-background"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="interest"
-                      className="text-sm font-semibold text-foreground"
-                    >
-                      What Are You Looking For?
-                    </label>
-                    <select
-                      id="interest"
-                      name="interest"
-                      required
-                      className="flex h-11 w-full rounded-lg border border-input bg-background px-3 py-2 text-base shadow-sm transition-colors focus-visible:border-ring focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50 md:text-sm"
-                      defaultValue=""
-                    >
-                      <option value="" disabled>
-                        Pick one
-                      </option>
-                      <option value="interior">Interior Painting</option>
-                      <option value="exterior">Exterior Painting</option>
-                      <option value="commercial">Commercial Painting</option>
-                      <option value="consultation">
-                        Just Want to Talk It Through
-                      </option>
-                      <option value="other">Something Else</option>
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <label
-                      htmlFor="message"
-                      className="text-sm font-semibold text-foreground"
-                    >
-                      Tell Us About Your Project
-                    </label>
-                    <Textarea
-                      id="message"
-                      name="message"
-                      placeholder="What are you looking to have done? Any details help us give a better quote..."
-                      rows={4}
-                      required
-                      className="bg-background"
-                    />
-                  </div>
-                  <Button
-                    type="submit"
-                    size="lg"
-                    disabled={submitting}
-                    className="h-auto w-full px-6 py-3.5 text-base font-semibold shadow-lg shadow-primary/20"
-                  >
-                    {submitting && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    {submitting ? "Sending..." : "Send It Over"}
-                  </Button>
-                </form>
+                      {submitting && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
+                      {submitting ? "Sending..." : "Request My Free Estimate"}
+                    </Button>
+                  </form>
                 )}
               </div>
             </Reveal>

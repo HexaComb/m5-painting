@@ -1,3 +1,5 @@
+import "./redesign.css";
+
 export default function SiteLayout({
   children,
 }: {

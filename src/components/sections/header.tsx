@@ -1,163 +1,153 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Phone, Menu, X } from "lucide-react";
+import { ArrowUpRight, Menu, Phone, X } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { SiteSettings } from "@/lib/content-types";
 
-const navLinks = [
+const links = [
   { label: "Services", href: "/services", track: "nav-services" },
   { label: "Our Work", href: "/#projects", track: "nav-work" },
-  { label: "About", href: "/#about", track: "nav-about" },
+  { label: "Our Story", href: "/#about", track: "nav-about" },
   { label: "Reviews", href: "/#reviews", track: "nav-reviews" },
-  { label: "Contact", href: "/contact", track: "nav-contact" },
 ];
 
-export function Header({ initialSettings }: { initialSettings?: SiteSettings | null }) {
+export function Header({
+  initialSettings,
+}: {
+  initialSettings?: SiteSettings | null;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const querySettings = useQuery(api.content.getSiteSettings);
-  const settings = querySettings === undefined ? initialSettings : querySettings;
-  const isHeaderSolid = scrolled || mobileOpen;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const live = useQuery(api.content.getSiteSettings);
+  const settings = live === undefined ? initialSettings : live;
 
   useEffect(() => {
     if (!mobileOpen) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
+    const close = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMobileOpen(false);
+        menuButton.current?.focus();
       }
     };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", close);
+    return () => document.removeEventListener("keydown", close);
   }, [mobileOpen]);
 
-  if (!settings) return null;
+  useEffect(() => {
+    const breakpoint = window.matchMedia("(min-width: 768px)");
+    const reset = () => {
+      if (breakpoint.matches) setMobileOpen(false);
+    };
+    breakpoint.addEventListener("change", reset);
+    return () => breakpoint.removeEventListener("change", reset);
+  }, []);
 
+  if (!settings) return null;
   return (
-    <header
-      className={`fixed top-0 z-50 w-full border-b transition-all duration-500 ease-out ${
-        isHeaderSolid
-          ? "border-white/10 bg-brand-black/95 shadow-lg shadow-black/50 backdrop-blur-md"
-          : "border-transparent bg-transparent shadow-none backdrop-blur-none"
-      }`}
-    >
-      <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[5.25rem]">
-        <Link href="/" className="flex shrink-0 items-center" aria-label={settings.businessName}>
+    <header className="m5-site-header fixed top-0 z-50 w-full border-b">
+      <div className="m5-container flex h-[5rem] items-center justify-between lg:h-[6rem]">
+        <Link
+          href="/"
+          aria-label={`${settings.businessName} home`}
+          className="flex shrink-0 items-center"
+        >
           <Image
             src="/images/logo.webp"
-            alt={settings.businessName}
+            alt=""
             width={1024}
             height={1024}
-            className="h-14 w-14 object-contain sm:h-16 sm:w-16"
-            sizes="(min-width: 640px) 64px, 56px"
+            sizes="(min-width: 640px) 80px, 64px"
+            className="h-16 w-16 object-contain sm:h-20 sm:w-20"
             priority
           />
+          <span className="m5-wordmark" aria-hidden="true">
+            M5 PAINTING<small>RESIDENTIAL &amp; COMMERCIAL</small>
+          </span>
         </Link>
-
-        <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
+        <nav
+          className="hidden items-center gap-1 md:flex"
+          aria-label="Main navigation"
+        >
+          {links.map((link) => (
             <a
               key={link.href}
               href={link.href}
               data-track={link.track}
-              className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-300 ${
-                isHeaderSolid
-                  ? "text-on-dark-secondary hover:text-on-dark"
-                  : "text-white/90 hover:text-white"
-              }`}
+              className="px-3 py-3 text-xs font-medium text-white/85 transition-colors hover:text-white"
             >
               {link.label}
             </a>
           ))}
         </nav>
-
-        <div className="flex items-center gap-2">
-          <a href={`tel:${settings.phone.replace(/\D/g, "")}`} data-track="header-phone" className="hidden lg:inline-flex">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`font-medium transition-colors duration-300 ${
-                isHeaderSolid
-                  ? "text-on-dark-secondary hover:bg-white/10 hover:text-on-dark"
-                  : "text-white/90 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <Phone className="mr-1.5 h-3.5 w-3.5" />
-              {settings.phone}
-            </Button>
+        <div className="flex items-center gap-4">
+          <a
+            href={`tel:${settings.phone.replace(/\D/g, "")}`}
+            data-track="header-phone"
+            className="hidden items-center gap-2 text-xs text-white xl:flex"
+          >
+            <Phone size={14} aria-hidden="true" />
+            {settings.phone}
           </a>
-          <Link href="/contact" data-track="header-estimate">
-            <Button
-              size="sm"
-              className="brand-gradient-blue min-h-11 border-0 px-4 font-bold text-white shadow-md brand-glow hover:opacity-95 md:min-h-9"
-            >
-              Free Estimate
-            </Button>
+          <Link
+            href="/contact"
+            data-track="header-estimate"
+            className="m5-nav-cta inline-flex items-center justify-center gap-3"
+          >
+            Free Estimate <ArrowUpRight size={16} aria-hidden="true" />
           </Link>
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`ml-1 inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50 md:hidden ${
-              isHeaderSolid ? "text-on-dark-secondary hover:text-on-dark" : "text-white/90 hover:text-white"
-            }`}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            ref={menuButton}
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            className="flex h-11 w-11 items-center justify-center text-white md:hidden"
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
         </div>
       </div>
-
       <div
         id="mobile-navigation"
-        aria-hidden={!mobileOpen}
-        inert={!mobileOpen}
-        className={`grid overflow-hidden border-t border-white/10 bg-brand-black/98 transition-[grid-template-rows,opacity] duration-300 ease-out md:hidden ${
-          mobileOpen ? "grid-rows-[1fr] opacity-100" : "pointer-events-none grid-rows-[0fr] opacity-0"
-        }`}
+        hidden={!mobileOpen}
+        className="border-t border-white/15 bg-[#0d1824] md:hidden"
       >
-        <div className="min-h-0">
-          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-5 pb-5 pt-3 sm:px-6" aria-label="Mobile navigation">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                data-track={link.track}
-                onClick={() => setMobileOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-bold text-on-dark-secondary transition-colors hover:bg-white/10 hover:text-on-dark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50"
-              >
-                {link.label}
-              </a>
-            ))}
-            <Link href="/contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
-              <Button className="brand-gradient-blue min-h-12 w-full border-0 font-bold text-white shadow-md brand-glow hover:opacity-95">
-                Free Estimate
-              </Button>
-            </Link>
+        <nav
+          className="m5-container flex flex-col gap-1 py-5"
+          aria-label="Mobile navigation"
+        >
+          {links.map((link) => (
             <a
-              href={`tel:${settings.phone.replace(/\D/g, "")}`}
-              data-track="header-phone"
+              key={link.href}
+              href={link.href}
+              data-track={link.track}
               onClick={() => setMobileOpen(false)}
-              className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm font-bold text-brand-electric transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50"
+              className="py-3 text-base font-medium text-white"
             >
-              <Phone className="h-4 w-4" />
-              {settings.phone}
+              {link.label}
             </a>
-          </nav>
-        </div>
+          ))}
+          <Link
+            href="/contact"
+            onClick={() => setMobileOpen(false)}
+            className="py-3 text-base font-medium text-white"
+          >
+            Contact
+          </Link>
+          <a
+            href={`tel:${settings.phone.replace(/\D/g, "")}`}
+            data-track="header-phone"
+            className="flex items-center gap-2 border-t border-white/15 pt-5 text-sm text-blue-200"
+          >
+            <Phone size={16} aria-hidden="true" />
+            {settings.phone}
+          </a>
+        </nav>
       </div>
     </header>
   );
