@@ -34,11 +34,25 @@ export function Hero({
       ? (initialCertifications ?? defaultCertifications)
       : liveCertifications;
   if (!hero || !settings) return null;
-  const mediaSrc = hero.mediaUrl ?? DEFAULT_HERO_VIDEO;
-  const mediaType = hero.mediaUrl ? (hero.mediaType ?? "image") : "video";
+  // Keep the full process video available in the CMS; use its caption-free
+  // jobsite excerpt for the homepage background.
+  const useDefaultMedia = !hero.mediaUrl || hero.mediaUrl === DEFAULT_HERO_VIDEO;
+  const mediaSrc = useDefaultMedia
+    ? "/videos/m5-hero-background.mp4"
+    : hero.mediaUrl!;
+  const mediaType = useDefaultMedia ? "video" : (hero.mediaType ?? "image");
   return (
     <>
       <section className="m5-hero" aria-labelledby="hero-title">
+        <HeroMedia
+          src={mediaSrc}
+          type={mediaType}
+          alt={hero.mediaAlt ?? DEFAULT_HERO_VIDEO_ALT}
+          poster={useDefaultMedia ? "/images/hero-video-poster.webp" : undefined}
+          priority
+          sizes="100vw"
+          className="m5-hero-background"
+        />
         <div className="m5-hero-copy">
           <p className="m5-eyebrow">
             <span className="m5-status-dot" /> Sanger roots. Central Valley
@@ -70,41 +84,6 @@ export function Hero({
             </span>{" "}
             A closer look at our work
           </a>
-        </div>
-        <div
-          className={`m5-hero-visual ${mediaType === "video" ? "m5-hero-video" : ""}`}
-        >
-          <HeroMedia
-            src={mediaSrc}
-            type={mediaType}
-            alt={hero.mediaAlt ?? DEFAULT_HERO_VIDEO_ALT}
-            poster={
-              mediaSrc === DEFAULT_HERO_VIDEO
-                ? "/images/hero-video-poster.webp"
-                : undefined
-            }
-            priority
-            sizes="(max-width: 760px) 100vw, 50vw"
-          />
-          {mediaType !== "video" && (
-            <>
-              <div className="m5-photo-note">
-                <span>A CLOSER LOOK AT M5</span>
-                <p>
-                  From the first call.
-                  <br />
-                  To the final coat.
-                </p>
-              </div>
-              <a
-                href="#projects"
-                className="m5-photo-link"
-                aria-label="Explore M5 Painting projects"
-              >
-                <ArrowUpRight size={25} aria-hidden="true" />
-              </a>
-            </>
-          )}
         </div>
       </section>
       <div className="m5-trust-band">

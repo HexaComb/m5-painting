@@ -71,13 +71,22 @@ export function HeroMedia({
           ref={videoRef}
           src={src}
           poster={poster}
+          style={
+            poster
+              ? {
+                  backgroundImage: `url("${poster}")`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center 30%",
+                }
+              : undefined
+          }
           preload="none"
           className={`absolute inset-0 h-full w-full ${className}`}
           muted
           loop
           playsInline
           autoPlay={autoplayAllowed}
-          aria-label={alt}
+          aria-hidden="true"
           onPlay={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
         />
