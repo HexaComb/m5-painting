@@ -38,3 +38,11 @@ Three real M5 Instagram reel covers have been saved locally and linked directly 
 - Crew at a home: https://www.instagram.com/m5painting/reel/DWhiXKQEljE/
 
 Original-source captions and the before-stage are not presented as finished transformations. Further Instagram sourcing was stopped at the user’s request. These existing public source cards remain unchanged.
+
+## Navbar refinement
+
+The navbar is now a quieter, flat warm-white strip inspired by the cleaner Ruiz navigation structure: compact typographic M5 / Painting branding, evenly spaced dark links, and one dark estimate action. The original detailed logo remains elsewhere on the site; the header no longer squeezes that artwork, a duplicate wordmark, tiny tagline, phone number, and multiple competing actions into one row. There are no gradients or floating pill containers in the navbar. The hero video and its overlay are unchanged.
+
+Desktop navigation remains visible from 960px. Smaller screens use a 44px menu toggle and scrollable, clearly separated menu rows. The disclosure closes on link selection, Escape (returning focus), outside pointer interaction, focus leaving the header, route changes, and a switch to desktop width. Phone access remains in the mobile menu and existing site content. Current standalone nav pages expose `aria-current`.
+
+Navbar validation: Bun production build (31 routes), standalone lint/TypeScript, and generated HTML checks passed for home/services/contact. An isolated React + Happy DOM harness passed initial closed state, repeated open/close, Escape and focus return, link selection, outside pointer, focus leaving, desktop breakpoint, route changes, active service link, estimate action, and telephone target. This is a DOM behavior test, not a real-browser rendering test. Live visual/overflow checks remain unavailable because the desktop attachment reported offline; preview protection was not changed.

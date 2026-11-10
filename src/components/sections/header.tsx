@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, Phone, X } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
@@ -21,24 +21,35 @@ export function Header({
   initialSettings?: SiteSettings | null;
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const menuButton = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
   const live = useQuery(api.content.getSiteSettings);
   const settings = live === undefined ? initialSettings : live;
 
   useEffect(() => {
     if (!mobileOpen) return;
-    const close = (event: KeyboardEvent) => {
+    const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setMobileOpen(false);
         menuButton.current?.focus();
       }
     };
-    document.addEventListener("keydown", close);
-    return () => document.removeEventListener("keydown", close);
+    const closeOutside = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
+        setMobileOpen(false);
+      }
+    };
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOutside);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOutside);
+    };
   }, [mobileOpen]);
 
   useEffect(() => {
-    const breakpoint = window.matchMedia("(min-width: 768px)");
+    const breakpoint = window.matchMedia("(min-width: 960px)");
     const reset = () => {
       if (breakpoint.matches) setMobileOpen(false);
     };
@@ -46,108 +57,107 @@ export function Header({
     return () => breakpoint.removeEventListener("change", reset);
   }, []);
 
+  useEffect(() => setMobileOpen(false), [pathname]);
+
   if (!settings) return null;
+  const phoneHref = `tel:${settings.phone.replace(/\D/g, "")}`;
+
   return (
-    <header className="m5-site-header fixed top-0 z-50 w-full border-b">
-      <div className="m5-container flex h-[5rem] items-center justify-between lg:h-[6rem]">
+    <header
+      ref={headerRef}
+      className="m5-site-header"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setMobileOpen(false);
+        }
+      }}
+    >
+      <div className="m5-container m5-nav-inner">
         <Link
           href="/"
           aria-label={`${settings.businessName} home`}
-          className="flex shrink-0 items-center"
+          className="m5-nav-brand"
+          onClick={() => setMobileOpen(false)}
         >
-          <Image
-            src="/images/logo.webp"
-            alt=""
-            width={1024}
-            height={1024}
-            sizes="(min-width: 640px) 80px, 64px"
-            className="h-16 w-16 object-contain sm:h-20 sm:w-20"
-            priority
-          />
-          <span className="m5-wordmark" aria-hidden="true">
-            M5 PAINTING<small>RESIDENTIAL &amp; COMMERCIAL</small>
-          </span>
+          <span className="m5-brand-monogram" aria-hidden="true">M5</span>
+          <span className="m5-brand-name" aria-hidden="true">Painting</span>
         </Link>
-        <nav
-          className="hidden items-center gap-1 md:flex"
-          aria-label="Main navigation"
-        >
+        <nav className="m5-desktop-nav" aria-label="Main navigation">
           {links.map((link) => (
-            <a
+            <Link
               key={link.href}
               href={link.href}
               data-track={link.track}
-              className="px-3 py-3 text-xs font-medium text-white/85 transition-colors hover:text-white"
+              className="m5-nav-link"
+              aria-current={pathname === link.href ? "page" : undefined}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
-          <a
-            href={`tel:${settings.phone.replace(/\D/g, "")}`}
-            data-track="header-phone"
-            className="hidden items-center gap-2 text-xs text-white xl:flex"
-          >
-            <Phone size={14} aria-hidden="true" />
-            {settings.phone}
-          </a>
+        <div className="m5-nav-actions">
           <Link
             href="/contact"
             data-track="header-estimate"
-            className="m5-nav-cta inline-flex items-center justify-center gap-3"
+            className="m5-nav-cta"
+            aria-label="Get a free estimate"
+            onClick={() => setMobileOpen(false)}
           >
-            Free Estimate <ArrowUpRight size={16} aria-hidden="true" />
+            <span className="m5-estimate-label">Free estimate</span>
+            <span className="m5-estimate-short" aria-hidden="true">Estimate</span>
+            <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
           <button
             ref={menuButton}
             type="button"
             onClick={() => setMobileOpen((open) => !open)}
-            className="flex h-11 w-11 items-center justify-center text-white md:hidden"
+            className="m5-menu-toggle"
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+            {mobileOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
           </button>
         </div>
       </div>
       <div
         id="mobile-navigation"
         hidden={!mobileOpen}
-        className="border-t border-white/15 bg-[#0d1824] md:hidden"
+        className="m5-mobile-panel"
       >
-        <nav
-          className="m5-container flex flex-col gap-1 py-5"
-          aria-label="Mobile navigation"
-        >
-          {links.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              data-track={link.track}
+        <div className="m5-container m5-mobile-inner">
+          <nav className="m5-mobile-nav" aria-label="Mobile navigation">
+            {links.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-track={link.track}
+                onClick={() => setMobileOpen(false)}
+                aria-current={pathname === link.href ? "page" : undefined}
+              >
+                {link.label}
+                <ArrowUpRight size={20} aria-hidden="true" />
+              </Link>
+            ))}
+            <Link
+              href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="py-3 text-base font-medium text-white"
+              aria-current={pathname === "/contact" ? "page" : undefined}
             >
-              {link.label}
-            </a>
-          ))}
-          <Link
-            href="/contact"
-            onClick={() => setMobileOpen(false)}
-            className="py-3 text-base font-medium text-white"
-          >
-            Contact
-          </Link>
+              Contact
+              <ArrowUpRight size={20} aria-hidden="true" />
+            </Link>
+          </nav>
           <a
-            href={`tel:${settings.phone.replace(/\D/g, "")}`}
+            href={phoneHref}
             data-track="header-phone"
-            className="flex items-center gap-2 border-t border-white/15 pt-5 text-sm text-blue-200"
+            className="m5-mobile-call"
+            onClick={() => setMobileOpen(false)}
           >
-            <Phone size={16} aria-hidden="true" />
-            {settings.phone}
+            <Phone size={17} aria-hidden="true" />
+            <span>Let’s talk about your project<strong>{settings.phone}</strong></span>
           </a>
-        </nav>
+        </div>
       </div>
     </header>
   );
