@@ -98,6 +98,8 @@
   font-weight: 500;
 }
 .m5-site-header .m5-nav-cta {
+  color: white;
+  padding: 0.75rem 1.1rem;
   background: var(--m5-blue);
   border-radius: 2px;
   font-size: 0.75rem;
@@ -1088,4 +1090,21 @@
   .m5-instagram-highlights {
     overscroll-behavior-x: contain;
   }
+}
+.m5-consultation-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem 1.4rem;
+  margin-top: 1rem;
+}
+.m5-consultation-items li {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.66rem;
+  color: #3c4c58;
+}
+.m5-consultation-items svg {
+  color: var(--m5-blue);
+  flex: none;
 }

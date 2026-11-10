@@ -6,7 +6,6 @@ import { ArrowUpRight, Play } from "lucide-react";
 import { useQuery } from "convex/react";
 import { useCallback, useEffect, useState } from "react";
 import { api } from "../../../convex/_generated/api";
-import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/ui/reveal";
 import { InstagramEmbed } from "@/components/instagram-embed";
 import type { InstagramPost } from "@/lib/content-types";
@@ -181,10 +180,13 @@ export function Projects({
 
         <Reveal>
           <div className="mt-10 text-center">
-            <a href="#contact" data-track="projects-estimate">
-              <Button variant="outline" size="lg" className="m5-button">
-                Let&apos;s Start Your Project
-              </Button>
+            <a
+              href="#contact"
+              data-track="projects-estimate"
+              className="m5-button"
+            >
+              Let&apos;s Start Your Project{" "}
+              <ArrowUpRight size={18} aria-hidden="true" />
             </a>
           </div>
         </Reveal>

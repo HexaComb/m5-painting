@@ -97,6 +97,14 @@ export function Services({
               <div>
                 <h3>Every great project starts with a conversation.</h3>
                 <p>{s.description}</p>
+                <ul className="m5-consultation-items">
+                  {s.items.map((item) => (
+                    <li key={item}>
+                      <Check size={13} aria-hidden="true" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
               <a className="m5-text-link" href="#contact">
                 Let’s talk it through{" "}

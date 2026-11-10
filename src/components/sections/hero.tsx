@@ -109,7 +109,7 @@ export function Hero({
           </span>
           {certifications
             .filter((c) => c.showInHero && c.enabled !== false)
-            .slice(0, 2)
+
             .map((c) => (
               <span key={c._id}>
                 <Check size={16} aria-hidden="true" />
