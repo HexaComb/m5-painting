@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Menu, Phone, X } from "lucide-react";
 import { useQuery } from "convex/react";
@@ -79,8 +80,15 @@ export function Header({
           className="m5-nav-brand"
           onClick={() => setMobileOpen(false)}
         >
-          <span className="m5-brand-monogram" aria-hidden="true">M5</span>
-          <span className="m5-brand-name" aria-hidden="true">Painting</span>
+          <Image
+            src="/images/logo.webp"
+            alt={settings.businessName}
+            width={1024}
+            height={1024}
+            sizes="(max-width: 959px) 64px, 72px"
+            className="m5-nav-logo"
+            priority
+          />
         </Link>
         <nav className="m5-desktop-nav" aria-label="Main navigation">
           {links.map((link) => (

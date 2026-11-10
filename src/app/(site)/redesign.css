@@ -83,34 +83,23 @@
   border-bottom: 1px solid #d9dedf;
 }
 .m5-nav-inner {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: 2rem;
   height: 80px;
 }
 .m5-nav-brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.8rem;
+  justify-self: start;
   flex: none;
-  color: var(--m5-ink);
 }
-.m5-brand-monogram {
-  font-family: var(--font-heading);
-  font-size: 2.3rem;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: -0.09em;
-}
-.m5-brand-name {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding-left: 0.8rem;
-  border-left: 1px solid #b7c0c6;
-  line-height: 1.6;
+.m5-nav-logo {
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
 }
 .m5-desktop-nav {
   display: flex;
@@ -149,6 +138,7 @@
 }
 .m5-nav-actions {
   display: flex;
+  justify-self: end;
   align-items: center;
   gap: 0.65rem;
   flex: none;
@@ -180,8 +170,14 @@
 }
 @media (max-width: 959px) {
   .m5-nav-inner {
+    display: flex;
+    justify-content: space-between;
     height: 72px;
     gap: 1rem;
+  }
+  .m5-nav-logo {
+    width: 64px;
+    height: 64px;
   }
   .m5-desktop-nav {
     display: none;
@@ -260,17 +256,6 @@
   }
 }
 @media (max-width: 420px) {
-  .m5-nav-brand {
-    gap: 0.55rem;
-  }
-  .m5-brand-monogram {
-    font-size: 2rem;
-  }
-  .m5-brand-name {
-    font-size: 0.58rem;
-    letter-spacing: 0.1em;
-    padding-left: 0.55rem;
-  }
   .m5-nav-inner {
     gap: 0.5rem;
   }

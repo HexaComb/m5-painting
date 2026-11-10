@@ -41,7 +41,7 @@ Original-source captions and the before-stage are not presented as finished tran
 
 ## Navbar refinement
 
-The navbar is now a quieter, flat warm-white strip inspired by the cleaner Ruiz navigation structure: compact typographic M5 / Painting branding, evenly spaced dark links, and one dark estimate action. The original detailed logo remains elsewhere on the site; the header no longer squeezes that artwork, a duplicate wordmark, tiny tagline, phone number, and multiple competing actions into one row. There are no gradients or floating pill containers in the navbar. The hero video and its overlay are unchanged.
+The navbar is a flat warm-white strip with evenly spaced dark links and one dark estimate action. The original `/images/logo.webp` is restored in the home link, unaltered and uncropped: 72px on desktop, 64px on mobile. The attempted typographic substitute has been removed. Desktop grid columns keep navigation centered between the authentic logo and estimate action. There are no gradients or floating pill containers in the navbar. The hero video and its overlay are unchanged.
 
 Desktop navigation remains visible from 960px. Smaller screens use a 44px menu toggle and scrollable, clearly separated menu rows. The disclosure closes on link selection, Escape (returning focus), outside pointer interaction, focus leaving the header, route changes, and a switch to desktop width. Phone access remains in the mobile menu and existing site content. Current standalone nav pages expose `aria-current`.
 
