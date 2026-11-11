@@ -31,7 +31,7 @@ Requests with a missing, expired, invalid, replayed or wrong-host token fail clo
 
 ## Validation checklist
 
-- Open both the homepage and /contact and confirm the Turnstile widget loads.
+- Open both the homepage and /contact on the production domain and confirm the Turnstile widget loads. Generic Vercel preview domains are not on the widget allowlist; test on the approved production domain or a separately approved preview host.
 - Submit a valid test inquiry: exactly one new Convex lead and one notification email.
 - Check that a request with no token is rejected before any lead is saved.
 - Reuse the same token: Turnstile should reject the replay.
