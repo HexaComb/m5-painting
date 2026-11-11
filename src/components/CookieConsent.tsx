@@ -105,14 +105,14 @@ export function CookieConsentProvider({ children }: { children: ReactNode }) {
   const isPublicSite = !pathname.startsWith("/admin");
 
   const [consent, setConsent] = useState<ConsentState>(null);
-  // true on first render so the banner is in the SSR HTML (lab LCP). Returning
-  // visitors are hidden before paint via the boot script + data-cookie-consent CSS.
-  const [showBanner, setShowBanner] = useState(true);
+  // Do not display a cookie banner automatically. Visitors may still manage
+  // analytics consent through the footer preference link.
+  const [showBanner, setShowBanner] = useState(false);
 
   useEffect(() => {
     const stored = getStoredCookieConsent();
     setConsent(stored ?? "pending");
-    setShowBanner(stored === null);
+    setShowBanner(false);
     applyCookieConsentHtmlAttr(stored);
   }, []);
 
