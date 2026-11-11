@@ -15,8 +15,9 @@ This site uses one managed Cloudflare Turnstile widget to protect the contact / 
 1. In the **Convex production deployment** environment variables, set:
    - `TURNSTILE_SECRET` — the private secret from Cloudflare Turnstile → M5 Painting — Estimate Form. Never put this in `NEXT_PUBLIC_*`, source control, or a chat.
    - `TURNSTILE_HOSTNAMES=www.m5painting.com,m5painting.com` — the exact approved production frontend hostnames. **Do not** include localhost here.
-2. In **Netlify** (or whichever service builds the Next.js frontend), set:
+2. In **Vercel** project `m5-painting`, the public build setting is **already configured** for production and preview:
    - `NEXT_PUBLIC_TURNSTILE_SITE_KEY=0x4AAAAAAF9Jmwk4KUuWGe2-`
+   - Vercel environment variables affect **new deployments**. Rebuild after the code is ready.
 3. Deploy Convex backend functions **and** rebuild/redeploy the Next.js frontend. Setting the environment variables alone does not publish the code changes. Ensure the Convex production deployment used by the frontend has the new action.
 4. For local development, a non-production Convex deployment may use `TURNSTILE_HOSTNAMES=localhost,127.0.0.1` with the same widget secret. Do not allow local hostnames in production.
 
