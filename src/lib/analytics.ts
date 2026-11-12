@@ -109,7 +109,14 @@ export function trackClickToCall(
 export function dispatchAnalyticsEvent(event: AnalyticsEvent): void {
   if (!hasAnalyticsConsent()) return;
 
-  if (window.gtag) {
+  if (process.env.NEXT_PUBLIC_GTM_ID) {
+    window.dataLayer ??= [];
+    window.dataLayer.push({
+      event: event.name,
+      event_category: event.category,
+      event_label: event.label,
+    });
+  } else if (window.gtag) {
     window.gtag("event", event.name, {
       event_category: event.category,
       event_label: event.label,
@@ -120,14 +127,6 @@ export function dispatchAnalyticsEvent(event: AnalyticsEvent): void {
     window.fbq("trackCustom", event.name, {
       category: event.category,
       label: event.label,
-    });
-  }
-
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: event.name,
-      event_category: event.category,
-      event_label: event.label,
     });
   }
 
@@ -173,25 +172,21 @@ export function trackPageView(sessionId = getSessionId()): void {
     targetElement: "page",
   };
 
-  if (window.gtag) {
-    window.gtag("event", "page_view", {
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: window.location.pathname + window.location.hash,
-    });
+  const pageParams = {
+    page_title: document.title,
+    page_location: window.location.href,
+    page_path: window.location.pathname + window.location.hash,
+  };
+
+  if (process.env.NEXT_PUBLIC_GTM_ID) {
+    window.dataLayer ??= [];
+    window.dataLayer.push({ event: "page_view", ...pageParams });
+  } else if (window.gtag) {
+    window.gtag("event", "page_view", pageParams);
   }
 
   if (window.fbq) {
     window.fbq("track", "PageView");
-  }
-
-  if (window.dataLayer) {
-    window.dataLayer.push({
-      event: "page_view",
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: window.location.pathname + window.location.hash,
-    });
   }
 
   logAnalyticsHit(event, sessionId);
