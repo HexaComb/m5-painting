@@ -1,162 +1,170 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import { Phone, Menu, X } from "lucide-react";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { ArrowUpRight, Menu, Phone, X } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import type { SiteSettings } from "@/lib/content-types";
 
-const navLinks = [
+const links = [
   { label: "Services", href: "/services", track: "nav-services" },
   { label: "Our Work", href: "/#projects", track: "nav-work" },
-  { label: "About", href: "/#about", track: "nav-about" },
+  { label: "Our Story", href: "/#about", track: "nav-about" },
   { label: "Reviews", href: "/#reviews", track: "nav-reviews" },
-  { label: "Contact", href: "/contact", track: "nav-contact" },
 ];
 
-export function Header({ initialSettings }: { initialSettings?: SiteSettings | null }) {
+export function Header({
+  initialSettings,
+}: {
+  initialSettings?: SiteSettings | null;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const querySettings = useQuery(api.content.getSiteSettings);
-  const settings = querySettings === undefined ? initialSettings : querySettings;
-  const isHeaderSolid = scrolled || mobileOpen;
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  const headerRef = useRef<HTMLElement>(null);
+  const menuButton = useRef<HTMLButtonElement>(null);
+  const pathname = usePathname();
+  const live = useQuery(api.content.getSiteSettings);
+  const settings = live === undefined ? initialSettings : live;
 
   useEffect(() => {
     if (!mobileOpen) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
+    const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        setMobileOpen(false);
+        menuButton.current?.focus();
+      }
+    };
+    const closeOutside = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) {
         setMobileOpen(false);
       }
     };
-
-    document.addEventListener("keydown", onKeyDown);
-    return () => document.removeEventListener("keydown", onKeyDown);
+    document.addEventListener("keydown", closeOnEscape);
+    document.addEventListener("pointerdown", closeOutside);
+    return () => {
+      document.removeEventListener("keydown", closeOnEscape);
+      document.removeEventListener("pointerdown", closeOutside);
+    };
   }, [mobileOpen]);
 
+  useEffect(() => {
+    const breakpoint = window.matchMedia("(min-width: 960px)");
+    const reset = () => {
+      if (breakpoint.matches) setMobileOpen(false);
+    };
+    breakpoint.addEventListener("change", reset);
+    return () => breakpoint.removeEventListener("change", reset);
+  }, []);
+
+  useEffect(() => setMobileOpen(false), [pathname]);
+
   if (!settings) return null;
+  const phoneHref = `tel:${settings.phone.replace(/\D/g, "")}`;
 
   return (
     <header
-      className={`fixed top-0 z-50 w-full border-b transition-all duration-500 ease-out ${
-        isHeaderSolid
-          ? "border-white/10 bg-brand-black/95 shadow-lg shadow-black/50 backdrop-blur-md"
-          : "border-transparent bg-transparent shadow-none backdrop-blur-none"
-      }`}
+      ref={headerRef}
+      className="m5-site-header"
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+          setMobileOpen(false);
+        }
+      }}
     >
-      <div className="mx-auto flex h-[4.75rem] max-w-6xl items-center justify-between px-5 sm:px-6 lg:h-[5.25rem]">
-        <Link href="/" className="flex shrink-0 items-center" aria-label={settings.businessName}>
+      <div className="m5-container m5-nav-inner">
+        <Link
+          href="/"
+          aria-label={`${settings.businessName} home`}
+          className="m5-nav-brand"
+          onClick={() => setMobileOpen(false)}
+        >
           <Image
             src="/images/logo.webp"
             alt={settings.businessName}
             width={1024}
             height={1024}
-            className="h-14 w-14 object-contain sm:h-16 sm:w-16"
-            sizes="(min-width: 640px) 64px, 56px"
+            sizes="(max-width: 959px) 64px, 72px"
+            className="m5-nav-logo"
             priority
           />
         </Link>
-
-        <nav className="hidden items-center gap-1 md:flex">
-          {navLinks.map((link) => (
-            <a
+        <nav className="m5-desktop-nav" aria-label="Main navigation">
+          {links.map((link) => (
+            <Link
               key={link.href}
               href={link.href}
               data-track={link.track}
-              className={`rounded-md px-3 py-2 text-sm font-semibold transition-colors duration-300 ${
-                isHeaderSolid
-                  ? "text-on-dark-secondary hover:text-on-dark"
-                  : "text-white/90 hover:text-white"
-              }`}
+              className="m5-nav-link"
+              aria-current={pathname === link.href ? "page" : undefined}
             >
               {link.label}
-            </a>
+            </Link>
           ))}
         </nav>
-
-        <div className="flex items-center gap-2">
-          <a href={`tel:${settings.phone.replace(/\D/g, "")}`} data-track="header-phone" className="hidden lg:inline-flex">
-            <Button
-              variant="ghost"
-              size="sm"
-              className={`font-medium transition-colors duration-300 ${
-                isHeaderSolid
-                  ? "text-on-dark-secondary hover:bg-white/10 hover:text-on-dark"
-                  : "text-white/90 hover:bg-white/10 hover:text-white"
-              }`}
-            >
-              <Phone className="mr-1.5 h-3.5 w-3.5" />
-              {settings.phone}
-            </Button>
-          </a>
-          <Link href="/contact" data-track="header-estimate">
-            <Button
-              size="sm"
-              className="brand-gradient-blue min-h-11 border-0 px-4 font-bold text-white shadow-md brand-glow hover:opacity-95 md:min-h-9"
-            >
-              Free Estimate
-            </Button>
+        <div className="m5-nav-actions">
+          <Link
+            href="/contact"
+            data-track="header-estimate"
+            className="m5-nav-cta"
+            aria-label="Get a free estimate"
+            onClick={() => setMobileOpen(false)}
+          >
+            <span className="m5-estimate-label">Free estimate</span>
+            <span className="m5-estimate-short" aria-hidden="true">Estimate</span>
+            <ArrowUpRight size={17} aria-hidden="true" />
           </Link>
           <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className={`ml-1 inline-flex h-11 w-11 items-center justify-center rounded-md transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50 md:hidden ${
-              isHeaderSolid ? "text-on-dark-secondary hover:text-on-dark" : "text-white/90 hover:text-white"
-            }`}
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
+            ref={menuButton}
+            type="button"
+            onClick={() => setMobileOpen((open) => !open)}
+            className="m5-menu-toggle"
             aria-expanded={mobileOpen}
             aria-controls="mobile-navigation"
+            aria-label={mobileOpen ? "Close menu" : "Open menu"}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? <X size={22} aria-hidden="true" /> : <Menu size={22} aria-hidden="true" />}
           </button>
         </div>
       </div>
-
       <div
         id="mobile-navigation"
-        aria-hidden={!mobileOpen}
-        inert={!mobileOpen}
-        className={`grid overflow-hidden border-t border-white/10 bg-brand-black/98 transition-[grid-template-rows,opacity] duration-300 ease-out md:hidden ${
-          mobileOpen ? "grid-rows-[1fr] opacity-100" : "pointer-events-none grid-rows-[0fr] opacity-0"
-        }`}
+        hidden={!mobileOpen}
+        className="m5-mobile-panel"
       >
-        <div className="min-h-0">
-          <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-5 pb-5 pt-3 sm:px-6" aria-label="Mobile navigation">
-            {navLinks.map((link) => (
-              <a
+        <div className="m5-container m5-mobile-inner">
+          <nav className="m5-mobile-nav" aria-label="Mobile navigation">
+            {links.map((link) => (
+              <Link
                 key={link.href}
                 href={link.href}
                 data-track={link.track}
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg px-3 py-3 text-base font-bold text-on-dark-secondary transition-colors hover:bg-white/10 hover:text-on-dark focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50"
+                aria-current={pathname === link.href ? "page" : undefined}
               >
                 {link.label}
-              </a>
+                <ArrowUpRight size={20} aria-hidden="true" />
+              </Link>
             ))}
-            <Link href="/contact" data-track="header-estimate" onClick={() => setMobileOpen(false)} className="mt-3">
-              <Button className="brand-gradient-blue min-h-12 w-full border-0 font-bold text-white shadow-md brand-glow hover:opacity-95">
-                Free Estimate
-              </Button>
-            </Link>
-            <a
-              href={`tel:${settings.phone.replace(/\D/g, "")}`}
-              data-track="header-phone"
+            <Link
+              href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="mt-2 flex min-h-12 items-center justify-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-3 text-sm font-bold text-brand-electric transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-brand-electric/50"
+              aria-current={pathname === "/contact" ? "page" : undefined}
             >
-              <Phone className="h-4 w-4" />
-              {settings.phone}
-            </a>
+              Contact
+              <ArrowUpRight size={20} aria-hidden="true" />
+            </Link>
           </nav>
+          <a
+            href={phoneHref}
+            data-track="header-phone"
+            className="m5-mobile-call"
+            onClick={() => setMobileOpen(false)}
+          >
+            <Phone size={17} aria-hidden="true" />
+            <span>Let’s talk about your project<strong>{settings.phone}</strong></span>
+          </a>
         </div>
       </div>
     </header>

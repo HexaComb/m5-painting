@@ -136,7 +136,7 @@ export function InstagramEmbed({
           rel="noopener noreferrer"
           onClick={() => onRequestLoad?.()}
           className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-muted transition-opacity duration-300"
-          aria-label="View on Instagram (loading embed)"
+          aria-label="View post on Instagram"
         >
           {thumbnailUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -155,8 +155,10 @@ export function InstagramEmbed({
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/90 shadow-md">
               <InstagramIcon className="h-6 w-6 text-pink-600" />
             </span>
-            <span className="text-xs font-medium text-white drop-shadow-sm">
-              {thumbnailUrl ? "Loading post…" : "Loading from Instagram…"}
+            <span
+              className={`text-xs font-medium ${thumbnailUrl ? "text-white drop-shadow-sm" : "text-foreground"}`}
+            >
+              View post on Instagram
             </span>
           </div>
         </a>

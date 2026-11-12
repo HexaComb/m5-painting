@@ -5,7 +5,10 @@ import { Building2, Phone, Mail, MapPin } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { useCookieConsent } from "@/components/CookieConsent";
-import { FooterCertifications, filterFooterCertifications } from "@/components/sections/certifications";
+import {
+  FooterCertifications,
+  filterFooterCertifications,
+} from "@/components/sections/certifications";
 import type { SiteSettings, Certification } from "@/lib/content-types";
 import { defaultCertifications } from "@/lib/default-content";
 
@@ -38,7 +41,8 @@ export function Footer({
 }) {
   const querySettings = useQuery(api.content.getSiteSettings);
   const queryCertifications = useQuery(api.content.getCertifications);
-  const settings = querySettings === undefined ? initialSettings : querySettings;
+  const settings =
+    querySettings === undefined ? initialSettings : querySettings;
   const certifications =
     queryCertifications === undefined
       ? (initialCertifications ?? defaultCertifications)
@@ -50,14 +54,13 @@ export function Footer({
   const footerCerts = filterFooterCertifications(certifications);
   const phoneHref = settings.phone.replace(/\D/g, "");
   const [primaryLocation = settings.address, serviceArea] = settings.address
-    .split("·")
+    .split(/[·•]/)
     .map((part) => part.trim());
-  const [addressLocality = primaryLocation, addressRegion = "CA"] = primaryLocation
-    .split(",")
-    .map((part) => part.trim());
+  const [addressLocality = primaryLocation, addressRegion = "CA"] =
+    primaryLocation.split(",").map((part) => part.trim());
   return (
-    <footer className="brand-surface-dark border-t border-white/10 text-white">
-      <div className="mx-auto max-w-6xl px-5 py-14 sm:px-6 sm:py-16">
+    <footer className="m5-footer border-t border-white/10 text-white">
+      <div className="m5-container py-14 sm:py-16">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-5">
           <div className="space-y-4 sm:col-span-2 lg:col-span-1">
             <Image
@@ -91,7 +94,9 @@ export function Footer({
           </div>
 
           <div>
-            <h4 className="text-label mb-4 text-on-dark-muted">Painting Services</h4>
+            <h4 className="text-label mb-4 text-on-dark-muted">
+              Painting Services
+            </h4>
             <nav className="flex flex-col gap-2.5" aria-label="Service pages">
               {serviceLinks.map((link) => (
                 <a
@@ -106,7 +111,7 @@ export function Footer({
           </div>
 
           <div>
-            <h4 className="text-label mb-4 text-on-dark-muted">Name, Address, Phone</h4>
+            <h4 className="text-label mb-4 text-on-dark-muted">Let’s talk</h4>
             <address
               className="space-y-3 not-italic"
               itemScope
@@ -154,7 +159,9 @@ export function Footer({
 
           {footerCerts.length > 0 && (
             <div>
-              <h4 className="text-label mb-4 text-on-dark-muted">Credentials</h4>
+              <h4 className="text-label mb-4 text-on-dark-muted">
+                Credentials
+              </h4>
               <FooterCertifications certifications={certifications} />
             </div>
           )}
@@ -162,7 +169,8 @@ export function Footer({
 
         <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-8 sm:flex-row">
           <p className="text-xs text-on-dark-muted">
-            &copy; {new Date().getFullYear()} {settings.businessName}. All Rights Reserved.
+            &copy; {new Date().getFullYear()} {settings.businessName}. All
+            Rights Reserved.
           </p>
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
             <button
