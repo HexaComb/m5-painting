@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SOCIAL_IMAGE } from "@/lib/social-metadata";
 import { Header } from "@/components/sections/header";
 import { Contact } from "@/components/sections/contact";
 import { Footer } from "@/components/sections/footer";
@@ -44,21 +45,14 @@ export const metadata: Metadata = {
     url: "/contact",
     siteName: "M5 Painting",
     locale: "en_US",
-    images: [
-      {
-        url: "/images/hero-banner.webp",
-        width: 1200,
-        height: 630,
-        alt: "M5 Painting crew serving the Central Valley",
-      },
-    ],
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Contact M5 Painting | Get a Free Painting Estimate",
     description:
       "Tell M5 Painting about your project and request a free painting estimate.",
-    images: ["/images/hero-banner.webp"],
+    images: [SOCIAL_IMAGE],
   },
   robots: {
     index: true,

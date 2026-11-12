@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SOCIAL_IMAGE } from "@/lib/social-metadata";
 import { Analytics } from "@/components/Analytics";
 import { CookieConsentProvider } from "@/components/CookieConsent";
 import { Tracker } from "@/components/Tracker";
@@ -65,20 +66,13 @@ export const metadata: Metadata = {
     url: "/",
     siteName: BUSINESS_NAME,
     locale: "en_US",
-    images: [
-      {
-        url: "/images/hero-banner.webp",
-        width: 1200,
-        height: 630,
-        alt: "Sanger painters from M5 Painting — residential and commercial painting in the Central Valley, California",
-      },
-    ],
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: defaultTitle,
     description: metaDescription,
-    images: ["/images/hero-banner.webp"],
+    images: [SOCIAL_IMAGE],
   },
   alternates: {
     canonical: "/",
