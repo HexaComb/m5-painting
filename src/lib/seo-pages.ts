@@ -358,7 +358,7 @@ export const SEO_PAGES: SeoPage[] = [
     ],
     relatedSlugs: [
       "residential-painting",
-      "interior-painting",
+      "commercial-painting",
       "exterior-painting",
     ],
     serviceName: "Sanger Painters",
