@@ -23,7 +23,7 @@ export function Analytics() {
   const lastTrackedPath = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!isPublicSitePath()) return;
+    if (!isPublicSitePath(pathname)) return;
 
     // Capture client-side route changes as well as the initial page view.
     // Direct GA4 initializes asynchronously; wait until gtag('config') exists
@@ -45,7 +45,7 @@ export function Analytics() {
     recordPageView();
   }, [pathname]);
 
-  if (!isPublicSitePath()) {
+  if (!isPublicSitePath(pathname)) {
     return null;
   }
 

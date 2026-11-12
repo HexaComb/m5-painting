@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import {
   Analytics,
   type BeforeSendEvent,
@@ -8,7 +9,8 @@ import { isPublicSitePath } from "@/lib/analytics";
 
 /** Vercel Web Analytics loads on public site paths only. */
 export function VercelAnalytics() {
-  if (!isPublicSitePath()) {
+  const pathname = usePathname();
+  if (!isPublicSitePath(pathname)) {
     return null;
   }
 
