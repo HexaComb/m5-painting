@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { Analytics } from "@/components/Analytics";
-import { CookieConsentProvider } from "@/components/CookieConsent";
 import { Tracker } from "@/components/Tracker";
 import { VercelAnalytics } from "@/components/VercelAnalytics";
 import { ConvexClientProvider } from "@/components/admin/ConvexClientProvider";
-import { cookieConsentBootScript } from "@/lib/cookie-consent";
 import type { SiteContent } from "@/lib/content-types";
 import {
   BUSINESS_NAME,
@@ -14,7 +12,7 @@ import {
 } from "@/lib/site";
 import "./globals.css";
 
-const bootScripts = `${cookieConsentBootScript}(function(){var l=document.createElement("link");l.rel="stylesheet";l.href="/fonts.css";l.media="print";l.onload=function(){this.media="all"};document.head.appendChild(l)})();`;
+const bootScripts = `(function(){var l=document.createElement("link");l.rel="stylesheet";l.href="/fonts.css";l.media="print";l.onload=function(){this.media="all"};document.head.appendChild(l)})();`;
 
 let _buildContent: SiteContent | null = null;
 try {
@@ -98,15 +96,10 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
       <head>
         <script
-          id="cookie-consent-boot"
+          id="font-boot"
           dangerouslySetInnerHTML={{ __html: bootScripts }}
         />
         <noscript>
-          <style
-            dangerouslySetInnerHTML={{
-              __html: "[data-cookie-banner]{display:none!important}",
-            }}
-          />
           {/* Brand fonts for no-JS. JS path injects this stylesheet asynchronously. */}
           {/* eslint-disable-next-line @next/next/no-css-tags */}
           <link rel="stylesheet" href="/fonts.css" />
@@ -114,12 +107,10 @@ export default function RootLayout({
       </head>
       <body className="font-sans antialiased">
         <ConvexClientProvider>
-          <CookieConsentProvider>
-            {children}
-            <VercelAnalytics />
-            <Analytics />
-            <Tracker />
-          </CookieConsentProvider>
+          {children}
+          <VercelAnalytics />
+          <Analytics />
+          <Tracker />
         </ConvexClientProvider>
       </body>
     </html>

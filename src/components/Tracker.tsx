@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { useCookieConsent } from "@/components/CookieConsent";
 import {
   dispatchAnalyticsEvent,
   getConvexSiteUrl,
@@ -24,10 +23,9 @@ interface TrackingEvent {
  * matching `data-track` elements on the public site.
  */
 export function Tracker() {
-  const { hasAnalyticsConsent } = useCookieConsent();
 
   useEffect(() => {
-    if (!hasAnalyticsConsent || !isPublicSitePath()) return;
+    if (!isPublicSitePath()) return;
 
     const cleanups: (() => void)[] = [];
 
@@ -102,7 +100,7 @@ export function Tracker() {
       clearTimeout(timer);
       cleanups.forEach((fn) => fn());
     };
-  }, [hasAnalyticsConsent]);
+  }, []);
 
   return null;
 }

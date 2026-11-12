@@ -6,7 +6,7 @@ Updated November 12, 2026.
 
 OpenSEO's connected GA4 property: **M5 Painting** (`properties/551178746`), web measurement ID **G-1QWGMNC02K**.
 
-The public site emits these events **only when analytics consent has been granted**:
+The public site now emits these events without a custom cookie-consent opt-in gate:
 
 | Event | When it fires | What it measures | Event parameters |
 | --- | --- | --- | --- |
@@ -30,17 +30,17 @@ Google's reference: https://support.google.com/analytics/answer/13128484?hl=en
 
 ## Realtime testing on an approved hostname
 
-1. Deploy this pull request and confirm the site loads the M5 measurement ID or its configured GTM container. Open an incognito browser.
-2. **Accept analytics** in cookie preferences before testing. Consent denied or pending intentionally suppresses GA4. Note: open draft PR #48 hides the automatic banner, so new visitors must opt in via footer preferences; that means GA4 will undercount users and leads until consent is obtained.
+1. Verify the deployed main branch loads the M5 measurement ID or configured GTM container. Open an incognito browser.
+2. Analytics runs without a cookie banner or preferences control. Confirm the site's privacy notice and any required opt-out mechanism match the deployed behavior.
 3. Open a public service page, then `/contact`. In GA4 **Reports → Realtime**, check `page_view` and the page paths.
 4. Click a phone link. Verify `click_to_call` in GA4 Realtime/DebugView. It is an interaction, not an actual connected call.
 5. Submit a **clearly labeled internal test quote request** through the real form after the production Turnstile secrets are configured and its draft PR is deployed. Confirm both the lead in M5's CMS and the notification email. In GA4 Realtime/DebugView, confirm exactly one `generate_lead` event for the successful submission.
-6. With analytics consent rejected, repeat only a non-submitting phone-click test and check that neither event is sent. Do not send more junk leads to production just to check a count.
+6. Verify that public analytics does not collect admin-page events. Avoid extra test leads in production.
 7. Confirm both events appear as key events after GA4 has processed them. Standard reports can lag, and creating a key event does not retroactively reclassify old traffic.
 
 ## Caveats and follow-up
 
-- **Do not merge Turnstile PR #48 until the private Convex environment variables and deployment are ready**. That PR intentionally fails closed without `TURNSTILE_SECRET` and `TURNSTILE_HOSTNAMES`.
+- **Do not merge Turnstile PR #48 as-is**: it still changes the removed consent component, and its form protection needs `TURNSTILE_SECRET` and `TURNSTILE_HOSTNAMES` configured first.
 - Existing CMS admin custom click/form events can coexist; avoid configuring another GA4 tag with the **same event name** on the same interaction, or conversions may be counted twice.
-- The user asked to hide the cookie banner. If anonymous measurement without an opt-in is later desired, choose and legally review a privacy-compliant consent configuration rather than silently bypassing existing consent checks.
+- With consent gating removed, review applicable privacy notice, consent and opt-out requirements. Removing the banner does not itself establish compliance.
 - Verify actual call completions through a call-tracking provider or phone system, not by labeling a `tel:` click as a phone call.

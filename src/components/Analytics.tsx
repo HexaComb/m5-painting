@@ -3,7 +3,6 @@
 import Script from "next/script";
 import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { useCookieConsent } from "@/components/CookieConsent";
 import { isPublicSitePath, trackPageView } from "@/lib/analytics";
 
 const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
@@ -12,7 +11,7 @@ const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
 /**
  * Loads third-party analytics scripts and records a page view for the public site.
- * Scripts load only after the visitor accepts analytics cookies.
+ * Analytics loads on public pages without an opt-in banner.
  *
  * Configure one of:
  * - NEXT_PUBLIC_GA_MEASUREMENT_ID (direct GA4)
@@ -20,12 +19,11 @@ const metaPixelId = process.env.NEXT_PUBLIC_META_PIXEL_ID;
  * - NEXT_PUBLIC_META_PIXEL_ID (Meta Pixel)
  */
 export function Analytics() {
-  const { hasAnalyticsConsent } = useCookieConsent();
   const pathname = usePathname();
   const lastTrackedPath = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!hasAnalyticsConsent || !isPublicSitePath()) return;
+    if (!isPublicSitePath()) return;
 
     // Capture client-side route changes as well as the initial page view.
     // Direct GA4 initializes asynchronously; wait until gtag('config') exists
@@ -45,9 +43,9 @@ export function Analytics() {
     // In GTM mode, queue the event even before the container finishes loading.
     if (gtmId) window.dataLayer ??= [];
     recordPageView();
-  }, [hasAnalyticsConsent, pathname]);
+  }, [pathname]);
 
-  if (!hasAnalyticsConsent || !isPublicSitePath()) {
+  if (!isPublicSitePath()) {
     return null;
   }
 

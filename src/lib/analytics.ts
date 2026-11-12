@@ -1,5 +1,3 @@
-import { hasAnalyticsConsent } from "@/lib/cookie-consent";
-
 export interface AnalyticsEvent {
   name: string;
   category: string;
@@ -49,8 +47,7 @@ export type GenerateLeadParams = {
  * Deliver a GA4 event through exactly one integration path.
  *
  * Direct GA4 uses gtag. GTM uses dataLayer and requires a GA4 Event tag in
- * the container for these events. Consent is checked again if we need to
- * defer delivery until the direct tag has finished initializing.
+ * the container for these events. Deferred events wait for the direct tag.
  *
  * Never include names, emails, phone numbers, messages or query strings.
  */
@@ -59,7 +56,7 @@ function sendGoogleAnalyticsEvent(
   parameters: Record<string, string>,
 ): void {
   if (typeof window === "undefined") return;
-  if (!hasAnalyticsConsent() || !isPublicSitePath()) return;
+  if (!isPublicSitePath()) return;
 
   if (process.env.NEXT_PUBLIC_GTM_ID) {
     window.dataLayer ??= [];
@@ -74,7 +71,7 @@ function sendGoogleAnalyticsEvent(
 
   if (process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID) {
     const onReady = () => {
-      if (hasAnalyticsConsent() && isPublicSitePath()) {
+      if (isPublicSitePath()) {
         window.gtag?.("event", eventName, parameters);
       }
     };
@@ -107,7 +104,7 @@ export function trackClickToCall(
 }
 
 export function dispatchAnalyticsEvent(event: AnalyticsEvent): void {
-  if (!hasAnalyticsConsent()) return;
+  if (!isPublicSitePath()) return;
 
   if (process.env.NEXT_PUBLIC_GTM_ID) {
     window.dataLayer ??= [];
@@ -141,7 +138,7 @@ export function logAnalyticsHit(
   event: AnalyticsEvent,
   sessionId = getSessionId(),
 ): void {
-  if (!hasAnalyticsConsent()) return;
+  if (!isPublicSitePath()) return;
 
   const apiBase = getConvexSiteUrl();
   if (!apiBase || !isPublicSitePath()) return;
@@ -163,7 +160,7 @@ export function logAnalyticsHit(
 }
 
 export function trackPageView(sessionId = getSessionId()): void {
-  if (!isPublicSitePath() || !hasAnalyticsConsent()) return;
+  if (!isPublicSitePath()) return;
 
   const event: AnalyticsEvent = {
     name: "page_view",
