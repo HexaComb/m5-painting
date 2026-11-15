@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { useCookieConsent } from "@/components/CookieConsent";
 import {
   dispatchAnalyticsEvent,
   getConvexSiteUrl,
   getSessionId,
   isPublicSitePath,
   logAnalyticsHit,
+  trackClickToCall,
 } from "@/lib/analytics";
 
 interface TrackingEvent {
@@ -23,16 +23,40 @@ interface TrackingEvent {
  * matching `data-track` elements on the public site.
  */
 export function Tracker() {
-  const { hasAnalyticsConsent } = useCookieConsent();
 
   useEffect(() => {
-    if (!hasAnalyticsConsent || !isPublicSitePath()) return;
+    if (!isPublicSitePath()) return;
 
+    const cleanups: (() => void)[] = [];
+
+    // One delegated listener covers header, footer, contact, and SEO CTAs,
+    // including links rendered after CMS data loads. A tap is not a phone call.
+    const onPhoneLinkClick = (event: MouseEvent) => {
+      if (!(event.target instanceof Element)) return;
+      const link = event.target.closest('a[href^="tel:"]');
+      if (!link) return;
+
+      const location = link.closest("header")
+        ? "header"
+        : link.closest("footer")
+          ? "footer"
+          : link.closest("#contact")
+            ? "contact"
+            : "page";
+      trackClickToCall(location);
+    };
+
+    document.addEventListener("click", onPhoneLinkClick, true);
+    cleanups.push(() =>
+      document.removeEventListener("click", onPhoneLinkClick, true),
+    );
+
+    // Custom admin-configured events still use Convex, but call-click
+    // measurement must work even when that endpoint isn't configured.
     const apiBase = getConvexSiteUrl();
-    if (!apiBase) return;
+    if (!apiBase) return () => cleanups.forEach((fn) => fn());
 
     let aborted = false;
-    const cleanups: (() => void)[] = [];
 
     async function init() {
       try {
@@ -76,7 +100,7 @@ export function Tracker() {
       clearTimeout(timer);
       cleanups.forEach((fn) => fn());
     };
-  }, [hasAnalyticsConsent]);
+  }, []);
 
   return null;
 }
