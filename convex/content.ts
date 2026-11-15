@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import {
   query,
   mutation,
+  action,
   internalMutation,
   type MutationCtx,
   type QueryCtx,
@@ -1130,14 +1131,83 @@ export const ensureDefaultCertifications = mutation({
 // LEADS
 // ═══════════════════════════════════════════════════════════════════════
 
-export const submitLead = mutation({
+const leadFields = {
+  name: v.string(),
+  phone: v.optional(v.string()),
+  email: v.string(),
+  interest: v.string(),
+  message: v.string(),
+};
+
+/**
+ * Contact is a public endpoint, but it must not expose a public write mutation.
+ * Validate Turnstile here before the internal database insert.
+ */
+export const submitLead = action({
   args: {
-    name: v.string(),
-    phone: v.optional(v.string()),
-    email: v.string(),
-    interest: v.string(),
-    message: v.string(),
+    ...leadFields,
+    turnstileToken: v.string(),
   },
+  returns: v.id("leads"),
+  handler: async (ctx, { turnstileToken, ...lead }) => {
+    const secret = process.env.TURNSTILE_SECRET;
+    const approvedHostnames = new Set(
+      (process.env.TURNSTILE_HOSTNAMES ?? "")
+        .split(",")
+        .map((hostname) => hostname.trim())
+        .filter(Boolean),
+    );
+
+    if (!secret || approvedHostnames.size === 0 || !turnstileToken ||
+        turnstileToken.length > 2048) {
+      throw new Error("Security verification is unavailable. Please try again.");
+    }
+
+    let verification: {
+      success?: boolean;
+      action?: string;
+      hostname?: string;
+    };
+
+    try {
+      const response = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams({
+            secret,
+            response: turnstileToken,
+          }),
+          signal: AbortSignal.timeout(10_000),
+        },
+      );
+      if (!response.ok) throw new Error("Siteverify unavailable");
+      verification = (await response.json()) as typeof verification;
+    } catch {
+      // Fail closed if Cloudflare is unavailable or the reply is invalid.
+      throw new Error("Security verification failed. Please try again.");
+    }
+
+    if (
+      verification.success !== true ||
+      verification.action !== "contact" ||
+      !approvedHostnames.has(verification.hostname ?? "")
+    ) {
+      throw new Error("Security verification failed. Please try again.");
+    }
+
+    const leadId: Id<"leads"> = await ctx.runMutation(
+      internal.content.insertVerifiedLead,
+      lead,
+    );
+    return leadId;
+  },
+});
+
+// Internal only: prevents bots from skipping Siteverify and writing leads directly.
+export const insertVerifiedLead = internalMutation({
+  args: leadFields,
   returns: v.id("leads"),
   handler: async (ctx, args) => {
     return await ctx.db.insert("leads", {

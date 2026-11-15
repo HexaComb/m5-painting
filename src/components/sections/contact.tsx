@@ -6,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Reveal } from "@/components/ui/reveal";
 import { Phone, Mail, MapPin, Loader2 } from "lucide-react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useAction } from "convex/react";
 import { api } from "../../../convex/_generated/api";
 import { toast } from "sonner";
 import type { ContactContent, SiteSettings } from "@/lib/content-types";
 import { sendContactNotification } from "@/app/actions/contact";
+import { ContactTurnstile } from "@/components/ContactTurnstile";
 import { trackGenerateLead } from "@/lib/analytics";
 
 export function Contact({
@@ -24,9 +25,11 @@ export function Contact({
   const querySettings = useQuery(api.content.getSiteSettings);
   const contact = queryContact === undefined ? initialContact : queryContact;
   const settings = querySettings === undefined ? initialSettings : querySettings;
-  const submitLead = useMutation(api.content.submitLead);
+  const submitLead = useAction(api.content.submitLead);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileResetKey, setTurnstileResetKey] = useState(0);
   const submitLockRef = useRef(false);
 
   if (!contact || !settings) return null;
@@ -50,6 +53,12 @@ export function Contact({
       return;
     }
 
+    if (!turnstileToken) {
+      submitLockRef.current = false;
+      toast.error("Please complete the security verification.");
+      return;
+    }
+
     setSubmitting(true);
     try {
       const lead = {
@@ -60,7 +69,7 @@ export function Contact({
         message,
       };
 
-      const leadId = await submitLead(lead);
+      const leadId = await submitLead({ ...lead, turnstileToken });
       const notification = await sendContactNotification({
         ...lead,
         leadId,
@@ -78,6 +87,9 @@ export function Contact({
       submitLockRef.current = false;
       toast.error("Something went wrong. Please try again.");
     } finally {
+      // Each Turnstile token can be used only once, even when a submit fails.
+      setTurnstileToken("");
+      setTurnstileResetKey((key) => key + 1);
       setSubmitting(false);
     }
   };
@@ -273,10 +285,14 @@ export function Contact({
                       className="bg-background"
                     />
                   </div>
+                  <ContactTurnstile
+                    onToken={setTurnstileToken}
+                    resetKey={turnstileResetKey}
+                  />
                   <Button
                     type="submit"
                     size="lg"
-                    disabled={submitting}
+                    disabled={submitting || !turnstileToken}
                     className="h-auto w-full px-6 py-3.5 text-base font-semibold shadow-lg shadow-primary/20"
                   >
                     {submitting && (
