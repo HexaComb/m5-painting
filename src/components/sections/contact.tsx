@@ -69,20 +69,25 @@ export function Contact({
         message,
       };
 
+      // Saving a verified lead is the successful conversion. Notification
+      // delivery is a separate step and must not invite a duplicate submission.
       const leadId = await submitLead({ ...lead, turnstileToken });
-      const notification = await sendContactNotification({
-        ...lead,
-        leadId,
-      });
-
-      if (!notification.ok) {
-        throw new Error(notification.error);
-      }
-
       trackGenerateLead({ form: "contact", interest });
       setSubmitted(true);
-      toast.success("Message sent! We'll be in touch soon.");
       form.reset();
+
+      try {
+        const notification = await sendContactNotification({ ...lead, leadId });
+        if (!notification.ok) {
+          console.error("M5 lead notification failed:", notification.error);
+          toast.warning("Your request was received. Please call us if it's urgent.");
+        } else {
+          toast.success("Message sent! We'll be in touch soon.");
+        }
+      } catch {
+        console.error("M5 lead notification could not be delivered.");
+        toast.warning("Your request was received. Please call us if it's urgent.");
+      }
     } catch {
       submitLockRef.current = false;
       toast.error("Something went wrong. Please try again.");
