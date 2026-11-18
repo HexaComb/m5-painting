@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Building2, Phone, Mail, MapPin } from "lucide-react";
 import { useQuery } from "convex/react";
 import { api } from "../../../convex/_generated/api";
-import { useCookieConsent } from "@/components/CookieConsent";
 import {
   FooterCertifications,
   filterFooterCertifications,
@@ -49,7 +48,6 @@ export function Footer({
       : queryCertifications.length > 0
         ? queryCertifications
         : defaultCertifications;
-  const { openPreferences } = useCookieConsent();
   if (!settings) return null;
   const footerCerts = filterFooterCertifications(certifications);
   const phoneHref = settings.phone.replace(/\D/g, "");
@@ -173,13 +171,6 @@ export function Footer({
             Rights Reserved.
           </p>
           <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-4">
-            <button
-              type="button"
-              onClick={openPreferences}
-              className="text-xs text-on-dark-muted underline-offset-2 transition-colors hover:text-on-dark-secondary hover:underline"
-            >
-              Cookie preferences
-            </button>
             <p className="text-xs text-on-dark-muted">
               Proudly serving {settings.address}
             </p>

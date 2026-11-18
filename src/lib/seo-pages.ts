@@ -30,9 +30,9 @@ export const SEO_PAGES: SeoPage[] = [
     slug: "residential-painting",
     keyword: "residential painting",
     title:
-      "House Painters in Sanger & Central Valley | Residential Painting | M5",
+      "House Painters in Sanger, CA | M5 Painting",
     description:
-      "House painters and home painters in Sanger and the Central Valley. Residential painting for interiors and exteriors — careful prep, Valley-ready finishes, free estimate.",
+      "House painters in Sanger, CA for interiors, exteriors, trim and cabinets. Family-owned M5 Painting offers careful prep and free written estimates.",
     headline: "House painters",
     highlight: "for Central Valley homes.",
     intro:
@@ -170,7 +170,7 @@ export const SEO_PAGES: SeoPage[] = [
     title:
       "Interior Painting in Sanger & Central Valley | M5 Painting",
     description:
-      "Interior painting in Sanger and the Central Valley — rooms, whole homes, trim, cabinets, and ceilings. Low-mess crews, careful prep, free estimates from M5 Painting.",
+      "Interior painters in Sanger and the Central Valley. Rooms, whole homes, trim, cabinets and ceilings. Careful prep and free estimates from M5 Painting.",
     headline: "Interior painting",
     highlight: "with clean edges and even color.",
     intro:
@@ -307,7 +307,7 @@ export const SEO_PAGES: SeoPage[] = [
     keyword: "Sanger painters",
     title: "Sanger Painters | Painters in Sanger, CA | M5 Painting",
     description:
-      "Need painters in Sanger, CA? Hire the local crew based in town. Interior and exterior painting for homes and businesses. Licensed. Free on-site estimate.",
+      "Sanger painters for homes and businesses. Family-owned M5 Painting handles residential and commercial projects with free on-site estimates.",
     headline: "Sanger painters",
     highlight: "for homes & businesses.",
     intro:
@@ -358,7 +358,7 @@ export const SEO_PAGES: SeoPage[] = [
     ],
     relatedSlugs: [
       "residential-painting",
-      "interior-painting",
+      "commercial-painting",
       "exterior-painting",
     ],
     serviceName: "Sanger Painters",
@@ -368,7 +368,7 @@ export const SEO_PAGES: SeoPage[] = [
   {
     slug: "central-valley-painting-company",
     keyword: "Central Valley California painting company",
-    title: "Central Valley, California Painting Company | Fresno, Clovis & Sanger | M5",
+    title: "Central Valley Painting Company | M5 Painting",
     description:
       "Need a Central Valley, California painting company? Local Sanger crew for interior and exterior work in Fresno, Clovis, and nearby. Free on-site estimate.",
     headline: "Central Valley, California painters",

@@ -4,6 +4,7 @@ import { Phone, Check, Star } from "lucide-react";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
 import { HeroCertifications } from "@/components/sections/certifications";
+import { ServiceProjectProof } from "@/components/sections/service-project-proof";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -202,6 +203,8 @@ export function SeoLanding({
             </aside>
           </div>
         </section>
+
+        <ServiceProjectProof slug={page.slug} />
 
         {reviews.length > 0 ? (
           <section className="border-y border-brand-blue/20 bg-background py-16 sm:py-20">
