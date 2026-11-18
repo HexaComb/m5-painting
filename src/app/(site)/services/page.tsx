@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SOCIAL_IMAGE } from "@/lib/social-metadata";
 import Link from "next/link";
 import { Header } from "@/components/sections/header";
 import { Footer } from "@/components/sections/footer";
@@ -45,21 +46,14 @@ export const metadata: Metadata = {
     url: "/services",
     siteName: "M5 Painting",
     locale: "en_US",
-    images: [
-      {
-        url: "/images/hero-banner.webp",
-        width: 1200,
-        height: 630,
-        alt: "M5 Painting services across the Central Valley",
-      },
-    ],
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Painting Services in Sanger & Central Valley | M5 Painting",
     description:
       "Residential, commercial, interior, and exterior painting from M5 Painting.",
-    images: ["/images/hero-banner.webp"],
+    images: [SOCIAL_IMAGE],
   },
   robots: {
     index: true,

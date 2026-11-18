@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SOCIAL_IMAGE } from "@/lib/social-metadata";
 import Link from "next/link";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Header } from "@/components/sections/header";
@@ -18,7 +19,6 @@ try {
   // build-content.json not yet generated
 }
 
-const pageUrl = `${SITE_URL}/our-process`;
 const videoUrl = `${SITE_URL}/videos/m5easyprocess-720p.mp4`;
 const thumbnailUrl = `${SITE_URL}/images/process-video-thumbnail.webp`;
 
@@ -56,24 +56,17 @@ export const metadata: Metadata = {
     description:
       "Watch how M5 Painting makes residential and commercial painting easy for homeowners and businesses in Sanger and the Central Valley.",
     type: "video.other",
-    url: pageUrl,
+    url: `${SITE_URL}/our-process`,
     siteName: "M5 Painting",
     locale: "en_US",
-    images: [
-      {
-        url: thumbnailUrl,
-        width: 720,
-        height: 1280,
-        alt: "M5 Painting process — easy, reliable, professional",
-      },
-    ],
+    images: [SOCIAL_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Our Process — Easy Painting From Start to Finish | M5 Painting",
     description:
       "Watch how M5 Painting makes residential and commercial painting easy for homeowners and businesses in Sanger and the Central Valley.",
-    images: [thumbnailUrl],
+    images: [SOCIAL_IMAGE],
   },
   robots: {
     index: true,

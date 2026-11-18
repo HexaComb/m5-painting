@@ -19,3 +19,8 @@ SHA-256 of each local file matches the gstatic URL byte-for-byte:
     sha256:6438d7b8ea9c7c3992d5e2fd2afdb1ff948570a3ef0bedae76247b51632960ba
 
 Licenses: OFL-Lato.txt, OFL-Montserrat.txt
+
+Client-inspired redesign fonts (self-hosted, Latin subset, variable weights):
+Public Sans: https://github.com/google/fonts/tree/main/ofl/publicsans
+Schibsted Grotesk: https://github.com/google/fonts/tree/main/ofl/schibstedgrotesk
+Both distributed under SIL Open Font License. Licenses included alongside font files.
